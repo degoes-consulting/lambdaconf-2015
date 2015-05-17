@@ -79,6 +79,8 @@
           [else m]))
   ```
   
+  Exercise:
+  
   ```racket
   (define (fib n)
     (cond [(<= n 2) 1]
@@ -126,6 +128,8 @@
   #<Student>
   ```
   
+  Exercise:
+  
   ```racket
   (struct: Nat ())
   (struct: Z Nat ())
@@ -140,6 +144,8 @@
  
   (define-type (Opt a) (U None (Some a)))
   ```
+  
+  Exercise:
   
   ```racket
   (struct: (a) Left ([v : a]))
@@ -170,6 +176,8 @@
   (define-type (OctTree A) (Rec QT (U A (Vector QT QT QT QT QT QT QT QT))))
   ```
   
+  Exercise:
+  
   ```racket
   (struct: Z ())
   (struct: (a) S ((n : a)))
@@ -186,6 +194,8 @@
       (->* (Integer) (Pseudo-Random-Generator) Nonnegative-Integer)
       (->* () (Pseudo-Random-Generator) Flonum))
   ```
+  
+* Occurrence Types.
 
 * Type a `map` function.
   ```racket
