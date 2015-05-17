@@ -62,3 +62,5 @@ As mentioned, Typed Racket aims to allow you to write programs in a style simila
     (displayln line))
   (hash-set! seen line #t))
   ```
+  
+* Exercise: find another program on the Racket homepage that type checks without modification.
