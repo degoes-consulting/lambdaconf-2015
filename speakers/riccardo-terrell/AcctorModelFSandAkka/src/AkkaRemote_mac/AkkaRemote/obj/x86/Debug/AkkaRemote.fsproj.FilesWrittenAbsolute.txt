@@ -1,0 +1,15 @@
+/Users/ricky/Projects/AkkaRemote/AkkaRemote/obj/x86/Debug/.NETFramework,Version=v4.5.1.AssemblyAttribute.fs
+/Users/ricky/Projects/AkkaRemote/AkkaRemote/bin/Debug/AkkaRemote.exe.mdb
+/Users/ricky/Projects/AkkaRemote/AkkaRemote/bin/Debug/AkkaRemote.exe
+/Users/ricky/Projects/AkkaRemote/AkkaRemote/obj/x86/Debug/AkkaRemote.exe
+/Users/ricky/Projects/AkkaRemote/AkkaRemote/obj/x86/Debug/AkkaRemote.exe.mdb
+/Users/ricky/Projects/AkkaRemote/AkkaRemote/bin/Debug/Newtonsoft.Json.dll
+/Users/ricky/Projects/AkkaRemote/AkkaRemote/bin/Debug/FsPickler.dll
+/Users/ricky/Projects/AkkaRemote/AkkaRemote/bin/Debug/FSharp.PowerPack.dll
+/Users/ricky/Projects/AkkaRemote/AkkaRemote/bin/Debug/FSharp.PowerPack.Linq.dll
+/Users/ricky/Projects/AkkaRemote/AkkaRemote/bin/Debug/Akka.dll
+/Users/ricky/Projects/AkkaRemote/AkkaRemote/bin/Debug/Akka.FSharp.dll
+/Users/ricky/Projects/AkkaRemote/AkkaRemote/bin/Debug/Google.ProtocolBuffers.dll
+/Users/ricky/Projects/AkkaRemote/AkkaRemote/bin/Debug/Google.ProtocolBuffers.Serialization.dll
+/Users/ricky/Projects/AkkaRemote/AkkaRemote/bin/Debug/Helios.dll
+/Users/ricky/Projects/AkkaRemote/AkkaRemote/bin/Debug/Akka.Remote.dll
