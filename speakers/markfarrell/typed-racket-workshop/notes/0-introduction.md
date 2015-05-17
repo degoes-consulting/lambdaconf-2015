@@ -5,7 +5,7 @@ Today we're going to be talking to about Typed Racket. Typed Racket adds an opti
 Typed Racket is designed to allow you to write programs in a style similar to how you would write programs in untyped Racket. The idea is that you should be able to modify your previously untyped Racket programs as little as possible, and use them within Typed Racket wherever possible, having Typed Racket infer types wherever it can. Typed Racket achieves this by equipping its type system with a number of features, notably: 
 
  * Occurrence typing: derive types from predicate tests inside the body of a definition.
- * Subtyping: e.g. ```Any``` is the top type and ```Real``` is a subtype of ```Number```.
+ * Subtyping: e.g. ```Any``` is the top type, ```Nothing``` is the bottom type and ```Real``` is a subtype of ```Number```.
  * All values are types: e.g. ```3``` is a subtype of ```Integer```.
  * Untagged union types: e.g. ```(U String Number)```.
  * Intersection types: e.g. define functions that when given a ```Number``` produces a ```Boolean```
