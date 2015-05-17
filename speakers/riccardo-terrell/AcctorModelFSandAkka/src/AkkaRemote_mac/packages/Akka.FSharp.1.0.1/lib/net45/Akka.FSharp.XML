@@ -1,0 +1,656 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doc>
+<assembly><name>Akka.FSharp</name></assembly>
+<members>
+<member name="M:Akka.FSharp.Strategy.OneForOne(Microsoft.FSharp.Quotations.FSharpExpr{Microsoft.FSharp.Core.FSharpFunc{System.Exception,Akka.Actor.Directive}},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.TimeSpan})">
+ <summary>
+ Returns a supervisor strategy appliable only to child actor which faulted during execution.
+ </summary>
+ <param name="retries">Defines a number of times, an actor could be restarted. If it's a negative value, there is not limit.</param>
+ <param name="timeout">Defines time window for number of retries to occur.</param>
+ <param name="decider">Used to determine a actor behavior response depending on exception occurred.</param>
+</member>
+<member name="M:Akka.FSharp.Strategy.OneForOne(Microsoft.FSharp.Core.FSharpFunc{System.Exception,Akka.Actor.Directive},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.TimeSpan})">
+ <summary>
+ Returns a supervisor strategy appliable only to child actor which faulted during execution.
+ </summary>
+ <param name="retries">Defines a number of times, an actor could be restarted. If it's a negative value, there is not limit.</param>
+ <param name="timeout">Defines time window for number of retries to occur.</param>
+ <param name="decider">Used to determine a actor behavior response depending on exception occurred.</param>
+</member>
+<member name="M:Akka.FSharp.Strategy.OneForOne(Microsoft.FSharp.Core.FSharpFunc{System.Exception,Akka.Actor.Directive})">
+ <summary>
+ Returns a supervisor strategy appliable only to child actor which faulted during execution.
+ </summary>
+ <param name="decider">Used to determine a actor behavior response depending on exception occurred.</param>
+</member>
+<member name="M:Akka.FSharp.Strategy.AllForOne(Microsoft.FSharp.Quotations.FSharpExpr{Microsoft.FSharp.Core.FSharpFunc{System.Exception,Akka.Actor.Directive}},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.TimeSpan})">
+ <summary>
+ Returns a supervisor strategy appliable to each supervised actor when any of them had faulted during execution.
+ </summary>
+ <param name="retries">Defines a number of times, an actor could be restarted. If it's a negative value, there is not limit.</param>
+ <param name="timeout">Defines time window for number of retries to occur.</param>
+ <param name="decider">Used to determine a actor behavior response depending on exception occurred.</param>
+</member>
+<member name="M:Akka.FSharp.Strategy.AllForOne(Microsoft.FSharp.Core.FSharpFunc{System.Exception,Akka.Actor.Directive},Microsoft.FSharp.Core.FSharpOption{System.Int32},Microsoft.FSharp.Core.FSharpOption{System.TimeSpan})">
+ <summary>
+ Returns a supervisor strategy appliable to each supervised actor when any of them had faulted during execution.
+ </summary>
+ <param name="retries">Defines a number of times, an actor could be restarted. If it's a negative value, there is not limit.</param>
+ <param name="timeout">Defines time window for number of retries to occur.</param>
+ <param name="decider">Used to determine a actor behavior response depending on exception occurred.</param>
+</member>
+<member name="M:Akka.FSharp.Strategy.AllForOne(Microsoft.FSharp.Core.FSharpFunc{System.Exception,Akka.Actor.Directive})">
+ <summary>
+ Returns a supervisor strategy appliable to each supervised actor when any of them had faulted during execution.
+ </summary>
+ <param name="decider">Used to determine a actor behavior response depending on exception occurred.</param>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="M:Akka.FSharp.EventStreaming.publish``1(``0,Akka.Event.EventStream)">
+ <summary>
+ Publishes an event on the provided event stream. Event channel is resolved from event's type.
+ </summary>
+</member>
+<member name="M:Akka.FSharp.EventStreaming.unsubscribe(System.Type,Akka.Actor.IActorRef,Akka.Event.EventStream)">
+ <summary>
+ Unubscribes an actor reference from target channel of the provided event stream.
+ </summary>
+</member>
+<member name="M:Akka.FSharp.EventStreaming.subscribe(System.Type,Akka.Actor.IActorRef,Akka.Event.EventStream)">
+ <summary>
+ Subscribes an actor reference to target channel of the provided event stream.
+ </summary>
+</member>
+<member name="T:Akka.FSharp.EventStreaming">
+
+</member>
+<member name="M:Akka.FSharp.Watchers.demonitor(Akka.Actor.IActorRef,Akka.Actor.ICanWatch)">
+ <summary>
+ Orders a <paramref name="watcher"/> to stop monitoring an actor refered by provided <paramref name="subject"/>.
+ </summary>
+</member>
+<member name="M:Akka.FSharp.Watchers.monitor(Akka.Actor.IActorRef,Akka.Actor.ICanWatch)">
+ <summary>
+ Orders a <paramref name="watcher"/> to monitor an actor targeted by provided <paramref name="subject"/>.
+ When an actor refered by subject dies, a watcher should receive a <see cref="Terminated"/> message.
+ </summary>
+</member>
+<member name="T:Akka.FSharp.Watchers">
+
+</member>
+<member name="M:Akka.FSharp.Inbox.asyncReceive``1(Akka.Actor.Inbox)">
+ <summary>
+ Awaits in async block fora  next message sent to the inbox. 
+ Returns None if message is incompatible with expected response type.
+ </summary>
+</member>
+<member name="M:Akka.FSharp.Inbox.filterReceive``1(System.TimeSpan,Microsoft.FSharp.Core.FSharpFunc{``0,System.Boolean},Akka.Actor.Inbox)">
+ <summary>
+ Receives a next message sent to the inbox, which satisfies provided predicate. 
+ This is a blocking operation. Returns None if timeout occurred or message 
+ is incompatible with expected response type.
+ </summary>
+</member>
+<member name="M:Akka.FSharp.Inbox.receive``1(System.TimeSpan,Akka.Actor.Inbox)">
+ <summary> 
+ Receives a next message sent to the inbox. This is a blocking operation.
+ Returns None if timeout occurred or message is incompatible with expected response type.
+ </summary>
+</member>
+<member name="M:Akka.FSharp.Inbox.inbox(Akka.Actor.ActorSystem)">
+ <summary>
+ Creates an actor-like object, which could be interrogated from the outside. 
+ Usually it's used to spy on other actors lifecycle.
+ Most of the inbox methods works in thread-blocking manner.
+ </summary>
+</member>
+<member name="T:Akka.FSharp.Inbox">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="M:Akka.FSharp.Spawn.actorOf2``2(Microsoft.FSharp.Core.FSharpFunc{Akka.FSharp.Actors.Actor{``0},Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit}},Akka.FSharp.Actors.Actor{``0})">
+ <summary>
+ Wraps provided function with actor behavior. 
+ It will be invoked each time, an actor will receive a message. 
+ </summary>
+</member>
+<member name="M:Akka.FSharp.Spawn.actorOf``2(Microsoft.FSharp.Core.FSharpFunc{``0,Microsoft.FSharp.Core.Unit},Akka.FSharp.Actors.Actor{``0})">
+ <summary>
+ Wraps provided function with actor behavior. 
+ It will be invoked each time, an actor will receive a message. 
+ </summary>
+</member>
+<member name="M:Akka.FSharp.Spawn.spawnObj``1(Akka.Actor.IActorRefFactory,System.String,Microsoft.FSharp.Quotations.FSharpExpr{Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,``0}})">
+ <summary>
+ Spawns an actor using specified actor quotation.
+ The actor can only be used locally. 
+ </summary>
+ <param name="actorFactory">Either actor system or parent actor</param>
+ <param name="name">Name of spawned child actor</param>
+ <param name="f">Used to create a new instance of the actor</param>
+</member>
+<member name="M:Akka.FSharp.Spawn.spawnObjOpt``1(Akka.Actor.IActorRefFactory,System.String,Microsoft.FSharp.Quotations.FSharpExpr{Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,``0}},Microsoft.FSharp.Collections.FSharpList{Akka.FSharp.Spawn.SpawnOption})">
+ <summary>
+ Spawns an actor using specified actor quotation, with custom spawn option settings.
+ The actor can only be used locally. 
+ </summary>
+ <param name="actorFactory">Either actor system or parent actor</param>
+ <param name="name">Name of spawned child actor</param>
+ <param name="f">Used to create a new instance of the actor</param>
+ <param name="options">List of options used to configure actor creation</param>
+</member>
+<member name="M:Akka.FSharp.Spawn.spawn``2(Akka.Actor.IActorRefFactory,System.String,Microsoft.FSharp.Core.FSharpFunc{Akka.FSharp.Actors.Actor{``0},Akka.FSharp.Actors.Cont{``0,``1}})">
+ <summary>
+ Spawns an actor using specified actor computation expression.
+ The actor can only be used locally. 
+ </summary>
+ <param name="actorFactory">Either actor system or parent actor</param>
+ <param name="name">Name of spawned child actor</param>
+ <param name="f">Used by actor for handling response for incoming request</param>
+</member>
+<member name="M:Akka.FSharp.Spawn.spawnOpt``2(Akka.Actor.IActorRefFactory,System.String,Microsoft.FSharp.Core.FSharpFunc{Akka.FSharp.Actors.Actor{``0},Akka.FSharp.Actors.Cont{``0,``1}},Microsoft.FSharp.Collections.FSharpList{Akka.FSharp.Spawn.SpawnOption})">
+ <summary>
+ Spawns an actor using specified actor computation expression, with custom spawn option settings.
+ The actor can only be used locally. 
+ </summary>
+ <param name="actorFactory">Either actor system or parent actor</param>
+ <param name="name">Name of spawned child actor</param>
+ <param name="f">Used by actor for handling response for incoming request</param>
+ <param name="options">List of options used to configure actor creation</param>
+</member>
+<member name="M:Akka.FSharp.Spawn.spawne``2(Akka.Actor.IActorRefFactory,System.String,Microsoft.FSharp.Quotations.FSharpExpr{Microsoft.FSharp.Core.FSharpFunc{Akka.FSharp.Actors.Actor{``0},Akka.FSharp.Actors.Cont{``0,``1}}},Microsoft.FSharp.Collections.FSharpList{Akka.FSharp.Spawn.SpawnOption})">
+ <summary>
+ Spawns an actor using specified actor computation expression, using an Expression AST.
+ The actor code can be deployed remotely.
+ </summary>
+ <param name="actorFactory">Either actor system or parent actor</param>
+ <param name="name">Name of spawned child actor</param>
+ <param name="expr">F# expression compiled down to receive function used by actor for response for incoming request</param>
+ <param name="options">List of options used to configure actor creation</param>
+</member>
+<member name="">
+
+</member>
+<member name="T:Akka.FSharp.Spawn">
+
+</member>
+<member name="M:Akka.FSharp.System.create(System.String,Akka.Configuration.Config)">
+<summary>
+ Creates an actor system with remote deployment serialization enabled.
+</summary>
+</member>
+<member name="T:Akka.FSharp.System">
+
+</member>
+<member name="">
+
+</member>
+<member name="T:Akka.FSharp.OptionHelper">
+
+</member>
+<member name="M:Akka.FSharp.Configuration.load">
+<summary>
+ Loads Akka configuration from the project&apos;s .config file.
+</summary>
+</member>
+<member name="M:Akka.FSharp.Configuration.defaultConfig">
+<summary>
+ Returns default Akka configuration.
+</summary>
+</member>
+<member name="M:Akka.FSharp.Configuration.parse(System.String)">
+<summary>
+ Parses provided HOCON string into a valid Akka configuration object.
+</summary>
+</member>
+<member name="T:Akka.FSharp.Configuration">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="T:Akka.FSharp.Serialization">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="T:Akka.FSharp.Linq">
+
+</member>
+<member name="M:Akka.FSharp.Logging.logErrorf``2(Akka.FSharp.Actors.Actor{``0})">
+<summary>
+ Logs a message at Error level using configured Akka logger. 
+</summary>
+</member>
+<member name="M:Akka.FSharp.Logging.logWarningf``2(Akka.FSharp.Actors.Actor{``0})">
+<summary>
+ Logs a message at Warning level using configured Akka logger.
+</summary>
+</member>
+<member name="M:Akka.FSharp.Logging.logInfof``2(Akka.FSharp.Actors.Actor{``0})">
+<summary>
+ Logs a message at Info level using configured Akka logger.
+</summary>
+</member>
+<member name="M:Akka.FSharp.Logging.logDebugf``2(Akka.FSharp.Actors.Actor{``0})">
+<summary>
+ Logs a message at Debug level using configured Akka logger.
+</summary>
+</member>
+<member name="M:Akka.FSharp.Logging.logf``2(Akka.Event.LogLevel,Akka.FSharp.Actors.Actor{``0})">
+<summary>
+ Logs a message using configured Akka logger.
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="M:Akka.FSharp.Logging.logException``1(Akka.FSharp.Actors.Actor{``0},System.Exception)">
+<summary>
+ Logs an exception message at Error level using configured Akka logger.
+</summary>
+</member>
+<member name="M:Akka.FSharp.Logging.logError``1(Akka.FSharp.Actors.Actor{``0},System.String)">
+<summary>
+ Logs a message at Error level using configured Akka logger. 
+</summary>
+</member>
+<member name="M:Akka.FSharp.Logging.logWarning``1(Akka.FSharp.Actors.Actor{``0},System.String)">
+<summary>
+ Logs a message at Warning level using configured Akka logger.
+</summary>
+</member>
+<member name="M:Akka.FSharp.Logging.logInfo``1(Akka.FSharp.Actors.Actor{``0},System.String)">
+<summary>
+ Logs a message at Info level using configured Akka logger.
+</summary>
+</member>
+<member name="M:Akka.FSharp.Logging.logDebug``1(Akka.FSharp.Actors.Actor{``0},System.String)">
+<summary>
+ Logs a message at Debug level using configured Akka logger.
+</summary>
+</member>
+<member name="M:Akka.FSharp.Logging.log``1(Akka.Event.LogLevel,Akka.FSharp.Actors.Actor{``0},System.String)">
+<summary>
+ Logs a message using configured Akka logger.
+</summary>
+</member>
+<member name="T:Akka.FSharp.Logging">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="M:Akka.FSharp.Actors.ActorBuilder.Bind``3(Akka.FSharp.Actors.Cont{``0,``1},Microsoft.FSharp.Core.FSharpFunc{``1,Akka.FSharp.Actors.Cont{``0,``2}})">
+<summary>
+ Binds the result of another actor computation expression.
+</summary>
+</member>
+<member name="M:Akka.FSharp.Actors.ActorBuilder.Bind``2(Akka.FSharp.Actors.IO{``0},Microsoft.FSharp.Core.FSharpFunc{``0,Akka.FSharp.Actors.Cont{``0,``1}})">
+<summary>
+ Binds the next message.
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="T:Akka.FSharp.Actors.ActorBuilder">
+<summary>
+ The builder for actor computation expression.
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="T:Akka.FSharp.Actors.Cont`2">
+<summary>
+ Gives access to the next message throu let! binding in actor computation expression.
+</summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="P:Akka.FSharp.Actors.Actor`1.Self">
+ <summary>
+ Gets <see cref="IActorRef" /> for the current actor.
+ </summary>
+</member>
+<member name="P:Akka.FSharp.Actors.Actor`1.Log">
+ <summary>
+ Lazy logging adapter. It won't be initialized until logging function will be called. 
+ </summary>
+</member>
+<member name="P:Akka.FSharp.Actors.Actor`1.Context">
+ <summary>
+ Gets the current actor context.
+ </summary>
+</member>
+<member name="M:Akka.FSharp.Actors.Actor`1.UnstashAll">
+ <summary>
+ Unstashes all messages by prepending them to the actor's mailbox.
+ The stash is guaranteed to be empty afterwards.
+ </summary>
+</member>
+<member name="M:Akka.FSharp.Actors.Actor`1.Unstash">
+ <summary>
+ Unstash the oldest message in the stash and prepends it to the actor's mailbox.
+ The message is removed from the stash.
+ </summary>
+</member>
+<member name="M:Akka.FSharp.Actors.Actor`1.Unhandled(`0)">
+ <summary>
+ Explicit signalization of unhandled message.
+ </summary>
+</member>
+<member name="M:Akka.FSharp.Actors.Actor`1.Stash">
+ <summary>
+ Stashes the current message (the message that the actor received last)
+ </summary>
+</member>
+<member name="M:Akka.FSharp.Actors.Actor`1.Sender">
+ <summary>
+ Returns a sender of current message or <see cref="ActorRefs.NoSender" />, if none could be determined.
+ </summary>
+</member>
+<member name="M:Akka.FSharp.Actors.Actor`1.Receive">
+ <summary>
+ Explicitly retrieves next incoming message from the mailbox.
+ </summary>
+</member>
+<member name="M:Akka.FSharp.Actors.Actor`1.Defer(Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit})">
+ <summary>
+ Defers provided function to be invoked when actor stops, regardless of reasons.
+ </summary>
+</member>
+<member name="T:Akka.FSharp.Actors.Actor`1">
+ <summary>
+ Exposes an Akka.NET actor APi accessible from inside of F# continuations -> <see cref="Cont{'In, 'Out}" />
+ </summary>
+</member>
+<member name="">
+
+</member>
+<member name="">
+
+</member>
+<member name="P:Akka.FSharp.Actors.actor">
+<summary>
+ Builds an actor message handler using an actor expression syntax.
+</summary>
+</member>
+<member name="M:Akka.FSharp.Actors.select(System.String,Akka.Actor.IActorRefFactory)">
+ <summary>
+ Returns an instance of <see cref="ActorSelection" /> for specified path. 
+ If no matching receiver will be found, a <see cref="ActorRefs.NoSender" /> instance will be returned. 
+ </summary>
+</member>
+<member name="M:Akka.FSharp.Actors.op_LessBangBar``1(Akka.Actor.ICanTell,Microsoft.FSharp.Control.FSharpAsync{``0})">
+<summary>
+ Pipe operator which sends an output of asynchronous expression directly to the recipients mailbox
+</summary>
+</member>
+<member name="M:Akka.FSharp.Actors.op_BarBangGreater``1(Microsoft.FSharp.Control.FSharpAsync{``0},Akka.Actor.ICanTell)">
+<summary>
+ Pipe operator which sends an output of asynchronous expression directly to the recipients mailbox.
+</summary>
+</member>
+<member name="M:Akka.FSharp.Actors.pipeTo``1(Microsoft.FSharp.Control.FSharpAsync{``0},Akka.Actor.ICanTell,Akka.Actor.IActorRef)">
+<summary>
+ Pipes an output of asynchronous expression directly to the recipients mailbox.
+</summary>
+</member>
+<member name="M:Akka.FSharp.Actors.op_LessQmark``2(``0,System.Object)">
+ <summary> 
+ Bidirectional send operator. Sends a message object directly to actor 
+ tracked by actorRef and awaits for response send back from corresponding actor. 
+ </summary>
+</member>
+<member name="M:Akka.FSharp.Actors.op_LessBang``1(``0,System.Object)">
+ <summary>
+ Unidirectional send operator. 
+ Sends a message object directly to actor tracked by actorRef. 
+ </summary>
+</member>
+<member name="T:Akka.FSharp.Actors">
+
+</member>
+<member name="M:Schedulers.ITellScheduler.ScheduleTellOnce``1(Akka.Actor.ITellScheduler,System.TimeSpan,Akka.Actor.IActorRef,``0)">
+ <summary>
+ Schedules a single <paramref name="message"/> send to the provided <paramref name="receiver"/>.
+ </summary>
+ <param name="after">Delay before sending a message.</param>
+ <param name="message">Message to be sent to the receiver by the scheduler.</param>
+ <param name="receiver">Message receiver.</param>
+</member>
+<member name="M:Schedulers.ITellScheduler.ScheduleTellRepeatedly``1(Akka.Actor.ITellScheduler,System.TimeSpan,System.TimeSpan,Akka.Actor.IActorRef,``0)">
+ <summary>
+ Schedules a <paramref name="message"/> to be sent to the provided <paramref name="receiver"/> in specified time intervals.
+ </summary>
+ <param name="after">Initial delay to first function call.</param>
+ <param name="every">Interval.</param>
+ <param name="message">Message to be sent to the receiver by the scheduler.</param>
+ <param name="receiver">Message receiver.</param>
+</member>
+<member name="M:Schedulers.IActionScheduler.ScheduleOnce(Akka.Actor.IActionScheduler,System.TimeSpan,Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{Akka.Actor.ICancelable})">
+ <summary>
+ Schedules a single function call using specified sheduler.
+ </summary>
+ <param name="after">Delay before calling the function.</param>
+ <param name="fn">Function called by the scheduler.</param>
+ <param name="cancelable">Optional cancelation token</param>
+</member>
+<member name="M:Schedulers.IActionScheduler.ScheduleRepeatedly(Akka.Actor.IActionScheduler,System.TimeSpan,System.TimeSpan,Microsoft.FSharp.Core.FSharpFunc{Microsoft.FSharp.Core.Unit,Microsoft.FSharp.Core.Unit},Microsoft.FSharp.Core.FSharpOption{Akka.Actor.ICancelable})">
+ <summary>
+ Schedules a function to be invoked repeatedly in the provided time intervals. 
+ </summary>
+ <param name="after">Initial delay to first function call.</param>
+ <param name="every">Interval.</param>
+ <param name="fn">Function called by the scheduler.</param>
+ <param name="cancelable">Optional cancelation token</param>
+</member>
+<member name="T:Schedulers">
+
+</member>
+<member name="">
+
+</member>
+<member name="T:System.AssemblyVersionInformation">
+
+</member>
+</members>
+</doc>

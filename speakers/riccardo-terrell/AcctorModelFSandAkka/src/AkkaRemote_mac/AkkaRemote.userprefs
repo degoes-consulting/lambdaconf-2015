@@ -1,0 +1,20 @@
+﻿<Properties StartupItem="AkkaRemote/AkkaRemote.fsproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="FractalRemote/Program.fs">
+    <Files>
+      <File FileName="AkkaRemote/Program.fs" Line="31" Column="9" />
+      <File FileName="AkkaRemote/AssemblyInfo.fs" Line="1" Column="1" />
+      <File FileName="AkkaWorkerRemote/Program.fs" Line="1" Column="1" />
+      <File FileName="../../../../Library/Frameworks/Mono.framework/Versions/4.0.0/lib/mono/4.5/Microsoft.Common.targets" Line="1" Column="1" />
+      <File FileName="FractalRemote/Program.fs" Line="23" Column="41" />
+      <File FileName="Manelbrot/MyClass.cs" Line="10" Column="4" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <DisabledProjects>
+    <String>AkkaWorkerRemote/AkkaWorkerRemote.fsproj</String>
+  </DisabledProjects>
+</Properties>

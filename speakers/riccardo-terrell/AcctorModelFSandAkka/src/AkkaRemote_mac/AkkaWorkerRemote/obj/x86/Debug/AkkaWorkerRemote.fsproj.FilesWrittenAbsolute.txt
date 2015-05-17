@@ -1,0 +1,15 @@
+/Users/Riccardo/Projects/AkkaRemote/AkkaWorkerRemote/obj/x86/Debug/.NETFramework,Version=v4.0.AssemblyAttribute.fs
+/Users/Riccardo/Projects/AkkaRemote/AkkaWorkerRemote/bin/Debug/AkkaWorkerRemote.exe.mdb
+/Users/Riccardo/Projects/AkkaRemote/AkkaWorkerRemote/bin/Debug/AkkaWorkerRemote.exe
+/Users/Riccardo/Projects/AkkaRemote/AkkaWorkerRemote/obj/x86/Debug/AkkaWorkerRemote.exe
+/Users/Riccardo/Projects/AkkaRemote/AkkaWorkerRemote/obj/x86/Debug/AkkaWorkerRemote.exe.mdb
+/Users/Riccardo/Projects/AkkaRemote/AkkaWorkerRemote/bin/Debug/Akka.Remote.dll
+/Users/Riccardo/Projects/AkkaRemote/AkkaWorkerRemote/bin/Debug/Akka.FSharp.dll
+/Users/Riccardo/Projects/AkkaRemote/AkkaWorkerRemote/bin/Debug/Akka.dll
+/Users/Riccardo/Projects/AkkaRemote/AkkaWorkerRemote/bin/Debug/FSharp.PowerPack.dll
+/Users/Riccardo/Projects/AkkaRemote/AkkaWorkerRemote/bin/Debug/FSharp.PowerPack.Linq.dll
+/Users/Riccardo/Projects/AkkaRemote/AkkaWorkerRemote/bin/Debug/FsPickler.dll
+/Users/Riccardo/Projects/AkkaRemote/AkkaWorkerRemote/bin/Debug/Newtonsoft.Json.dll
+/Users/Riccardo/Projects/AkkaRemote/AkkaWorkerRemote/bin/Debug/Helios.dll
+/Users/Riccardo/Projects/AkkaRemote/AkkaWorkerRemote/bin/Debug/Google.ProtocolBuffers.dll
+/Users/Riccardo/Projects/AkkaRemote/AkkaWorkerRemote/bin/Debug/Google.ProtocolBuffers.Serialization.dll
