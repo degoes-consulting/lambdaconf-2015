@@ -1,3 +1,7 @@
+## Type Annotations
+
+In this section, we will explore the basic features of Typed Racket's type system, type-annotating examples of previously untyped Racket code.
+
 * Type basic value definitions: e.g. the name of a person.
 
    ```racket
