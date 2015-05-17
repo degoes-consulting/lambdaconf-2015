@@ -1,3 +1,7 @@
+## No Type-Annotations Needed
+
+As mentioned, Typed Racket aims to allow you to write programs in a style similar to how you would write programs in untyped Racket. Several of the example programs on the Racket home page type-check in Typed Racket without modification.
+
 * Program 1:
 
   ```racket
