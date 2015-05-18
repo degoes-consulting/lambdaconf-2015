@@ -1,4 +1,21 @@
-## Type Annotations
+# Introduction
+
+Today we're going to be talking to about Typed Racket. Typed Racket adds an optional static type system to Racket, formerly known as PLT Scheme. Unlike untyped Racket, Typed Racket can allow you to ensure that certain aspects of your programs' behavior are correct before they run.
+
+Typed Racket is designed to allow you to write programs in a style similar to how you would write programs in untyped Racket. The idea is that you should be able to modify your previously untyped Racket programs as little as possible, and use them within Typed Racket wherever possible, having Typed Racket infer types wherever it can. Typed Racket achieves this by equipping its type system with a number of features, notably: 
+
+ * Occurrence typing: derive types from predicate tests inside the body of a definition.
+ * Subtyping: e.g. ```Any``` is the top type, ```Nothing``` is the bottom type and ```Real``` is a subtype of ```Number```.
+ * All values are types: e.g. ```3``` is a subtype of ```Integer```.
+ * Untagged union types: e.g. ```(U String Number)```.
+ * Intersection types: e.g. define functions that when given a ```Number``` produces a ```Boolean```
+   and when given a ```String``` produces an ```Integer```.
+ 
+We'll have a closer look at these particular features of Typed Racket's type system later on in this workshop - and look at how previously untyped Racket code can often type check with minimal modification.
+
+Let's first get you using Typed Racket. We'll look at some more familiar features of Typed Racket's type system, having you add type annotations to examples of previously untyped Racket code.
+
+# Type Annotations
 
 In this section, we will explore the basic features of Typed Racket's type system, type-annotating examples of previously untyped Racket code.
 
@@ -402,13 +419,13 @@ We don't want to be able to create student instances that don't satisfy these co
 
 ### Intersection Types
  
-  ```racket
-  > (:print-type random)
-    (case->
-      (->* (Positive-Fixnum) (Pseudo-Random-Generator) Nonnegative-Fixnum)
-      (->* (Integer) (Pseudo-Random-Generator) Nonnegative-Integer)
-      (->* () (Pseudo-Random-Generator) Flonum))
-  ```
+```racket
+> (:print-type random)
+  (case->
+   (->* (Positive-Fixnum) (Pseudo-Random-Generator) Nonnegative-Fixnum)
+   (->* (Integer) (Pseudo-Random-Generator) Nonnegative-Integer)
+   (->* () (Pseudo-Random-Generator) Flonum))
+```
 
 ### Additional Exercises
 
@@ -425,3 +442,182 @@ Here are a few additional exercises for you to try:
    ```
    
 * Type a `zip` function.
+
+# Break
+
+This is an opportunity to grab a coffee or ask questions.
+
+# No Type-Annotations Needed
+
+As mentioned, Typed Racket aims to allow you to write programs in a style similar to how you would write programs in untyped Racket. Several of the example programs on the Racket homepage type check in Typed Racket without modification.
+
+* Program 1:
+
+  ```racket
+  #lang racket
+  ;; Finds Racket sources in all subdirs
+  (for ([path (in-directory)]
+       #:when (regexp-match? #rx"[.]rkt$" path))
+    (printf "source file: ~a\n" path))
+  ```
+* Program 2:
+
+  ```racket
+  #lang racket
+  
+  (define listener (tcp-listen 12345))
+  
+  (let echo-server ()
+    (define-values (in out) (tcp-accept listener))
+    (thread (lambda () (copy-port in out)
+                       (close-output-port out)))
+    (echo-server))
+  ```
+
+  ```racket
+  #lang typed/racket
+
+  (define listener (tcp-listen 12345))
+  
+  (let echo-server ()
+    (define-values (in out) (tcp-accept listener))
+    (thread (lambda () (copy-port in out)
+                       (close-output-port out)))
+    (echo-server))
+  ```
+  
+* Program 3:
+  
+  ```racket
+  #lang racket
+
+  ;; Report each unique line from stdin
+  (define seen (make-hash empty))
+  
+  (for ([line (in-lines)])
+    (unless (hash-ref seen line #f)
+    (displayln line))
+  (hash-set! seen line #t))
+  ```
+
+  ```racket
+  #lang typed/racket
+
+  ;; Report each unique line from stdin
+  (define seen (make-hash empty))
+  
+  (for ([line (in-lines)])
+    (unless (hash-ref seen line #f)
+    (displayln line))
+  (hash-set! seen line #t))
+  ```
+  
+* Exercise: find another program on the Racket homepage that type checks without modification.
+
+# Adding Algebraic Data Types to Typed Racket
+
+* Create `define-datatype` macro.
+* Create `type-case` macro.
+* Algebraic data type examples:
+ 
+  ```racket 
+  (require datatype)
+  ```
+ 
+  ```racket
+  (define-datatype Nat
+    [S (Nat)]
+    [Z ()])
+  ```
+  
+  ```racket
+  (: Zero Nat)
+  (define Zero (Z))
+  ```
+ 
+  ```racket
+  (: One Nat)
+  (define One (S (Z)))
+  ```
+ 
+  ```racket
+  (: Two Nat)
+  (define Two (S (S (Z))))
+  ```
+  
+  ```racket
+  (: nat->number (-> Nat Number))
+  (define (nat->number nat)
+    (type-case Nat nat
+      [(S n) => (+ (nat->number n) 1)]
+      [(Z) => 0]))
+  ```
+  
+  ```racket
+  > (nat->number (S (S (S (Z)))))
+  - : Number
+  3
+  ```
+  
+  Exercise:
+  
+  ```racket
+  (define-datatype (Option a)
+    [Some (a)]
+    [None ()])
+  ```
+  
+  Exercise:
+  
+  ```racket
+  (define-datatype (Either a b)
+    [Left (a)]
+    [Right (b)])
+  ```
+
+# Soundness Bugs
+
+There are currently soundness bugs in Typed Racket, where
+the compile-time type of a term differs from its run-time type.
+
+* Example: [call/cc + letrec + occurrence typing can be unsound](https://github.com/racket/typed-racket/issues/128)
+
+  ```racket
+  (define-type klk [(List klk Boolean) -> Nothing])
+  
+  (: foo : [-> False])
+  (define (foo)
+    (letrec ([x (let/cc k : (List klk Boolean)
+                (list k #f))])
+    (if (false? (second x))
+        (begin
+          (let/cc k : (List klk Boolean)
+            ((first x) (list k #t)))
+          (second x))
+        ((first x) x))))
+  ```
+
+  ```
+  > (foo)
+  #t
+  ```
+
+# What Next?
+
+* In the future, I'd like to try adding an experimental dependently typed functional programming language to Racket,
+  e.g. ```#lang dependent/racket```. I wouldn't want this language to try to accodomate the style that untyped Racket
+  programmers program in, nor would I strive for untyped Racket code. I'm not a fan of gradual typing: I find too
+  much typing to be bad, in the sense that many incorrect untyped Racket programs type check in Typed Racket
+  without having to be corrected first. Typed Racket is designed to accodomate and make the most out of sloppy thinking,
+  not necessary correct or disallow it.
+* I'd be interested in trying to add Haskell-style type classes and adhoc-polymorphism to Typed Racket.
+* I'd be interested in trying to add higher-kinded types to Typed Racket.
+* I'd be happy if you were willing to join me in pursuing these endeavours!
+
+# Resources
+
+* [The Typed Racket Guide](http://docs.racket-lang.org/ts-guide/index.html)
+* [Racketcon 2012: Sam Tobin-Hochstadt - Tutorial: Typed Racket](https://www.youtube.com/watch?v=w-fVHOxeEpM)
+* [The Design and Implementation of Typed Scheme](http://www.ccs.neu.edu/racket/pubs/popl08-thf.pdf)
+* [Typing the Numeric Tower](http://www.ccs.neu.edu/home/stamourv/papers/numeric-tower.pdf)
+* [Making a Dual Typed/Untyped Racket Library](http://unitscale.com/mb/technique/dual-typed-untyped-library.html)
