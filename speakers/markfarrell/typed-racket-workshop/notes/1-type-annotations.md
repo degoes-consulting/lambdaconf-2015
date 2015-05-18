@@ -187,28 +187,105 @@ In this section, we will explore the basic features of Typed Racket's type syste
   valid `ids` and `ages`, storing these possibilities in a untagged union types that depend on 
   values like `Term` and `Faculty`. 
   
+  For the sake of this example, let's simplify our specification for valid `id`s and `ages`:
+  
+  We'll say that a valid `age` is a positive integer between 16 and 25: 
+  
+  ```
+  (define-type Age (U 16 17 18 19 20 21 22 23 24 25))
+  ```
+  
+  We'll say that a valid `id` is a 1-digit string containing only numeric characters:
+  
+  ```
+  (define-type Id (U "0" "1" "2" "3" "4" "5" "6" "7" "8" "9"))
+  ```
+  
+  Then we can define our student record type in Typed Racket as follows, and impose these
+  constraints at compile-time:
+  
   ```racket
   (struct: Student 
-           ([id : String] 
+           ([id : Id] 
             [name : String] 
-            [age : Positive-Integer]
+            [age : Age]
             [faculty : Faculty]
             [term : Term]))
   ```
     
   ```racket
-  > (Student "John Smith" 20 'mathematics '2A)
+  > (Student "9" "John Smith" 20 'mathematics '2A)
   - : Student
   #<Student>
   ```
   
-  Exercise:
+  This concludes are example of record types in Typed Racket. Now let's look at some more exercises.
+  
+  Exercise: represent the Peano numbers in Typed Racket using record types.
+  
+  Hint: you'll need to define three `struct`s - one for `Nat`, one for `Z` and one for successors `S` of some    natural number. You should also impose the constraint that `Z` and `S` are subtypes of `Nat`. If you happen to be familiar with Scala and Scala's type system, think about how you would represent the Peano numbers using case classes to answer this question. 
   
   ```racket
   (struct: Nat ())
   (struct: Z Nat ())
   (struct: S Nat ((n : Nat)))
   ```
+  
+  Subtyping gets in the way with type-inference in Typed Racket: you have to use ```ann``` to explicitly annotate 
+  that certain naturals are indeed instances of `Nat` and not just instances of `Z` or `S` in Typed Racket. 
+  
+  For instance: 
+  
+  ```racket
+  > (Z)
+  - : Z
+  #<Z>
+  ```
+  
+  ```racket
+  > (S (Z))
+  - : S
+  #<S>
+  ```
+  
+  Might often have to explicitly annotated as `Nat`, using the `ann` form: 
+  
+  ```racket
+  > (ann (Z) Nat)
+  - : Nat
+  #<Z>
+  ```
+  
+  ```racket
+  > (ann (S (Z)) Nat)
+  - : Nat
+  #<S>
+  ```
+  
+  This concludes our exercise for defining the Peano numbers in Typed Racket using record types.
+  
+  Remark: if you were working in a programming language with algebraic data types, such as Haskell 
+  or Idris, you might define a representation of the Peano numbers as follows: 
+  
+  ```haskell
+  data Nat = Z | S Nat
+  ```
+  
+  Typed Racket currently lacks support for algebraic data types, and only let's you pattern match 
+  on the structure of types for control-flow at run-time, using ```match```. We might wish to 
+  have algebraic data types and ensure that we are pattern-matching on their structure for control-flow
+  at compile-time. We'll look at how we might add algebraic data types and a compile-time pattern matching
+  construct to Typed Racket later on in this workshop. 
+  
+  So, you've had an exercise where you've had to use record types in Typed Racket to represent the Peano 
+  numbers in Typed Racket. However, I simplified the specification for valid ids and ages of student's 
+  in my previous example of record types in Typed Racket. I said that you'd have to enumerate
+  all possible valid `id`s and `age`s, storing them in untagged union types that depend on values in 
+  order to make types that allow to certain that the `id`s and `age`s of students are correct before 
+  our programs run in Typed Racket. It's possible to write functions that enumerate all possible `id`s 
+  and `age`s at run-time - you could even write programs to do this and then wrap the lists of results,
+  pasting them into types for `Id` and `Age` in Dr. Racket. 
+  
   
 * Parametric polymorphism.
   
