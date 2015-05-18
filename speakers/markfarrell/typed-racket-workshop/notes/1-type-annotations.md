@@ -410,9 +410,9 @@ We don't want to be able to create student instances that don't satisfy these co
       (->* () (Pseudo-Random-Generator) Flonum))
   ```
 
-### End of Section Exercises
+### Additional Exercises
 
-Here are a few end-of-section exercises for you to try: 
+Here are a few additional exercises for you to try: 
 
 * Type a polymorphic `map` function.
 
