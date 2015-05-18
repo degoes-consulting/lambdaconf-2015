@@ -604,6 +604,7 @@ the compile-time type of a term differs from its run-time type.
 
 # What Next?
 
+* There are several Racket libraries that still need explicit type-annotations added to them, e.g. [How do to Design Programs](https://github.com/lexi-lambda/racket-2htdp-typed).
 * In the future, I'd like to try adding an experimental dependently typed functional programming language to Racket,
   e.g. ```#lang dependent/racket```. I wouldn't want this language to try to accodomate the style that untyped Racket
   programmers program in, nor would I strive for untyped Racket code. I'm not a fan of gradual typing: I find too
