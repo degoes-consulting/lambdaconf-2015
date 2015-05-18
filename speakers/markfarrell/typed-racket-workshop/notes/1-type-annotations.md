@@ -278,7 +278,7 @@ In this section, we will explore the basic features of Typed Racket's type syste
   construct to Typed Racket later on in this workshop. 
   
   So, you've had an exercise where you've had to use record types in Typed Racket to represent the Peano 
-  numbers in Typed Racket. I simplified the specification for valid ids and ages of student's 
+  numbers in Typed Racket. I simplified the specification for valid ```id```s and ```age```s of student's 
   in my previous example of record types in Typed Racket. I said that you'd have to enumerate
   all possible valid `id`s and `age`s, storing them in untagged union types that depend on values in 
   order to make types that allow to certain that the `id`s and `age`s of students are correct before 
@@ -305,8 +305,8 @@ In this section, we will explore the basic features of Typed Racket's type syste
   
  Challenge problem:
 
- We could also create a macro tha takes a type name and an integer n, defining
- an untagged union type with all possible n-digit strings with number characters
+ We could also create a macro that takes a type name and an integer ```n```, defining
+ an untagged union type with all possible ```n```-digit strings with number characters
  as its inhabitants. This exercise is left to the reader - its solution will 
  not be covered as part of this workshop.
  
@@ -338,6 +338,15 @@ In this section, we will explore the basic features of Typed Racket's type syste
   
   (define-type (Either a b) (U (Left a) (Right b)))
   ```
+  
+  Remark: in programming languages that support algebraic data types, like Haskell or Idris, you might define 
+  polymorphic ```Option``` and ```Either``` data types as follows: 
+  
+  ```data Option a = None | Some a```
+  
+  ```data Either a b = Left a | Right b```
+  
+  We could make it more convenient to define ```Option``` or ```Either``` data types in Typed Racket by adding  support for algebraic data types to Typed Racket. As mentioned, we'll look at how we might add algebraic data types to Typed Racket later on in this workshop.
   
 * Recursive type constructors.
 
