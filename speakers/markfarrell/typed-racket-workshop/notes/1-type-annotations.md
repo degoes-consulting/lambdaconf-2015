@@ -310,16 +310,27 @@ In this section, we will explore the basic features of Typed Racket's type syste
  as its inhabitants. This exercise is left to the reader - its solution will 
  not be covered as part of this workshop.
  
-* Parametric polymorphism.
-  
+* Parametric Polymorphism.
+ 
+  Typed Racket supports parametric polymorphism. You can define types (and record types) that
+  take types as parameters to construct new types. For instance, you can define an ```Option```
+  type, like you might have seen in Scala, that takes a type and gives you a type; option
+  types allow you to e.g. create functions where you might get a result of a particular
+  type if your input to the function is valid at run-time (```(Some a)```),  or get an empty result (`(None)`)
+  otherwise.
+
   ```racket
   (struct: None ())
   (struct: (a) Some ([v : a]))
  
-  (define-type (Opt a) (U None (Some a)))
+  (define-type (Option a) (U None (Some a)))
   ```
   
-  Exercise:
+  Remark: you'll have to use ```ann``` in many cases, just like what we saw in our ```Nat```,
+  to convince Typed Racket that instances of ```(None)``` or ```(Some a)``` are ```Option```s.
+  
+  Exercise: define a type for ```Either``` that takes two type parameters ```a b```, and is either a ```(Left a)```
+  or a ```(Right b)```.
   
   ```racket
   (struct: (a) Left ([v : a]))
@@ -329,14 +340,6 @@ In this section, we will explore the basic features of Typed Racket's type syste
   ```
   
 * Recursive type constructors.
-
- ```racket
- (define-type IntList (Rec List (Pair Integer (U List Null))))
- ```
- 
- ```racket
- (define-type (List A) (Rec List (Pair A (U List Null))))
- ```
 
   ```racket 
   (define-type (BinaryTree A) (Rec BT (U A (Vector BT BT))))
