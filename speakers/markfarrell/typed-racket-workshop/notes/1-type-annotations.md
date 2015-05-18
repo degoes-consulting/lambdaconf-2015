@@ -38,7 +38,7 @@ In this section, we will explore the basic features of Typed Racket's type syste
    (define age 28)
    ```
    
-   There's a diagram of Type Racket's numeric type hierarchy in the paper titled [Typing the Number](http://www.ccs.neu.edu/home/stamourv/papers/numeric-tower.pdf), which may be of use to you.
+   There's a diagram of Type Racket's numeric type hierarchy in the paper titled [Typing the Numeric Tower](http://www.ccs.neu.edu/home/stamourv/papers/numeric-tower.pdf), which may be of use to you.
    
 ### Type Basic Function Definitions
   
