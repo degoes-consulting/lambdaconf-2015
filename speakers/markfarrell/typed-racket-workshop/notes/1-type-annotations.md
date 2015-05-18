@@ -135,7 +135,44 @@ In this section, we will explore the basic features of Typed Racket's type syste
                     (fib (cast (- n 2) Positive-Integer)))]))
    ```
   
-* Define untagged union types.
+* Record types.
+  
+  Now we'll look at record types in Typed Racket; record types are like product types where each field has a name.
+  In Racket and Typed Racket, record types are called ```struct```s. Here's an example of a `struct` in untyped    Racket: a ```struct``` for student's, where each student has field for their name, age, faculty and term. Untyped Racket supports ```struct```s, though it only knows about these ```struct```s at run-time. 
+  
+  ```racket
+  (struct student (id name age faculty term))
+  ```
+  ```
+  > (student "00000999" "John Smith" 20 'mathematics '2A)
+  #<student>
+  ```
+  
+  Suppose that we'd want to impose the constraints that each student's:
+  
+  * `id` is an 8-digit string containing only numeric characters.
+  * `name` is a ```String```.
+  * `age` is a positive integer between 16 and 80.
+  * `faculty` is either `Mathematics`, `Science`, `Engineering`, `Arts` or `Applied Health Sciences`.
+  * `term` is either `1A`, `1B`, `2A`, `2B`, `3A`, `3B`, `4A` or `4B`. 
+  
+  We don't want to be able to create student instances that don't satisfy these constraints; 
+  student instances who don't satisfy these constraints would be invalid.
+
+  In untyped Racket, we could impose these constraints at run-time with contracts.
+    
+  In Typed Racket, we can impose some of these constraints at compile-time with
+  types.
+  
+  However, it's tricky to impose the constraint that a student's `id` is a 8-digit string 
+  containing only numeric characters at compile-time. It's also tricky to impose the 
+  constraint that their age is a positive integer between 16 and 80. Though, 
+  recall that in Typed Racket, all values are types: e.g. `16` is a subtype of `Positive-Integer`.
+  We also have untagged union types in Type Racket: e.g. `(U Number String)`, meaning that 
+  the inhabitants of this type can either be a `Number` or `String`, such as `3.0` or `"foo"`.
+  
+  We can quite easily certify that each student's term and faculty are valid at compile-time,
+  using untagged union types and the fact that all values are types in Typed Racket: 
   
   ```racket
   (define-type Term (U '1A '1B '2A '2B '3A '3B '4A '4B))
@@ -144,22 +181,19 @@ In this section, we will explore the basic features of Typed Racket's type syste
   ```racket
   (define-type Faculty (U 'mathematics 'science 'engineering 'arts 'applied-health-sciences))
   ```
-    
-* Record types.
   
-  Now we'll look at record types in Typed Racket; record types are like product types where each field has a name.
-  In Racket and Typed Racket, record types are called ```struct```s.
+  However, it's trickier to certify that each student's `id` and `age` are meet our specification
+  for valid `id`s and `ages` at compile-time; to do this, we'd have to enumerate all possible 
+  valid `ids` and `ages`, storing these possibilities in a untagged union types that depend on 
+  values like `Term` and `Faculty`. 
   
   ```racket
-  (struct student (name age faculty term))
-  ```
-  ```
-  > (student "John Smith" 20 'mathematics '2A)
-  #<student>
-  ```
-    
-  ```racket
-  (struct: Student ([name : String] [age : Integer] [faculty : Faculty] [term : Term]))
+  (struct: Student 
+           ([id : String] 
+            [name : String] 
+            [age : Positive-Integer]
+            [faculty : Faculty]
+            [term : Term]))
   ```
     
   ```racket
@@ -236,6 +270,8 @@ In this section, we will explore the basic features of Typed Racket's type syste
   ```
   
 * Occurrence Types.
+
+Here are a few end-of-section exercises for you to try: 
 
 * Type a `map` function.
   ```racket
