@@ -156,7 +156,7 @@ In this section, we will explore the basic features of Typed Racket's type syste
   * `faculty` is either `Mathematics`, `Science`, `Engineering`, `Arts` or `Applied Health Sciences`.
   * `term` is either `1A`, `1B`, `2A`, `2B`, `3A`, `3B`, `4A` or `4B`. 
   
-  We don't want to be able to create student instances that don't satisfy these constraints; 
+We don't want to be able to create student instances that don't satisfy these constraints; 
   student instances who don't satisfy these constraints would be invalid.
 
   In untyped Racket, we could impose these constraints at run-time with contracts.
