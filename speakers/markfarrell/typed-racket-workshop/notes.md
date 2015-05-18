@@ -140,7 +140,7 @@ In this section, we will explore the basic features of Typed Racket's type syste
                    (fib (- n 2)))]))
    ```
    
-   However, we want this function to take a positive integer and give us a positive integer: i.e. `(fib 1)` should give us the first fibonacci number. Though, we suffer from the same problem that we say with our `gcd` function: we have to cast the result of subtracting numbers at run-time to a positive integer in order for our programs that use `(fib n)` to type check. 
+   However, we want this function to take a positive integer and give us a positive integer: i.e. `(fib 1)` should give us the first fibonacci number. Though, we suffer from the same problem that we saw with our `gcd` function: we have to cast the result of subtracting numbers at run-time to a positive integer in order for our programs that use `(fib n)` to type check. 
   
    ```racket
    (: fib 
@@ -151,6 +151,8 @@ In this section, we will explore the basic features of Typed Racket's type syste
            [else (+ (fib (cast (- n 1) Positive-Integer))
                     (fib (cast (- n 2) Positive-Integer)))]))
    ```
+  
+  Though that's the best we can currently do in Typed Racket. 
   
 ### Record Types
   
@@ -289,7 +291,7 @@ We don't want to be able to create student instances that don't satisfy these co
   ```
   
   Typed Racket currently lacks support for algebraic data types, and only let's you pattern match 
-  on the structure of types for control-flow at run-time, using ```match```. We might wish to 
+  on the structure of types for control-flow at run-time, e.g. using ```match```. We might wish to 
   have algebraic data types and ensure that we are pattern-matching on their structure for control-flow
   at compile-time. We'll look at how we might add algebraic data types and a compile-time pattern matching
   construct to Typed Racket later on in this workshop. 
