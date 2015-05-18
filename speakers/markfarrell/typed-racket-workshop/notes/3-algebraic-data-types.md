@@ -82,15 +82,29 @@ We've seen how Typed Racket aims to accomodate the style in which you'd write un
   (define One (S (Z)))
   ```
  
-  ```
+  ```racket
   (: Two Nat)
   (define Two (S (S (Z))))
+  ```
+  
+  ```racket
+  (: nat->number (-> Nat Number))
+  (define (nat->number nat)
+    (type-case Nat nat
+      [(S n) => (+ (nat->number n) 1)]
+      [(Z) => 0]))
+  ```
+  
+  ```racket
+  > (nat->number (S (S (S (Z)))))
+  - : Number
+  3
   ```
   
   Exercise:
   
   ```racket
-  (define-datatype (Opt a)
+  (define-datatype (Option a)
     [Some (a)]
     [None ()])
   ```
