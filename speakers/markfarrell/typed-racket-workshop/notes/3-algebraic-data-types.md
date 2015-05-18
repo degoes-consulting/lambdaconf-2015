@@ -1,5 +1,7 @@
 ## Adding Algebraic Data Types to Typed Racket
 
+We've seen how Typed Racket aims to accomodate the style in which you'd write untyped Racket programs.
+
 * Create `define-datatype` macro: 
 
 ```racket
