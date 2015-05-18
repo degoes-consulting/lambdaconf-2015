@@ -2,7 +2,7 @@
 
 In this section, we will explore the basic features of Typed Racket's type system, type-annotating examples of previously untyped Racket code.
 
-* Type basic value definitions: e.g. the name of a person.
+### Type Basic Value Definitions
   
    We'll start looking at some basic types in Typed Racket. First, let's type-annotate a definition for a person's     full name. 
 
@@ -40,7 +40,7 @@ In this section, we will explore the basic features of Typed Racket's type syste
    
    There's a diagram of Type Racket's numeric type hierarchy in the paper titled [Typing the Number](http://www.ccs.neu.edu/home/stamourv/papers/numeric-tower.pdf), which may be of use to you.
    
-* Type basic function definitions.
+### Type Basic Function Definitions
   
   We'll now look at function types in Typed Racket. Let's type a function that takes the `gcd` of two integers.
 
@@ -135,7 +135,7 @@ In this section, we will explore the basic features of Typed Racket's type syste
                     (fib (cast (- n 2) Positive-Integer)))]))
    ```
   
-* Record types.
+### Record Types
   
   Now we'll look at record types in Typed Racket; record types are like product types where each field has a name.
   In Racket and Typed Racket, record types are called ```struct```s. Here's an example of a `struct` in untyped    Racket: a ```struct``` for student's, where each student has field for their name, age, faculty and term. Untyped Racket supports ```struct```s, though it only knows about these ```struct```s at run-time. 
@@ -310,7 +310,7 @@ In this section, we will explore the basic features of Typed Racket's type syste
  as its inhabitants. This exercise is left to the reader - its solution will 
  not be covered as part of this workshop.
  
-* Parametric Polymorphism.
+### Parametric Polymorphism
  
   Typed Racket supports parametric polymorphism. You can define types (and record types) that
   take types as parameters to construct new types. For instance, you can define an ```Option```
@@ -342,27 +342,44 @@ In this section, we will explore the basic features of Typed Racket's type syste
   Remark: in programming languages that support algebraic data types, like Haskell or Idris, you might define 
   polymorphic ```Option``` and ```Either``` data types as follows: 
   
-  ```data Option a = None | Some a```
+  ```haskell
+  data Option a = None | Some a
+  ```
   
-  ```data Either a b = Left a | Right b```
+  ```haskell
+  data Either a b = Left a | Right b
+  ```
   
   We could make it more convenient to define ```Option``` or ```Either``` data types in Typed Racket by adding  support for algebraic data types to Typed Racket. As mentioned, we'll look at how we might add algebraic data types to Typed Racket later on in this workshop.
   
-* Recursive type constructors.
+### Recursive Type Constructors
+  
+  Typed Racket also supports recursive type constructors. This meanings that you can define 
+  types that refer to themselves, e.g. a binary tree is either a leaf of some type or it 
+  branches off into two binary trees.
+  
+  We can define a recursive polymorphic type constructor for a ```BinaryTree``` in Typed Racket as follows:
 
   ```racket 
   (define-type (BinaryTree A) (Rec BT (U A (Vector BT BT))))
   ```
   
+  And, as another example, we can define a recursive polymorphic type constructor for a ```QuadTree``` in 
+  Typed Racket as follows: 
+  
   ```racket
   (define-type (QuadTree A) (Rec QT (U A (Vector QT QT QT QT))))
   ```
+  
+  Exercise: define a recursive polymorphic type constructor for an ```OctTree``` in Typed Racket.
   
   ```
   (define-type (OctTree A) (Rec QT (U A (Vector QT QT QT QT QT QT QT QT))))
   ```
   
-  Exercise:
+  Exercise: we can also define a type for the Peano numbers recursively in Typed Racket; though you
+  still need to define record types for ```Z``` and a polymorphic ```S``` because Typed Racket 
+  doesn't really support tagged union types. Try this.
   
   ```racket
   (struct: Z ())
@@ -371,7 +388,7 @@ In this section, we will explore the basic features of Typed Racket's type syste
   (define-type Nat (Rec Nat (U Z (S Nat))))
   ```
  
-* Intersection Types.
+### Intersection Types
  
   ```racket
   > (:print-type random)
@@ -381,18 +398,21 @@ In this section, we will explore the basic features of Typed Racket's type syste
       (->* () (Pseudo-Random-Generator) Flonum))
   ```
   
-* Occurrence Types.
+### Occurrence Types
+
+
+### End of Section Exercises
 
 Here are a few end-of-section exercises for you to try: 
 
-* Type a `map` function.
+* Type a polymorphic `map` function.
+
   ```racket
-  #lang racket
-  
   (define (map f xs)
     (cond [(empty? xs) xs]
           [else 
             (cons (f (first xs))
                   (rest xs))]))
    ```
+   
 * Type a `zip` function.
