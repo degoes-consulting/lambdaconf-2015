@@ -11,7 +11,7 @@ Typed Racket is designed to allow you to write programs in a style similar to ho
  * Intersection types: e.g. define functions that when given a ```Number``` produces a ```Boolean```
    and when given a ```String``` produces an ```Integer```.
  
-We'll have a closer look at these particular features of Typed Racket's type system later on in this workshop - and look at how previously untyped Racket code can often type check with minimal modification.
+We'll have a closer look at these particular features of Typed Racket's type system later on in this workshop - and look at examples of how previously untyped Racket code can often type check with minimal modification.
 
 Let's first get you using Typed Racket. We'll look at some more familiar features of Typed Racket's type system, having you add type annotations to examples of previously untyped Racket code.
 
