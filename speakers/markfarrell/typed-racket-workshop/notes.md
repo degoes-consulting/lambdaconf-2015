@@ -604,6 +604,8 @@ the compile-time type of a term differs from its run-time type.
   #t
   ```
 
+* Exercise: find another soundness bug reported in the issues for the Typed Racket project on GitHub.
+
 # What Next?
 
 * There are several Racket libraries that still need explicit type-annotations added to them, e.g. [How do to Design Programs](https://github.com/lexi-lambda/racket-2htdp-typed).
