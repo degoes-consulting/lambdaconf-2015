@@ -391,7 +391,9 @@ In this section, we will explore the basic features of Typed Racket's type syste
 ### Occurrence Types
 
 ```racket
-(: foo (-> (U String Any) (U Integer String)))
+(: foo 
+   (-> (U String Any)
+       (U Integer String)))
 (define (foo str-or-any)
   (cond [(string? str-or-any) 
          (string-length str-or-any)]
