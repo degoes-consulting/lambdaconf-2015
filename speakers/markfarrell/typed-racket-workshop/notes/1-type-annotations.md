@@ -278,15 +278,38 @@ In this section, we will explore the basic features of Typed Racket's type syste
   construct to Typed Racket later on in this workshop. 
   
   So, you've had an exercise where you've had to use record types in Typed Racket to represent the Peano 
-  numbers in Typed Racket. However, I simplified the specification for valid ids and ages of student's 
+  numbers in Typed Racket. I simplified the specification for valid ids and ages of student's 
   in my previous example of record types in Typed Racket. I said that you'd have to enumerate
   all possible valid `id`s and `age`s, storing them in untagged union types that depend on values in 
   order to make types that allow to certain that the `id`s and `age`s of students are correct before 
   our programs run in Typed Racket. It's possible to write functions that enumerate all possible `id`s 
   and `age`s at run-time - you could even write programs to do this and then wrap the lists of results,
-  pasting them into types for `Id` and `Age` in Dr. Racket. 
+  pasting them into types for `Id` and `Age` in Dr. Racket.
   
+  However, if Racket we have hygienic macros. Macro expansion takes place before type-checking occurs 
+  in Typed Racket. We can e.g. create a `define-range-type` macro in Typed Racket that
+  takes a type name, a lower-bound integer & an upper-bound integer as input, and then defines 
+  an untagged union type with all integer values in our range as its inhabitants.
   
+  Exercise: define such a macro. 
+  
+  Check that it your ```define-range-type``` macro correct defines our `Age` type correctly.
+  
+  ```racket
+  (define-range-type Age 16 80)
+  ```
+  
+  ```racket 
+  => (define-type Age (U 16 ... 80))
+  ```
+  
+ Challenge problem:
+
+ We could also create a macro tha takes a type name and an integer n, defining
+ an untagged union type with all possible n-digit strings with number characters
+ as its inhabitants. This exercise is left to the reader - its solution will 
+ not be covered as part of this workshop.
+ 
 * Parametric polymorphism.
   
   ```racket
