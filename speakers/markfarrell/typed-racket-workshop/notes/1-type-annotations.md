@@ -387,7 +387,17 @@ In this section, we will explore the basic features of Typed Racket's type syste
   
   (define-type Nat (Rec Nat (U Z (S Nat))))
   ```
- 
+
+### Occurrence Types
+
+```racket
+(: foo (-> (U String Any) (U Integer String)))
+(define (foo str-or-any)
+  (cond [(string? str-or-any) 
+         (string-length str-or-any)]
+        [else "error"]))
+```
+
 ### Intersection Types
  
   ```racket
@@ -397,9 +407,6 @@ In this section, we will explore the basic features of Typed Racket's type syste
       (->* (Integer) (Pseudo-Random-Generator) Nonnegative-Integer)
       (->* () (Pseudo-Random-Generator) Flonum))
   ```
-  
-### Occurrence Types
-
 
 ### End of Section Exercises
 
