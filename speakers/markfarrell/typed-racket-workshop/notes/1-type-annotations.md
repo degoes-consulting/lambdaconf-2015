@@ -3,10 +3,14 @@
 In this section, we will explore the basic features of Typed Racket's type system, type-annotating examples of previously untyped Racket code.
 
 * Type basic value definitions: e.g. the name of a person.
+  
+   We'll start looking at some basic types in Typed Racket. First, let's type-annotate a definition for a person's     full name. 
 
    ```racket
    (define full-name "John Smith")
    ```
+   
+   We can type-annotate this definition by saying that `full-name` is a `String`.
 
    ```racket
    (: full-name String)
@@ -97,7 +101,7 @@ In this section, we will explore the basic features of Typed Racket's type syste
           [else m]))
   ```
   
-  Exercise:
+  Exercise: type-annotate the definition of a function that computes the n-th fibonacci number.
   
   ```racket
   (define (fib n)
@@ -105,6 +109,8 @@ In this section, we will explore the basic features of Typed Racket's type syste
           [else (+ (fib (- n 1))
                    (fib (- n 2)))]))
   ```
+  
+  You could say that the type-signature of this function should be `(-> Integer Integer Integer)`. 
   
   ```racket
   (: fib 
@@ -116,6 +122,8 @@ In this section, we will explore the basic features of Typed Racket's type syste
           [else (+ (fib (- n 1))
                    (fib (- n 2)))]))
    ```
+   
+   However, we want this function to take a positive integer and give us a positive integer: i.e. `(fib 1)` should give us the first fibonacci number. Though, we suffer from the same problem that we say with our `gcd` function: we have to cast the result of subtracting numbers at run-time to a positive integer in order for our programs that use `(fib n)` to type check. 
   
    ```racket
    (: fib 
@@ -137,7 +145,10 @@ In this section, we will explore the basic features of Typed Racket's type syste
   (define-type Faculty (U 'mathematics 'science 'engineering 'arts 'applied-health-sciences))
   ```
     
-* Type structs. 
+* Record types.
+  
+  Now we'll look at record types in Typed Racket; record types are like product types where each field has a name.
+  In Racket and Typed Racket, record types are called ```struct```s.
   
   ```racket
   (struct student (name age faculty term))
