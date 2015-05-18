@@ -7,4 +7,5 @@
   without having to be corrected first. Typed Racket is designed to accodomate and make the most out of sloppy thinking,
   not necessary correct or disallow it.
 * I'd be interested in trying to add Haskell-style type classes and adhoc-polymorphism to Typed Racket.
+* I'd be interested in trying to add higher-kinded types to Typed Racket.
 * I'd be happy if you were willing to join me in pursuing these endeavours!
