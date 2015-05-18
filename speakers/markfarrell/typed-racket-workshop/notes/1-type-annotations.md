@@ -33,7 +33,12 @@ In this section, we will explore the basic features of Typed Racket's type syste
    (: age Positive-Integer)
    (define age 28)
    ```
+   
+   There's a diagram of Type Racket's numeric type hierarchy in the paper titled [Typing the Number](http://www.ccs.neu.edu/home/stamourv/papers/numeric-tower.pdf), which may be of use to you.
+   
 * Type basic function definitions.
+  
+  We'll now look at function types in Typed Racket. Let's type a function that takes the `gcd` of two integers.
 
   ```racket
   (define (gcd a b)
@@ -41,12 +46,16 @@ In this section, we will explore the basic features of Typed Racket's type syste
           [(gcd b (abs (modulo a b)))]))
   ```
   
+  This function can be given the type `(-> Integer Integer Integer)` since it works for negative integers as well, e.g. `(gcd -3 4) => 1`.
+  
   ```racket
   (: gcd (-> Integer Integer Integer))
   (define (gcd a b)
     (cond [(= b 0) a]
           [(gcd b (abs (modulo a b)))]))
   ```
+  
+  However, it is also possible to implement a `gcd` function using only substraction; in this case the function won't terminate if given a negative integer as one of its inputs. 
   
   ```racket
   (define (gcd m n)
@@ -56,6 +65,8 @@ In this section, we will explore the basic features of Typed Racket's type syste
            (gcd (- m n) n)]
           [else m]))
   ```
+  
+  In untyped Racket, we could impose the constraint that this function has to be given non-negative integers as input at run-time with contracts. 
   
   ```racket
   (define/contract (gcd m n)
@@ -68,6 +79,9 @@ In this section, we will explore the basic features of Typed Racket's type syste
            (gcd (- m n) n)]
           [else m]))
   ```
+  
+  In Typed Racket, we'd like to be able to impose this constraint before our programs that use this function run.    However, we are unable to guarantee with types before our program runs that our function will take two non-negative integers and give as a non-negative integer as a result: we have to cast the result of subtracting our two non-negative integers to a non-negative integer at run-time in order for our programs that use this function to type check. 
+  
   
   ```racket
   (: gcd 
@@ -94,13 +108,24 @@ In this section, we will explore the basic features of Typed Racket's type syste
   
   ```racket
   (: fib 
-     (-> Exact-Nonnegative-Integer
-         Exact-Nonnegative-Integer))
-  (define (fib n)
+     (-> Integer 
+         Integer
+         Integer))
+    (define (fib n)
     (cond [(<= n 2) 1]
-          [else (+ (fib (cast (- n 1) Exact-Nonnegative-Integer))
-                   (fib (cast (- n 2) Exact-Nonnegative-Integer)))]))
-  ```
+          [else (+ (fib (- n 1))
+                   (fib (- n 2)))]))
+   ```
+  
+   ```racket
+   (: fib 
+     (-> Positive-Integer
+         Positive-Integer))
+   (define (fib n)
+     (cond [(<= n 2) 1]
+           [else (+ (fib (cast (- n 1) Positive-Integer))
+                    (fib (cast (- n 2) Positive-Integer)))]))
+   ```
   
 * Define untagged union types.
   
