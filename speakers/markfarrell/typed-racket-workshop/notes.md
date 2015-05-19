@@ -312,15 +312,34 @@ We don't want to be able to create student instances that don't satisfy these co
   
   Exercise: define such a macro. 
   
-  Check that it your ```define-range-type``` macro correct defines our `Age` type correctly.
-  
   ```racket
-  (define-range-type Age 16 80)
-  ```
-  
-  ```racket 
-  => (define-type Age (U 16 ... 80))
-  ```
+ (define-syntax
+   (define-range-type stx)
+   (syntax-case stx ()
+     [(_ type-name lower-bound upper-bound)
+      (letrec [(range
+                (λ (a b)
+                   (if (<= a b)
+                       (cons a (range (+ 1 a) b))
+                       '())))]
+        (quasisyntax
+          (define-type type-name
+            (U (unsyntax-splicing
+                (range (syntax->datum (syntax lower-bound))
+                       (syntax->datum (syntax upper-bound))))))))]))
+ ```
+ 
+ Check that it your ```define-range-type``` macro correct defines our `Age` type correctly.
+ 
+ ```racket
+ (define-range-type Age 16 80)
+ ```
+ 
+ ```racket
+ > (:type Age)
+ (U 16 17 ... 80)
+ ```
+
   
  Challenge problem:
 
