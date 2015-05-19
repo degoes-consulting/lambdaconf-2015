@@ -15,6 +15,9 @@ Please see the bibliography of this document for further readings. Everything
 which I have cited is worth reading. Also, please contact me
 (jon@jonmsterling.com) with any questions or comments you may have.
 
+The latest version of this document may also be retrieved from its
+[repository](https://github.com/jonsterling/type-theory-and-its-meaning-explanations).
+
 Secondly, I also provide my hand-written and color-coded "slides"
 (`meaning-explanations-summary.pdf`), which give the full meaning explanations
 for an extensional type theory in the style of Martin-Löf's *Constructive
