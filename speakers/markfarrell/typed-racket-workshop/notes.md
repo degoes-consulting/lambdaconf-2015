@@ -304,7 +304,7 @@ We don't want to be able to create student instances that don't satisfy these co
   and `age`s at run-time - you could even write programs to do this and then wrap the lists of results,
   pasting them into types for `Id` and `Age` in Dr. Racket.
   
-  However, if Racket we have hygienic macros. Macro expansion takes place before type-checking occurs 
+  However, in Racket we have hygienic macros. Macro expansion takes place before type checking occurs 
   in Typed Racket. We can e.g. create a `define-range-type` macro in Typed Racket that
   takes a type name, a lower-bound integer & an upper-bound integer as input, and then defines 
   an untagged union type with all integer values in our range as its inhabitants.
