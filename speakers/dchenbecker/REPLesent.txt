@@ -1,0 +1,538 @@
+\g███████╗ ██████╗ █████╗ ██╗      █████╗ ███████╗
+\g██╔════╝██╔════╝██╔══██╗██║     ██╔══██╗╚══███╔╝
+\g███████╗██║     ███████║██║     ███████║  ███╔╝
+\g╚════██║██║     ██╔══██║██║     ██╔══██║ ███╔╝
+\g███████║╚██████╗██║  ██║███████╗██║  ██║███████╗
+\g╚══════╝ ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝
+\g
+\g███████╗████████╗██████╗ ███████╗ █████╗ ███╗   ███╗
+\g██╔════╝╚══██╔══╝██╔══██╗██╔════╝██╔══██╗████╗ ████║
+\g███████╗   ██║   ██████╔╝█████╗  ███████║██╔████╔██║
+\g╚════██║   ██║   ██╔══██╗██╔══╝  ██╔══██║██║╚██╔╝██║
+\g███████║   ██║   ██║  ██║███████╗██║  ██║██║ ╚═╝ ██║
+\g╚══════╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝
+---
+( The good parts )
+---
+| \gWho am I?
+<<     [31m [0m[31m [0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m                                                   
+<<     [31m [0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m                                                   
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m. [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m                                                   
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m.....[31m'[0m[31m,[0m[31m'[0m[31m.[0m....[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m                                                   
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m.[31m'[0m[31m;[0m[31m;[0m[31mc[0m[31mo[0m[31md[0m[31mx[0m[31mk[0m[31mx[0m[31md[0m[31ml[0m[31m;[0m'..[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m        \gDerek Chen-Becker                          
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m'[31mo[0m[31mx[0m[31mk[0m[31mO[0m[31m0[0m[31m0[0m[31mK[0m[31mK[0m[31mK[0m[31m0[0m[31mO[0m[31mx[0m[31mc[0m..[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m                                                   
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m.[31m,[0m[31md[0m[31mk[0m[31mO[0m[31m0[0m[31m0[0m[31mK[0m[31mK[0m[31mK[0m[31m0[0m[31m0[0m[31mO[0m[31mk[0m[31md[0m.  [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m        Scala development since 2007               
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m,[0m[31md[0m[31mk[0m[31mO[0m[31mO[0m[31m0[0m[31m0[0m[31m0[0m[31mO[0m[31mO[0m[31mO[0m[31mk[0m[31mx[0m[31md[0m[31m;[0m..[31m'[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m                                                   
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m;[0m[31m:[0m[31mo[0m[31ml[0m[31m;[0m[31m:[0m[31ml[0m[31mO[0m[31mk[0m[31ml[0m[31mc[0m[31m:[0m[31ml[0m[31md[0m[31mx[0m[31mo[0m[31m'[0m[31mo[0m[31m;[0m[31m'[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m        Using scalaz-stream in \ranger               
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m,[0m[31mo[0m[31mk[0m[31m0[0m[31m0[0m[31mO[0m[31mk[0m[31m0[0m[31mO[0m[31mO[0m[31m0[0m[31m0[0m[31m0[0m[31mO[0m[31mk[0m[31mo[0m[31ml[0m[31md[0m[31m'[0m[31m'[0m[31m'[0m[31m.[0m[31m.[0m[31m.[0m        for almost a year                          
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m:[0m[31md[0m[31mx[0m[31md[0m[31md[0m[31mo[0m[31mk[0m[31mx[0m[31mo[0m[31mk[0m[31mx[0m[31mk[0m[31mk[0m[31mx[0m[31ml[0m[31ml[0m[31m'[0m[31m'[0m[31m'[0m[31m'[0m[31m.[0m[31m.[0m[31m.[0m                                                   
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m'[0m[31mo[0m[31mx[0m[31mx[0m[31ml[0m[31md[0m[31mo[0m[31md[0m[31mx[0m[31mx[0m[31md[0m[31mk[0m[31mk[0m[31mx[0m[31mc[0m[31m'[0m[31m'[0m[31m'[0m[31m'[0m[31m'[0m[31m'[0m[31m.[0m[31m.[0m        Pragmatically functional                   
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m,[0m[31ml[0m[31mk[0m[31mx[0m[31mx[0m[31mk[0m[31mO[0m[31mk[0m[31mk[0m[31mO[0m[31mk[0m[31mx[0m[31md[0m[31ml[0m[31m'[0m[31m'[0m[31m'[0m[31m'[0m[31m'[0m[31m'[0m[31m.[0m[31m.[0m                                                   
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m'[0m[31mc[0m[31mx[0m[31mk[0m[31mk[0m[31mO[0m[31mO[0m[31mk[0m[31mx[0md[31mo[0m[31mo[0m[31md[0m[31mo[0m[31mc[0m[31ml[0m[31m,[0m[31m'[0m[31m'[0m[31m.[0m[31m.[0m                                                   
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m'[0m[31m;[0mlooolc[31ml[0m[31mx[0m[31mO[0mO[36m0[0m[36mK[0m[36mK[0m[37mx[0m[31m;[0m[31m'[0m[31m.[0m[31m.[0m                                                   
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m'[0m[31m:[0mc::[31mc[0m[31md[0m[31mk[0m0[36m0[0m[36mK[0m[36mK[0m[36mK[0m[36mK[0m[36mK[0m[36m0[0m[37md[0m[31mc[0m[31m'[0m                                                   
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m,[0m[37m:[0ml[31mo[0m[31mo[0m[31mx[0mk[36m0[0m[36mK[0m[36mK[0m[36m0[0m[36m0[0m[36mK[0m[36mK[0m[36mK[0m[36mK[0m[36mK[0m[36m0[0m[36mO[0m                                                   
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m,[0m[37mo[0m[36mx[0m[36mo[0mo[31md[0mx[36mO[0m[36m0[0m[36m0[0m[34mk[0m[36mO[0m[36mK[0m[36mK[0m[36mK[0m[36mK[0m[36mK[0m[36mK[0m[36mK[0m[36m0[0m[36m0[0m                                                   
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m,[0m[36mx[0m[34mO[0m[34mO[0m[36mx[0mk[37mO[0m[36mk[0m[34mO[0m[34mO[0m[34mO[0m[36mK[0m[36mK[0m[36mK[0m[36mK[0m[36mK[0m[36mK[0m[36mK[0m[36mK[0m[36mK[0m[36m0[0m[36m0[0m                                                   
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m'[0m[36md[0m[36mk[0m[34m0[0m[36mO[0m[36mx[0m[34mo[0m[34m:[0m[34ml[0m[34mx[0m[36m0[0m[36m0[0m[36mK[0m[36mK[0m[36m0[0m[36m0[0m[36m0[0m[36mK[0m[36mK[0m[36m0[0m[36m0[0m[36m0[0m[34mO[0m                                                   
+<<     [31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[31m.[0m[37ml[0m[36mx[0m[36md[0m[36mo[0m[34mc[0m[34ml[0m[36md[0m[36mO[0m[36m0[0m[36m0[0m[36m0[0m[36m0[0m[36m0[0m[36m0[0m[36m0[0m[36m0[0m[36m0[0m[36m0[0m[34mO[0m[36m0[0m[36m0[0m[34m0[0m[34mO[0m                                                   
+---
+| \gScalaz
+
+< - I'm going to assume you're already familiar with scalaz
+
+- But we're not going to touch \*directly\s on too much of scalaz, anyway
+---
+| \gWhat is scalaz-stream?
+
+< - A compositional library for stream processing
+
+- Resource-safe is the goal
+
+- Constant memory
+
+- Performant
+---
+| \gA Note on Version
+
+< - Using 0.7a (scalaz 7.1) for this presentation
+
+- Fixes some significant bugs (deadlock, infinite loops, etc)
+---
+| \gImports used in this talk
+
+```
+import scalaz._
+import scalaz.stream._
+import scalaz.concurrent.Task
+import scala.concurrent.duration._
+```
+---
+| \gProcess: a sequence of values
+
+```
+val pint: Process[Task, Int] = Process.emitAll(Seq(1,2,3,4))
+```
+
+- More specifically: a description of a sequence of operations that generate values
+---
+| \gGetting Data Out
+
+
+< - \brun\s transforms the Process from a description of operations to a single operation
+
+- It returns the monad in which you're working.
+
+```
+println(pint.run)
+```
+
+--
+- In this case, we're using Task, so we then need a second run on the task.
+
+```
+println(pint.run.run)
+```
+
+--
+- \brunLast\s executes the process and returns the last value produced:
+
+```
+println(pint.runLast.run)
+```
+
+--
+- \brunLog\s executes the process and collects all outputs:
+
+```
+println(pint.runLog.run)
+```
+---
+| \grunFoldMap folds the produced values, under your control
+
+< - For example, we can perform a simple sum over produced values:
+
+```
+{
+  implicit val sumIntMonoid = Monoid.instance[Int](_+_, 0)
+  println(pint.runFoldMap(identity).run)
+}
+```
+---
+| \gProcesses are re-runnable (they're just descriptions)
+
+
+```
+pint.runLog.run
+```
+---
+| \g(as long as you consider effects)
+
+
+```
+var iUniverse = 0
+val pAlterUniverse: Process[Task, Boolean] =
+  Process.eval(Task.delay { iUniverse += 1; iUniverse < 4 }).repeat
+```
+--
+
+```
+println(pAlterUniverse.take(2).runLog.run)
+```
+---
+| \gProcess relies on the stack safety of the Monad
+
+< - All of these examples will work in Task
+
+- Be aware that you can blow your stack if your monad doesn't trampoline
+
+- Even Task can blow up in your face if you're careless
+
+- If you truly have no effects (e.g. Nothing), you can use \btoSource\s
+---
+| \gBasic Process Usage
+
+< - emit/emitAll - direct construction from an existing element or sequence
+
+```
+val answerP: Process[Task, Int] = Process.emit(42)
+
+val fib5: Process[Task, Int] = Process.emitAll(Seq(1, 1, 2, 3, 5))
+```
+
+- eval - Construct from an effect, \bF[O] => Process[F, O]\s
+
+```
+val waitASecondP: Process[Task, Unit] = Process.eval(Task.delay(Thread.sleep(1000)))
+```
+---
+| \gIn general, methods available on \bSeq\g are present for Process
+
+
+```
+println(fib5.map(_ + 10).runLog.run)
+
+println(fib5.filter(_ % 2 == 0).runLog.run)
+
+println(fib5.flatMap { i => Process.emitAll(i to 5) }.runLog.run)
+```
+
+- Including \bzip\s, \btake\s, \bcollect\s, etc.
+---
+| \b++\g and \bappend\g...allow appending processes
+
+```
+{
+  val couplaProcs = Process.emit(1) ++ Process.emit(2)
+  println(couplaProcs.runLog[Task,Int].run)
+}
+```
+---
+| \gSecond (and subsequent process) only run if the previous process is successfull
+
+```
+{
+  val failP = Process.emitAll(Seq(11,12,13,14,15)) ++
+    Process.fail(new Exception("BOO")) ++
+    Process.emit(0)
+  failP.map(_.toString).to(io.stdOutLines).run.attemptRun
+}
+```
+---
+| \gSpeaking of "successfully"...
+
+< - \bonComplete\s can be used like a "finally" clause for cleanup, etc
+
+```
+pint.map(_ / 0).onComplete {
+  Process.eval_(Task.delay(println("still ran!")))
+}.run.attempt.run
+```
+
+- \bonFailure\s, \bonKill\s let you handle an error or termination, respectively
+
+---
+| \gRepetition
+
+< - Similar to \beval\s, \brepeatEval\s repeatedly generates a value from an effect
+
+```
+println(Process.repeatEval(Task.delay(System.currentTimeMillis)).take(5).runLog.run)
+```
+--
+
+- Or, you can use \brepeat\s on an existing Process to evaluate repeatedly (surprise!)
+
+```
+println(Process.eval(Task.delay(System.currentTimeMillis)).repeat.take(5).runLog.run)
+```
+---
+| \gChannels
+
+< - We know we can use standard scala collection methods to transform Processes
+
+- Channels define a transformation in the context of a Process
+
+```
+val addTwoChannel: Channel[Task, Int, Int] = Process.constant {
+  (i: Int) => Task.now(i + 2)
+}
+```
+---
+| \gWorking with Channels
+
+< - Application to an existing Process with \bthrough\s
+
+```
+val twoAdded = Process.emitAll(Seq(1,2,3)).through(addTwoChannel)
+twoAdded.runLog[Task,Int].run
+```
+
+- You can transform the channel with \bcontramap\s and \bmapOut\s
+
+---
+| \gSinks
+
+< - A \bSink\s is a Process that consumes another Process's output
+
+- Similar to Channel, construct as a constant function applied to each element
+
+```
+val printInts: Sink[Task, Int] = Process.constant {
+  (i: Int) => Task.delay { println(i) }
+}
+```
+
+- Return type is \bUnit\s
+
+- The sole purpose of a Sink is to apply an effectful function
+
+- You can convert a Sink to a Channel, which applies the effect and echoes the input
+
+---
+| \gWorking with Sinks
+
+< - Application to an existing Process with \bto\s consumes the stream
+
+```
+twoAdded.to(printInts).run.run
+```
+
+--
+- You can also \bobserve\s a stream to a Sink which "taps" the stream
+
+```
+twoAdded.observe(printInts).runLog.run
+```
+
+- You can convert a sink to a \bChannel\s with \btoChannel\s.
+---
+| \gConcurrency with Processes
+
+< - Normally a process runs serially
+
+- \bmergeN\s merges a number of Processes into a single Process
+
+- The merge is nondeterministic
+
+```
+merge.mergeN(pint.map {
+  v => Process.eval(Task.delay(println(s"$v:${Thread.currentThread}")))
+}).run.run
+```
+
+- \bmergeN\s can also take a max parallelism count
+
+- You may come across \bgatherMap\s...be wary
+---
+| \gProcess Error Handling Patterns
+
+- It's a common case to have a transformation with a failure mode
+
+- Scalaz's approach uses a disjunction (\b\/\s) to represent failure/success
+
+```
+val intParser: Channel[Task, String, String \/ Int] = Process.constant {
+  (s: String) =>
+    import scalaz.syntax.std.string._
+    Task.now(s.parseInt.disjunction.leftMap(_ => s"Failed parsing: $s"))
+}
+
+val parsed = Process.emitAll(Seq("1", "2", "FOO", "4")).through(intParser)
+```
+---
+| \gThere's a Type for that!
+
+- A Process[Task, W \/ O] is AKA a Writer[Task, W, O]
+
+- Lots of convenience methods for working with either side, e.g. mapW, observeO
+
+```
+parsed.drainW(io.stdOut).run.run
+```
+---
+| \gTimer-based Construction
+
+- Located in the \bscalaz.stream.time\g object
+
+- \bawakeEvery\s will emit elapsed time on a given period
+
+```
+// Must provide a scheduler first
+implicit val scheduler = java.util.concurrent.Executors.newScheduledThreadPool(2)
+time.awakeEvery(Duration(1, SECONDS)).map(println).take(3).run.run
+```
+---
+| \bsleep\g will wait a specified duration before emitting a value
+
+```
+val sleepers = for {
+  duration <- Process.emitAll(Seq(1,2,3))
+  result        <- time.sleep(Duration(duration, SECONDS)) ++ Process.emit(duration)
+} yield result
+
+sleepers.map(_.toString).to(io.stdOutLines).run.run
+```
+---
+| \bduration\s is a \gcontinuous\s stream of durations from the initial invocation
+
+< - Typically used in a zip to add timing
+
+```
+println(Process.emitAll(Seq(1,2,3,4,5)).evalMap {
+  x => Task.delay(println(x))
+}.zip(time.duration).runLog.run.unzip._2)
+```
+---
+| \bevery\s is a continuous boolean stream which is true after N*d duration
+
+< - It will return true at the most recent crossing of the "d" boundary
+
+- It then resets to false until the next crossing
+
+- Potential use case: checkpointing
+
+```
+time.every(Duration(1, SECONDS)).zip(
+  time.awakeEvery(Duration(250, MILLISECONDS))
+).take(5).runLog.run.mkString("\n")
+```
+---
+| \gHandy IO utilities
+
+< - There are number of useful methods in the \bscalaz.stream.io\s package
+
+- Broken down by what they read (\bByteVector\s/\bString\s)
+
+- And where they read from (file, stdIn, Input/OutpuStream)
+
+- New in 0.7a: toInputStream turns a Process into an InputStream
+---
+| \gio.resource
+
+< - A really useful method for constructing your own effectful Processes
+
+- I don't want external slide dependencies, so...
+
+```
+val myList = List(1,2,3)
+val rint: Process[Task, Int] = io.resource {
+    Task.now(myList.iterator) } {  // allocator
+    iter => Task.delay { println("done") } } { // cleanup
+    iter => Task.delay {
+      if (iter.hasNext) iter.next else throw Cause.Terminated(Cause.End)
+    }
+  }
+```
+--
+
+```
+println(rint.runLog.run)
+```
+---
+| \gQueues
+
+< - A basic queueing model, providing input (Sink) and output (Process)
+
+```
+val myQueue = async.boundedQueue[Int](2)
+
+Process.emitAll(Seq(42, 42)).to(myQueue.enqueue).run.runAsync(_ => ())
+myQueue.dequeue.map(_.toString).to(io.stdOutLines).run.runAsync(_ => ())
+```
+---
+| \gTopics
+
+< - Like queues, but all consumers receive each message
+
+```
+val myTopic = async.topic[Int]()
+
+myTopic.subscribe.map("A" + _.toString).to(io.stdOutLines).run.runAsync(_ => ())
+myTopic.subscribe.map("B" + _.toString).to(io.stdOutLines).run.runAsync(_ => ())
+Process.emitAll(Seq(42, 42)).to(myTopic.publish).run.runAsync(_ => ())
+```
+---
+| \gSignals
+
+< - Variants around when a value changes and what it changes to
+
+- Both continuous and discrete access
+
+- \btoSignal\s takes a discrete process and turns it into a signal
+
+```
+val mySignal = async.signalOf(false)
+
+mySignal.discrete.map("RX:" + _.toString).to(io.stdOutLines).run.runAsync(_ => ())
+```
+---
+| \gNetwork Support
+
+< - New in 0.7, support for TCP and UDP
+
+```
+udp.listen(4242) {
+  import udp.Packet
+  udp.receives(1024).take(3).flatMap { case Packet(src, b) =>
+    udp.eval(Task.delay {
+      println(s"Rx from $src: " + (new String(b.toArray, "UTF-8")))
+    })
+  }
+}
+```
+
+- I highly recommend a look at \bhttps://github.com/RichRelevance/scalaz-netty
+---
+| \gBuilding Stateful Transformations
+
+< - \bProcess1\s is a Process that consumes single inputs
+
+- Can be used to build tail-recursive-like transformations
+
+- Use case: counting stats based on stream values
+---
+| \gPrereqs
+
+- We need a Monoid to collect our stats in
+
+- For now, let's count failure \/ success
+
+```
+case class StreamStats(successes: Int, failures: Int)
+
+implicit val statsMonoid = Monoid.instance[StreamStats]({
+  (a, b) => StreamStats(a.successes + b.successes, a.failures + b.failures)
+}, StreamStats(0, 0))
+```
+---
+| \gClassify with an accumulator
+
+- \breceive1Or\s waits for an input, but can also handle end-of-input
+
+```
+def go(acc: StreamStats): Process1[A \/ B, A \/ B] =
+  Process.receive1Or { ??? } {
+    rx => Process.emit(rx) ++
+      go(acc |+| rx.fold(_ => StreamStats(1, 0),
+                         _ => StreamStats(0, 1)))
+  }
+```
+---
+| \gPut the pieces together
+
+```
+import scalaz.syntax.monoid._
+def reportStats[A, B](f: StreamStats => Task[Unit]): Process1[A \/ B, A \/ B] = {
+  def go(acc: StreamStats): Process1[A \/ B, A \/ B] =
+    Process.receive1Or[A \/ B, A \/ B](
+      f(acc).attempt.run.fold(Process.fail, _ => Process.halt)
+    ) {
+      rx => Process.emit(rx) ++
+        go(acc |+| rx.fold(_ => StreamStats(1, 0),
+                           _ => StreamStats(0, 1)))
+    }
+
+  go(mzero[StreamStats])
+}
+```
+---
+| \gUsage
+
+```
+(parsed |> reportStats(s => Task.delay(println(s)))).runLog.run
+```
+---
+| \gProjects using scalaz-stream
+
+< - \bscalaz-netty\s: Modeling network I/O as Process
+
+- http4s: lightweight HTTP services with Process I/O
+---
+\g███████╗██╗███╗   ██╗██╗███████╗
+\g██╔════╝██║████╗  ██║██║██╔════╝
+\g█████╗  ██║██╔██╗ ██║██║███████╗
+\g██╔══╝  ██║██║╚██╗██║██║╚════██║
+\g██║     ██║██║ ╚████║██║███████║
+\g╚═╝     ╚═╝╚═╝  ╚═══╝╚═╝╚══════╝
+---
