@@ -449,16 +449,27 @@ We don't want to be able to create student instances that don't satisfy these co
 
 ### Additional Exercises
 
-Here are a few additional exercises for you to try: 
+Here are a couple of additional exercises for you to try: 
 
-* Type a polymorphic `map` function.
+* Type a `chunk` function. 
 
   ```racket
-  (define (map f xs)
-    (cond [(empty? xs) xs]
-          [else 
-            (cons (f (first xs))
-                  (rest xs))]))
+  (define (chunk xs n)
+    (cond [(empty? xs) empty]
+          [(< (length xs) n)
+           (cons xs empty)]
+          [else (cons (take xs n)
+                      (chunk (drop xs n) n))]))
+   ```
+   
+   ```racket
+   (All (a) (-> (Listof a) Integer (Listof (Listof a)))))
+   (define (chunk xs n)
+     (cond [(empty? xs) empty]
+           [(< (length xs) n)
+            (cons xs empty)]
+           [else (cons (take xs n)
+                       (chunk (drop xs n) n))]))
    ```
    
 * Type a `zip` function.
