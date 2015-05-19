@@ -127,12 +127,11 @@ In this section, we will explore the basic features of Typed Racket's type syste
                    (fib (- n 2)))]))
   ```
   
-  You could say that the type-signature of this function should be `(-> Integer Integer Integer)`. 
+  You could say that the type-signature of this function should be `(-> Integer Integer)`. 
   
   ```racket
   (: fib 
      (-> Integer 
-         Integer
          Integer))
     (define (fib n)
     (cond [(<= n 2) 1]
