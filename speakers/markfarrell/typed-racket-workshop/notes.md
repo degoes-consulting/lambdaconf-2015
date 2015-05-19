@@ -650,6 +650,7 @@ the compile-time type of a term differs from its run-time type.
 
 # Resources
 
+* [(Somewhat) Algebraic Data Types for Typed Racket](https://github.com/andmkent/datatype)
 * [The Typed Racket Guide](http://docs.racket-lang.org/ts-guide/index.html)
 * [Racketcon 2012: Sam Tobin-Hochstadt - Tutorial: Typed Racket](https://www.youtube.com/watch?v=w-fVHOxeEpM)
 * [The Design and Implementation of Typed Scheme](http://www.ccs.neu.edu/racket/pubs/popl08-thf.pdf)
