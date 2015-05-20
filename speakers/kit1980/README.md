@@ -6,7 +6,7 @@
 
 Install version 6.1 #201 from http://eclipseclp.org/Distribution/6.1_201/
 
-Use i386_linux or x86_64_linux/ for 32-bit or 64-bit Linux binaries, and i386_nt/ or x86_64_nt/ for Windows binaries.
+Use `i386_linux` or `x86_64_linux` for 32-bit or 64-bit Linux binaries, and `i386_nt` or `x86_64_nt` for Windows binaries.
 Or, if you adventurous, install from source.
 
 ### For MacOS X
