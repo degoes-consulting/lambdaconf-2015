@@ -1,0 +1,18 @@
+ROT13 : {n} [n][8] -> [n][8]
+ROT13 msg = [ shift x | x <- msg ]
+  where map     = ['A' .. 'Z'] <<< 13
+        shift c = map @ (c - 'A')
+
+property hello_uryyb = ROT13 "HELLO" == "URYYB"
+
+// Note that we have to constrain the input, not all sequences of
+// bytes are uppercase characters
+property ROT13_inv x = ~(all isUpper x) || ROT13 (ROT13 x) == x
+
+all : {a, len} fin len => (a -> Bit) -> [len]a -> Bit
+all p xs = bs ! 0
+  where bs = [True] # [ b && p x | b <- bs | x <- xs ]
+
+isUpper : [8] -> Bit
+isUpper c = 'A' <= c && c <= 'Z'
+
