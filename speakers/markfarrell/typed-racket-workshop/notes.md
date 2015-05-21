@@ -441,6 +441,25 @@ We don't want to be able to create student instances that don't satisfy these co
   
   (define-type Nat (Rec Nat (U Z (S Nat))))
   ```
+  
+  Remark: I think it's possible to emulate recursive types with only record types and subtyping in Typed Racket.   Luckily, `Z` and `S` in this case are still treated as subtypes of `Nat`: we can still explicitly type annotate
+  `Z` or `(S n)` as `Nat` when we need to.
+  
+  Exercise: define a function that converts a `Nat` to a `Number` in Typed Racket. 
+  
+  Hint 1: use Racket's `match` construct.
+  
+  Hint 2: type-annotate this function.
+  
+  ```racket
+  (define (nat->number nat)
+    (match nat
+      [(S n)
+       (+ (nat->number n) 1)]
+      [(Z) 0]))
+  ```
+  
+  Answer:
 
   ```racket
   (: nat->number (-> Nat Number))
@@ -453,6 +472,8 @@ We don't want to be able to create student instances that don't satisfy these co
   
 ### Occurrence Types
 
+Occurrence types allow us to derive types from predicate tests inside the body of a definition. This feature of Typed Racket's type system is useful for allowing us to use previously untyped Racket code in Typed Racket with minimal modification. 
+
 ```racket
 (: foo 
    (-> (U String Any)
@@ -462,6 +483,8 @@ We don't want to be able to create student instances that don't satisfy these co
          (string-length str-or-any)]
         [else "error"]))
 ```
+
+We'll see in the next section how Typed Racket's type system allows us to use previously untyped Racket code in Typed Racket with minimal modification.
 
 # Break
 
@@ -578,6 +601,18 @@ As mentioned, Typed Racket aims to allow you to write programs in a style simila
   > (nat->number (Z))
   - : Number
   match: no matching clause for (Z)
+  ```
+  
+  ```racket
+  (: nat->number (-> Nat Number))
+  (define (nat->number nat)
+    (type-case Nat nat
+      [(S n) => (+ (nat->number n) 1)])
+  ```
+  
+  ```racket
+  type-case: missing case(s) for the following: (Z)
+ in: (syntax (type-case Nat nat ((S n) => (+ (nat->number n) 1))))
   ```
   
   ```racket
