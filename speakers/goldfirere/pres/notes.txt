@@ -1,0 +1,55 @@
+
+Prep:
+ - ghc-7.10
+ - ex3 branch
+ - correctly-built glam
+
+0. get folks to cabal install --only-dependencies -j<# of processors>  (0:00-0:02))
+
+I. Intro  (0:02-0:07)
+  - my background
+  - ask about level of Haskell experience
+  - ask about GADT experience
+  - explain they will be working in pairs
+  - goals
+  - working toward glambda
+
+II. Simple GADTs  (0:07-0:18)
+  - emacs with STy with Int + Bool + Maybe
+  - back to slides
+
+III. Exercise 1 (0:18-0:25)
+  - zero
+
+IV. GADT inference (0:25-0:33)
+  - need signatures (even if it looks like it has a most general type)
+  - ScopedTypeVariables
+  - warnings (with monotyped `eqSTy`)
+    - also talk about why monotyped eqSTy is very silly indeed
+
+V. HList (0:33-0:45)
+ - emacs, from scratch, again. promoted datatypes (lists)
+ - can't write get!
+ - Write Elem type
+
+VI. Exercise 2 (0:45-1:00)
+ - when discussing solution, show a kind signature
+
+-- BREAK (1:00-1:05) --
+
+VII. Glambda
+  - syntax  (1:05-1:20)
+     - revapp 3 plus1
+     - conditionals
+     - (no fix)
+     - isPrime
+     - :eval, :step, :type, :load
+  - de Bruijn indices
+     - :step (\x:Int. (\y:Int. x) 3 + x) 4
+
+  - code: Exp  (1:20-1:30)
+     - Exp, starting with Int & Bool
+     - Elem
+     - Var
+
+VIII. Exercise: write `eval` and `apply`.  (1:30-1:50)
