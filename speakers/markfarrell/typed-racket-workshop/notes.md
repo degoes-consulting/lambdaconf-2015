@@ -385,7 +385,7 @@ We don't want to be able to create student instances that don't satisfy these co
   
   We could make it more convenient to define ```Option``` or ```Either``` data types in Typed Racket by adding  support for algebraic data types to Typed Racket. As mentioned, we'll look at how we might add algebraic data types to Typed Racket later on in this workshop.
   
- Exercise: type a `chunk` function. 
+ Exercise: type a polymorphic `chunk` function. 
 
  ```racket
  (define (chunk xs n)
@@ -589,18 +589,18 @@ As mentioned, Typed Racket aims to allow you to write programs in a style simila
   ```
   
   ```racket
-  > (nat->number (S (S (S (Z)))))
-  - : Number
-  3
-  ```
-  
-  ```racket
   > (nat->number (Z))
   - : Number
   0
   ```
   
-  Exercise:
+  ```racket
+  > (nat->number (S (S (S (Z)))))
+  - : Number
+  3
+  ```
+  
+  Exercise: define an algebraic data type for `Option`.
   
   ```racket
   (define-datatype (Option a)
@@ -608,20 +608,35 @@ As mentioned, Typed Racket aims to allow you to write programs in a style simila
     [None ()])
   ```
   
-  Exercise:
+  Exercise: define an algebraic data type for 'Either'.
+  
   
   ```racket
   (define-datatype (Either a b)
     [Left (a)]
     [Right (b)])
   ```
+  
+  Exercise: check that these definitions macro-expand to the definitions
+  we made for `Option` and `Either` using record types in the previous 
+  section. Hint: press the macro-expander button in Dr. Racket.
+  
+# What Next?
 
-# Soundness Bugs
+We've talked about:
 
-There are currently soundness bugs in Typed Racket, where
-the compile-time type of a term differs from its run-time type.
+* The features of Typed Racket's type system.
+* Typed-annotated previously untyped Racket code.
+* Showed how Typed Racket's type system is designed to allow us to use our previously untyped Racket code in Typed Racket with as little modification as possible.
+* Added features to Typed Racket's type system to make it easier for us to ensure that our program's satisfy certain constraints before they run:
+  *  Range types made it easier for us to make sure that only valid students would be created before our programs run.
+  *  Algebraic data types and the type-case construct made it easier for us to define types for `Nat`, `Option` and `Either`. Our type-case construct allowed us to ensure that we provided full case coverage for all variants of our algebraic data types when pattern matching on them before our programs run.
 
-* Example: [call/cc + letrec + occurrence typing can be unsound](https://github.com/racket/typed-racket/issues/128)
+But, how might we improve Typed Racket?
+
+* There are several Racket libraries that still need explicit type-annotations added to them, e.g. [How do to Design Programs](https://github.com/lexi-lambda/racket-2htdp-typed).
+* There are currently soundness bugs in Typed Racket, where the compile-time type of a term differs from its run-time type.
+  * Example: [call/cc + letrec + occurrence typing can be unsound](https://github.com/racket/typed-racket/issues/128)
 
   ```racket
   (define-type klk [(List klk Boolean) -> Nothing])
@@ -642,12 +657,6 @@ the compile-time type of a term differs from its run-time type.
   > (foo)
   #t
   ```
-
-* Exercise: find another soundness bug reported in the issues for the Typed Racket project on GitHub.
-
-# What Next?
-
-* There are several Racket libraries that still need explicit type-annotations added to them, e.g. [How do to Design Programs](https://github.com/lexi-lambda/racket-2htdp-typed).
 * In the future, I'd like to try adding an experimental dependently typed functional programming language to Racket,
   e.g. ```#lang dependent/racket```. I wouldn't want this language to try to accodomate the style that untyped Racket
   programmers program in, nor would I strive for untyped Racket code. I'm not a fan of gradual typing: I find too
