@@ -424,6 +424,15 @@ We don't want to be able to create student instances that don't satisfy these co
   (define-type Nat (Rec Nat (U Z (S Nat))))
   ```
 
+  ```racket
+  (: nat->number (-> Nat Number))
+  (define (nat->number nat)
+    (match nat
+      [(S n)
+       (+ (nat->number n) 1)]
+      [(Z) 0]))
+  ```
+  
 ### Occurrence Types
 
 ```racket
@@ -470,8 +479,6 @@ Here are a couple of additional exercises for you to try:
            [else (cons (take xs n)
                        (chunk (drop xs n) n))]))
    ```
-   
-* Type a `zip` function.
 
 # Break
 
