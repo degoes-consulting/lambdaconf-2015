@@ -1,0 +1,352 @@
+\documentclass[pdf]{beamer}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage[all]{xy}
+
+\mode<presentation>{}
+
+% ------------------------------------------------------------------------------
+% Theme
+
+\usetheme[usetitleprogressbar, nosmallcapitals, usetotalslideindicator]{m}
+
+\lstloadlanguages{Haskell}
+\lstnewenvironment{code}
+    {\lstset{}%
+      \csname lst@SetFirstLabel\endcsname}
+    {\csname lst@SaveFirstLabel\endcsname}
+    \lstset{
+      basicstyle=\ttfamily\footnotesize,
+      flexiblecolumns=false,
+      basewidth={0.5em,0.45em},
+      literate={+}{{$+$}}1 {/}{{$/$}}1 {*}{{$*$}}1
+               {\\\\}{{\char`\\\char`\\}}1
+               {=>}{{$\Rightarrow$}}2
+               {forall}{{$\forall$}}2
+               {->}{{$\rightarrow$}}2
+               {<-}{{$\leftarrow$}}2
+               {>>}{{>>}}3 {>>=}{{>>=}}3,
+      commentstyle={\ttfamily\color{gray}},
+      language=haskell
+    }
+    
+% ------------------------------------------------------------------------------
+% Presentation
+
+\title{Give me freedom!}
+\subtitle{Or let me forget}
+\date{\today}
+\author{Joseph Tel Abrahamson}
+
+\renewcommand{\to}{\ensuremath{\rightarrow}}
+\DeclareMathOperator{\Free}{\texttt{Free}}
+\DeclareMathOperator{\Forget}{\texttt{Forget}}
+\DeclareMathOperator{\Monad}{\texttt{Monad}}
+\DeclareMathOperator{\Functor}{\texttt{Functor}}
+\DeclareMathOperator{\ty}{\texttt{ :: }}
+
+\begin{document}
+
+
+\maketitle
+
+\begin{frame}
+  \frametitle{Synopsis}
+  \begin{itemize}
+  \item Freedom: a \textit{noun}, no an \textit{adjective}, no a \textit{verb}!
+  \item Knowing about Freedom by Forgetting what we know
+  \item Putting Forgetfulness to work
+  \end{itemize}
+\end{frame}
+
+\section{\texttt{Free} is a noun}
+
+\begin{frame}[fragile]
+  \frametitle{The \texttt{Free} monad}
+\begin{lstlisting}
+data Free f a
+  = Return a
+  | Free (f (Free f a))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Construction and destruction}
+
+  \begin{itemize}
+  \item<1> When \texttt{f} is a \texttt{Functor}, \texttt{Free f} is a
+    \texttt{Monad}
+  \item<2> For any value \texttt{x :: f a} we have \texttt{lift x :: Free f a}
+  \item<3> For any 
+    \begin{enumerate}
+    \item \texttt{Monad} \texttt{m} and
+    \item \textit{interpretation} of \texttt{f} into \texttt{m}, \texttt{phi ::
+        forall x. f x -> m x},
+    \end{enumerate}
+    we have \texttt{fold phi :: forall a . Free f a -> m a}.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{e.g.}
+\begin{lstlisting}
+lift :: Functor f => f a -> Free f a
+fold :: Monad m => (forall x . f x -> m x) -> (forall x . Free f x -> m x)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Very nice embedded DSLs... for \textit{less}!}
+\begin{lstlisting}
+data TeletypeF a 
+  = PutStrLn String a 
+  | GetLine (String -> a)
+    deriving ( Functor )
+                     
+type Teletype = Free TeletypeF
+
+putStrLnTT :: String -> Teletype ()
+putStrLnTT line = lift (PutStrLn line ())
+
+getLineTT :: Teletype String
+getLineTT = lift (GetLine id)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Very nice embedded DSLs... for \textit{less}!}
+\begin{lstlisting}
+echoTT :: Teletype ()
+echoTT = forever $ do
+  line <- getLineTT
+  putStrLineTT line
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Very nice embedded DSLs... for \textit{less}!}
+\begin{lstlisting}
+interp :: TeletypeF a -> IO a
+interp x = case x of
+  PutStrLn line a -> putStrLn line >> return a
+  GetLine next -> do
+    line <- getLine
+    return (next line)
+
+echoIO :: IO ()
+echoIO = fold interp echoTT
+\end{lstlisting}
+\end{frame}
+
+\section{Free is an adjective}
+
+\begin{frame}
+  \begin{center}
+    \texttt{Free}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Other Freedoms we have}
+  \begin{enumerate}
+  \pause\item Free \texttt{Monad}s
+  \pause\item Free \texttt{MonadPlus}es
+  \pause\item Free \texttt{Applicative}s
+  \pause\item Free \texttt{Alternative}s
+  \pause\item Free \texttt{Monoid}s (``lists'')
+  \pause\item Free \texttt{Category}s
+  \pause\item ...
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What does it mean to be free?}
+  \pause
+
+  \textit{This is the wrong question!}
+\end{frame}
+
+\section{Free is a verb}
+
+\begin{frame}[fragile]
+  \frametitle{What is \texttt{Free}, really?}
+  
+  \uncover<3->{But really more like...}
+
+  \begin{align*}
+    & \action<+->{\mathtt{>}\ \mathtt{:kind}\ \Free_{\Monad}} \\
+    & \action<+->{
+        \Free_{\Monad} \ty 
+          (\star \to \star)_{\uncover<3->{\Functor}} \to
+          (\star \to \star)_{\uncover<3->{\Monad}}
+      }
+  \end{align*}
+  
+\pause
+
+\begin{tcolorbox}[boxrule=0pt, arc=0pt, outer arc=0pt]
+\begin{lstlisting}
+-- remember...
+instance Functor f => Monad (Free f)
+\end{lstlisting}
+\end{tcolorbox}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Freedom is a process}
+
+\begin{lstlisting}
+data IsAFunctor f
+  = IsAFunctor 
+    { fmap :: forall a b . (a -> b) -> (f a -> f b) 
+    }
+
+data IsAMonad f
+  = IsAMonad
+    { return :: forall a   . a -> f a
+    , bind   :: forall a b . (a -> f b) -> (f a -> f b)
+    }
+
+free :: IsAFunctor f -> IsAMonad (Free f)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Other ``Freedoms'' we have}
+  \begin{enumerate}
+  \item Free \texttt{Monad}s
+  \item Free \texttt{MonadPlus}es
+  \item Free \texttt{Applicative}s
+  \item Free \texttt{Alternative}s
+  \item Free \texttt{Monoid}s
+  \item Free \texttt{Category}s
+  \end{enumerate}
+  
+  \pause
+
+  All \textit{underdefined}. Freedom goes from a source to a target!
+\end{frame}
+
+\begin{frame}
+  \frametitle{A picture of ``Free monads"}
+  \begin{description}
+  \item[$\Free_{\Monad}$] 
+    \begin{displaymath}
+      \mathtt{Functor}\xymatrix{\bullet \ar[r]^{\Free} & \bullet}\mathtt{Monad}
+    \end{displaymath}
+  \pause
+  \item[$\mathtt{List}$]
+    \begin{displaymath}
+      \mathtt{Hask}\xymatrix{\bullet \ar[r]^{\Free} & \bullet}\mathtt{Monoid}
+    \end{displaymath}
+  \pause
+  \item[$\mathtt{Coyoneda}$] 
+    \begin{displaymath}
+      \mathtt{Hask}_{(\star\to\star)} \xymatrix{\bullet \ar[r]^{\Free} & \bullet}\mathtt{Functor}
+    \end{displaymath}
+  \end{description}
+  
+\end{frame}
+
+\section{Gaining Freedom and Forgetting it all}
+
+\begin{frame}
+  \begin{center}
+    \begin{displaymath}
+      \mathtt{Functor}
+      \xymatrix{
+        \bullet \ar@/^/[r]^{\Free} & 
+        \bullet
+      }
+      \mathtt{Monad}
+    \end{displaymath}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \begin{center}
+    \begin{displaymath}
+      \mathtt{Functor}
+      \xymatrix{
+        \bullet \ar@/^/[r]^{\Free} & 
+        \bullet \ar@/^/[l]^{\Forget}
+      }
+      \mathtt{Monad}
+    \end{displaymath}
+  \end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{It's easy to forget}
+  \begin{align*}
+    \Forget_{\Monad} \ty 
+        (\star \to \star)_{{\Monad}} \to
+        (\star \to \star)_{{\Functor}}
+  \end{align*}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+type Forget f a = f a
+
+forget :: IsAMonad f -> IsAFunctor (Forget f)
+forget (IsAMonad { bind, return }) = IsAFunctor fmap where
+  fmap f = bind (return . f)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Too much to ask for}
+  \begin{align*}
+    (\Free \circ \Forget)(M) &\neq M \\
+    (\Forget \circ \Free)(F) &\neq F
+  \end{align*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Just right}
+  If
+  \begin{flalign*}
+    M = \Free(F)
+  \end{flalign*}
+  for some \texttt{Functor} $F$, then
+  \begin{flalign*}
+    (\Free \circ \Forget)(M) = M
+  \end{flalign*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Just right}
+  If
+  \begin{flalign*}
+    F = \Forget(M)
+  \end{flalign*}
+  for some \texttt{Monad} $M$, then
+  \begin{flalign*}
+    (\Forget \circ \Free)(F) = F
+  \end{flalign*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Adjunctions}
+  \begin{align*}
+    F \circ G \circ F &= Id \\
+    G \circ F \circ G &= Id 
+  \end{align*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Adjunctions}
+  
+\end{frame}
+
+\end{document}
+
+%%% Local Variables: 
+%%% coding: utf-8
+%%% mode: latex
+%%% TeX-engine: xetex
+%%% End: 

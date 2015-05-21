@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+  <meta name="author" content="Chris Allen" />
+  <title>Modeling data in Haskell</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+<style>
+  html { background-color: black; }
+  body { background-color: white; border-radius: 12px}
+  /* A section is a slide. It's size is 800x600, and this will never change */
+  section {
+      font-family: Arial, serif;
+      font-size: 20pt;
+    }
+  address, blockquote, dl, fieldset, form, h1, h2, h3, h4, h5, h6, hr, ol, p, pre, table, ul, dl { padding: 10px 20px 10px 20px; }
+  h1, h2, h3 {
+    text-align: center;
+    margin: 10pt 10pt 20pt 10pt;
+  }
+  ul, ol {
+    margin: 10px 10px 10px 50px;
+  }
+  section.titleslide h1 { margin-top: 200px; }
+  h1.title { margin-top: 150px; }
+  h1 { font-size: 180%; }
+  h2 { font-size: 120%; }
+  h3 { font-size: 100%; }
+  q { quotes: "“" "”" "‘" "’"; }
+  blockquote { font-style: italic }
+  /* Figures are displayed full-page, with the caption on
+     top of the image/video */
+  figure {
+    background-color: black;
+  }
+  figcaption {
+    margin: 70px;
+  }
+  footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 40px;
+    text-align: right;
+    background-color: #F3F4F8;
+    border-top: 1px solid #CCC;
+  }
+
+  /* Transition effect */
+  /* Feel free to change the transition effect for original
+     animations. See here:
+     https://developer.mozilla.org/en/CSS/CSS_transitions
+     How to use CSS3 Transitions: */
+  section {
+      -moz-transition: left 400ms linear 0s;
+      -webkit-transition: left 400ms linear 0s;
+      -ms-transition: left 400ms linear 0s;
+      transition: left 400ms linear 0s;
+  }
+
+  /* Before */
+  section { left: -150%; }
+  /* Now */
+  section[aria-selected] { left: 0; }
+  /* After */
+  section[aria-selected] ~ section { left: +150%; }
+
+  /* Incremental elements */
+
+  /* By default, visible */
+  .incremental > * { opacity: 1; }
+
+  /* The current item */
+  .incremental > *[aria-selected] { color: red; opacity: 1; }
+
+  /* The items to-be-selected */
+  .incremental > *[aria-selected] ~ * { opacity: 0.2; }
+</style>
+</head>
+<body>
+<section class="title">
+  <h1 class="title">Modeling data in Haskell</h1>
+  <h2 class="author">Chris Allen</h2>
+  <h3 class="date">May 2015</h3>
+</section>
+<section id="haskells-type-system-is-one-of-its-most-famous-strengths" class="slide level1">
+<h1>Haskell's type system is one of its most famous strengths</h1>
+<ul>
+<li><p>Lets learn a bit about algebraic datatypes and how to use them effectively</p></li>
+<li><p>Talk about domain modeling a little bit, design decisions, where you can go to learn more advanced techniques</p></li>
+</ul>
+</section>
+<section id="haskell-datatype-syntax" class="slide level1">
+<h1>Haskell datatype syntax</h1>
+<p>Nullary constructor:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Trivial</span> <span class="fu">=</span> <span class="dt">Trivial</span>
+<span class="co">--   [1]       [2]</span></code></pre>
+<ol type="1">
+<li><p>Type constructor</p></li>
+<li><p>Data constructor - takes no arguments, thus &quot;nullary&quot;</p></li>
+</ol>
+</section>
+<section id="constructors" class="slide level1">
+<h1>Constructors?</h1>
+<p>We use type constructors to refer to types by name in type signatures.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">f ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
+f <span class="fu">=</span> <span class="fu">...</span>doesn&#39;t matta<span class="fu">...</span></code></pre>
+<p>Here we refer to the type <code>String</code> three times in our type signature, denoted syntactically by the double colon <code>::</code></p>
+<p>We use data constructors to create values. There's some special syntax for built-in types like String, List, tuples, but in most cases you'll use a data constructor explicitly introduced by the datatype.</p>
+</section>
+<section id="so-which-is-which" class="slide level1">
+<h1>So which is which?</h1>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">TrivialTypeConstructor</span>
+  <span class="fu">=</span> <span class="dt">TrivialDataConstructor</span></code></pre>
+<p>Rule of thumb: before the <code>=</code> is the type constructor, after the <code>=</code> are the data constructors.</p>
+<p>If there's a single data constructor, it'll often have the same name as the type constructor because types and values are strictly separated in Haskell.</p>
+</section>
+<section id="how-do-we-use-our-datatype-with-a-single-nullary-data-constructor" class="slide level1">
+<h1>How do we use our datatype with a single nullary data constructor?</h1>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">theProofIs ::</span> <span class="dt">Trivial</span>
+theProofIs <span class="fu">=</span> <span class="dt">Trivial</span>
+
+<span class="ot">trivialityBegets ::</span> <span class="dt">Trivial</span> <span class="ot">-&gt;</span> <span class="dt">Trivial</span>
+trivialityBegets <span class="dt">Trivial</span> <span class="fu">=</span> <span class="dt">Trivial</span>
+
+<span class="co">-- alternately</span>
+trivialityBegets _ <span class="fu">=</span> <span class="dt">Trivial</span>
+
+<span class="co">-- or</span>
+trivialityBegets x <span class="fu">=</span> <span class="dt">Trivial</span></code></pre>
+</section>
+<section id="what-can-this-function-do" class="slide level1">
+<h1>What can this function do?</h1>
+<p>What can and can't this function do, just from what we know based on the type?</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">trivInt ::</span> <span class="dt">Trivial</span> <span class="ot">-&gt;</span> <span class="dt">Integer</span></code></pre>
+</section>
+<section id="haskell-datatype-syntax-1" class="slide level1">
+<h1>Haskell datatype syntax</h1>
+<p>Unary constructor (takes one argument):</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Identity</span> a <span class="fu">=</span> <span class="dt">Identity</span> a
+<span class="co">--      [1]           [2]</span></code></pre>
+<ol type="1">
+<li><p>Type constructor, takes one argument.</p></li>
+<li><p>Data constructor, takes one argument. Thus, &quot;unary&quot;. Unary/nullary refers to the data constructor. You'll see examples with multiple data constructors of mixed arity later.</p></li>
+</ol>
+</section>
+<section id="how-do-we-use-identity" class="slide level1">
+<h1>How do we use Identity?</h1>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">unpack ::</span> <span class="dt">Identity</span> a <span class="ot">-&gt;</span> a
+unpack (<span class="dt">Identity</span> a) <span class="fu">=</span> a
+
+<span class="ot">embed ::</span> a <span class="ot">-&gt;</span> <span class="dt">Identity</span> a
+embed a <span class="fu">=</span> <span class="dt">Identity</span> a
+
+<span class="ot">imap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Identity</span> a <span class="ot">-&gt;</span> <span class="dt">Identity</span> b
+imap f (<span class="dt">Identity</span> a) <span class="fu">=</span> <span class="dt">Identity</span> (f a)</code></pre>
+<p>Identity doesn't do much, so if this seems pointless, you're not missing anything.</p>
+</section>
+<section id="type-constructor-has-to-agree-with-data-constructor" class="slide level1">
+<h1>Type constructor has to agree with data constructor</h1>
+<p>Why can't we have:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Identity</span> <span class="fu">=</span> <span class="dt">Identity</span> a</code></pre>
+<p>Because you'll get the error: <code>Not in scope: type variable ‘a’</code></p>
+<p>Without the argument existing for the data <em>and</em> the type constructor, we have no means of expressing what we think <code>Identity</code> contains. There ways to &quot;hide&quot; the type variables in data constructors from the type constructors but that's for another day.</p>
+</section>
+<section id="product" class="slide level1">
+<h1>Product</h1>
+<p>What happens if you add another argument to a unary data constructor? Products!</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Person</span> <span class="fu">=</span> <span class="dt">Person</span> <span class="dt">String</span> <span class="dt">Int</span></code></pre>
+<p>Product here can also be read to mean, &quot;record&quot; or &quot;struct&quot;, but be careful with assumptions about representation. Here <code>Person</code> is a product of a <code>String</code> and an <code>Int</code>.</p>
+</section>
+<section id="person-with-record-syntax" class="slide level1">
+<h1>Person with record syntax</h1>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Person</span> <span class="fu">=</span> <span class="dt">Person</span> { name <span class="fu">=</span> <span class="dt">String</span>
+                     , age <span class="fu">=</span> <span class="dt">Int</span> }</code></pre>
+<p><code>Person</code> defined using record syntax for the fields.</p>
+<p>Using the field accessors:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">getName ::</span> <span class="dt">Person</span> <span class="ot">-&gt;</span> <span class="dt">String</span>
+getName p <span class="fu">=</span> name p
+
+<span class="co">-- eta reduce</span>
+
+getName <span class="fu">=</span> name
+
+<span class="co">-- redundant</span></code></pre>
+</section>
+<section id="tuples" class="slide level1">
+<h1>Tuples</h1>
+<p>Tuples are our &quot;anonymous product&quot;, so called because we don't name anything. We could rewrite our <code>Person</code> type as:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">Person</span> <span class="fu">=</span> (<span class="dt">String</span>, <span class="dt">Int</span>)</code></pre>
+<p>The <code>type</code> keyword only creates type constructors, that is, aliases to other types with their own data constructors. You could refer to this value <code>(&quot;blah&quot;, 3)</code> has having type <code>Person</code>.</p>
+</section>
+<section id="nesting-tuples" class="slide level1">
+<h1>Nesting tuples</h1>
+<p>You can also nest tuples. Given the product of <code>String</code> <em>and</em> <code>Int</code> <em>and</em> <code>Integer</code> <em>and</em> another <code>String</code> you could write that as:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">(<span class="dt">String</span>, (<span class="dt">Int</span>, (<span class="dt">Integer</span>, <span class="dt">String</span>)))</code></pre>
+<p>This is what makes the 2-tuple an anonymous universal product, that we can nest them.</p>
+</section>
+<section id="exercises" class="slide level1">
+<h1>Exercises</h1>
+<p>Rewrite the following type into a nested two tuple:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Car</span> <span class="fu">=</span> <span class="dt">Car</span> {
+<span class="ot">             make ::</span> <span class="dt">CarMake</span>
+           ,<span class="ot"> model ::</span> <span class="dt">CarModel</span>
+           ,<span class="ot"> year ::</span> <span class="dt">CarYear</span>
+           }</code></pre>
+<p>turns into:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">Car</span> <span class="fu">=</span> <span class="fu">???</span></code></pre>
+</section>
+<section id="exercises-1" class="slide level1">
+<h1>Exercises</h1>
+<p>Given the functions:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">fst<span class="ot"> ::</span> (a, b) <span class="ot">-&gt;</span> a
+snd<span class="ot"> ::</span> (a, b) <span class="ot">-&gt;</span> b</code></pre>
+<p>Add the accessors back for your nested tuple type.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">make ::</span> <span class="dt">Car</span> <span class="ot">-&gt;</span> <span class="dt">CarMake</span>
+make <span class="fu">=</span> undefined
+
+<span class="ot">model ::</span> <span class="dt">Car</span> <span class="ot">-&gt;</span> <span class="dt">CarModel</span>
+model <span class="fu">=</span> undefined
+
+<span class="ot">year ::</span> <span class="dt">Car</span> <span class="ot">-&gt;</span> <span class="dt">CarYear</span>
+year <span class="fu">=</span> undefined</code></pre>
+</section>
+<section id="sum-type" class="slide level1">
+<h1>Sum type</h1>
+<p>The Bool datatype is defined as follows:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Bool</span> <span class="fu">=</span> <span class="dt">False</span> <span class="fu">|</span> <span class="dt">True</span></code></pre>
+<p>What we've done here is made it so two different data constructors are values of type <code>Bool</code>. Where <code>product</code> ~ <em>and</em>, <code>sum</code> ~ <em>or</em>.</p>
+</section>
+<section id="we-have-an-anonymous-sum-type-too" class="slide level1">
+<h1>We have an anonymous sum type too</h1>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Either</span> a b <span class="fu">=</span> <span class="dt">Left</span> a <span class="fu">|</span> <span class="dt">Right</span> b</code></pre>
+</section>
+<section id="gettin-silly" class="slide level1">
+<h1>Gettin' silly</h1>
+<p>We could atomise <code>Bool</code> like so:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">False&#39;</span> <span class="fu">=</span> <span class="dt">False&#39;</span> <span class="kw">deriving</span> <span class="dt">Show</span>
+<span class="kw">data</span> <span class="dt">True&#39;</span> <span class="fu">=</span> <span class="dt">True&#39;</span> <span class="kw">deriving</span> <span class="dt">Show</span>
+
+<span class="kw">type</span> <span class="dt">Bool&#39;</span> <span class="fu">=</span> <span class="dt">Either</span> <span class="dt">False&#39;</span> <span class="dt">True&#39;</span></code></pre>
+</section>
+<section id="bonus" class="slide level1">
+<h1>Bonus</h1>
+<p>It'll even type-check that you're not messing the order up:</p>
+<pre><code>Prelude&gt; Right False&#39; :: Bool&#39;
+
+&lt;interactive&gt;:57:7:
+    Couldn&#39;t match expected type ‘True&#39;’
+    with actual type ‘False&#39;’
+    In the first argument of ‘Right’,
+    namely ‘False&#39;’
+    In the expression: Right False&#39; :: Bool&#39;
+Prelude&gt; Right True&#39; :: Bool&#39;
+Right True&#39;</code></pre>
+</section>
+<section id="what-can-this-function-do-1" class="slide level1">
+<h1>What can this function do?</h1>
+<p>Based on the type, what can this function do?</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">boolInteger ::</span> <span class="dt">Bool</span> <span class="ot">-&gt;</span> <span class="dt">Integer</span></code></pre>
+</section>
+<section id="what-can-this-function-do-2" class="slide level1">
+<h1>What can this function do?</h1>
+<p>What about <code>quantInteger</code>?</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Quantum</span> <span class="fu">=</span> <span class="dt">True</span> <span class="fu">|</span> <span class="dt">False</span> <span class="fu">|</span> <span class="dt">Both</span>
+
+<span class="ot">quantInteger ::</span> <span class="dt">Quantum</span> <span class="ot">-&gt;</span> <span class="dt">Integer</span></code></pre>
+</section>
+<section id="making-the-algebra-in-algebraic-data-types-do-work" class="slide level1">
+<h1>Making the &quot;algebra&quot; in algebraic data types do work</h1>
+<ul>
+<li>There's an actual set of operations here.</li>
+</ul>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Bool</span> <span class="fu">=</span> <span class="dt">False</span> <span class="fu">|</span> <span class="dt">True</span></code></pre>
+<ul>
+<li>False = 1</li>
+<li>True = 1</li>
+<li>| = +</li>
+<li>Either also = +</li>
+</ul>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Bool</span> <span class="fu">=</span> <span class="dt">False</span> <span class="fu">+</span> <span class="dt">True</span>
+
+<span class="kw">data</span> <span class="dt">Bool</span> <span class="fu">=</span> <span class="dv">1</span> <span class="fu">+</span> <span class="dv">1</span>
+<span class="dt">Bool</span> <span class="fu">=</span> <span class="dv">2</span> inhabitants</code></pre>
+</section>
+<section id="making-the-algebra-in-algebraic-data-types-do-work-1" class="slide level1">
+<h1>Making the &quot;algebra&quot; in algebraic data types do work</h1>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">Bool&#39;</span> <span class="fu">=</span> <span class="dt">Either</span> <span class="dt">False&#39;</span> <span class="dt">True&#39;</span>
+
+<span class="dt">Either</span> <span class="fu">=</span> <span class="fu">+</span>
+
+<span class="kw">data</span> <span class="dt">False&#39;</span> <span class="fu">=</span> <span class="dt">False&#39;</span>
+
+<span class="dt">False&#39;</span> <span class="fu">=</span> <span class="dv">1</span>
+<span class="dt">True&#39;</span> <span class="fu">=</span> <span class="dv">1</span>
+
+<span class="kw">type</span> <span class="dt">Bool&#39;</span> <span class="fu">=</span> <span class="dt">Either</span> <span class="dv">1</span> <span class="dv">1</span>
+           <span class="fu">=</span> <span class="dv">1</span> <span class="fu">+</span> <span class="dv">1</span>
+<span class="co">-- same as ordinary Bool</span>
+<span class="co">-- we can say they are equivalent</span></code></pre>
+</section>
+<section id="making-the-algebra-in-algebraic-data-types-do-work-2" class="slide level1">
+<h1>Making the &quot;algebra&quot; in algebraic data types do work</h1>
+<p>Knowing how big your domain is important for knowing how comprehensible it is, as well as knowing how it relates</p>
+<p>(,) = *</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">DoesntMatter</span> <span class="fu">=</span> (<span class="dt">Bool</span>, <span class="dt">Bool</span>)
+
+<span class="kw">type</span> <span class="dt">DoesntMatter</span> <span class="fu">=</span> <span class="dt">Bool</span> <span class="fu">*</span> <span class="dt">Bool</span>
+
+<span class="kw">type</span> <span class="dt">DoesntMatter</span> <span class="fu">=</span> <span class="dv">2</span> <span class="fu">*</span> <span class="dv">2</span>
+
+<span class="kw">type</span> <span class="dt">DoesntMatter</span> <span class="fu">=</span> <span class="dv">4</span> inhabitants</code></pre>
+</section>
+<section id="exercises-2" class="slide level1">
+<h1>Exercises</h1>
+<p>How many inhabitants does each type have?</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="co">-- Word8 = 0-255</span>
+
+<span class="kw">import </span><span class="dt">Data.Word</span>
+
+<span class="kw">type</span> <span class="dt">A</span> <span class="fu">=</span> <span class="dt">Either</span> <span class="dt">Word8</span> <span class="dt">Bool</span>
+
+<span class="kw">type</span> <span class="dt">B</span> <span class="fu">=</span> (<span class="dt">Word8</span>, <span class="dt">Bool</span>)
+
+<span class="kw">type</span> <span class="dt">C</span> <span class="fu">=</span> <span class="dt">Either</span> (<span class="dt">Bool</span>, <span class="dt">Word8</span>) (<span class="dt">Word8</span>, <span class="dt">Bool</span>)</code></pre>
+</section>
+<section id="dont-do-this" class="slide level1">
+<h1>Don't do this</h1>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">CarType</span> <span class="fu">=</span> <span class="dt">Null</span> <span class="fu">|</span>
+               <span class="dt">Car</span> {<span class="ot"> carid ::</span> <span class="dt">Int</span>
+                   ,<span class="ot"> position ::</span> <span class="dt">Float</span>
+                   ,<span class="ot"> speed ::</span> <span class="dt">Float</span>,
+                   ,<span class="ot"> carLength ::</span> <span class="dt">Float</span>
+                   ,<span class="ot"> state ::</span> [<span class="dt">Float</span>]
+                   } <span class="kw">deriving</span> (<span class="dt">Show</span>,<span class="dt">Eq</span>)</code></pre>
+</section>
+<section id="why" class="slide level1">
+<h1>Why?</h1>
+<p>Because it's redundant, obnoxious, and it introduces partial functions. Don't mix record syntax and sum types!</p>
+<p>Partial what? Partial functions are functions that have inputs for which they don't have answers.</p>
+<pre><code>data Example = Null
+             | Example {
+               blah :: Int
+               } deriving Show
+Prelude&gt; blah $ Example 10
+10
+Prelude&gt; blah $ Null
+*** Exception: No match in record selector blah</code></pre>
+</section>
+<section id="pls-no." class="slide level1">
+<h1>Pls no.</h1>
+<p><code>Maybe</code> exists, use it!</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Maybe</span> a <span class="fu">=</span> <span class="dt">Nothing</span> <span class="fu">|</span> <span class="dt">Just</span> a</code></pre>
+<p>If you have a function that might not be able to return a sensible <code>CarType</code>, return <code>Maybe CarType</code>!</p>
+</section>
+<section id="strings-are-information-hotel-california" class="slide level1">
+<h1>Strings are information Hotel California</h1>
+<ul>
+<li><p>Until parsing, <code>String</code> value is effectively <code>forall a . a</code> - you don't know anything and you can't do anything with it.</p></li>
+<li><p><code>String</code> values have indefinite length (they're <code>[Char]</code>) and a ridiculous number of possible inhabitants for each <code>Char</code> value.</p></li>
+<li><p>The only way you're escaping <code>String</code> is with a <code>Parser</code>.</p></li>
+<li><p>Use a <code>String</code> when you're just holding onto something for presentation purposes. Keep structured information out of the <code>String</code> value.</p></li>
+</ul>
+</section>
+<section id="maps-are-not-products" class="slide level1">
+<h1>Maps are not products</h1>
+<ul>
+<li><p><code>Map k v</code> doesn't tell you what to expect, only the types of the keys and values.</p></li>
+<li><p>If you know upfront what keys will be populated, make a product type.</p></li>
+<li><p>Maps are better used for sparsely inhabited collections of values referenced by keys not known until runtime.</p></li>
+</ul>
+</section>
+<section id="lets-model-something" class="slide level1">
+<h1>Lets model something</h1>
+<ul>
+<li><p>Human language, in this case.</p></li>
+<li><p>This is an exercise.</p></li>
+</ul>
+</section>
+<!-- {{{{ dzslides core
+#
+#
+#     __  __  __       .  __   ___  __
+#    |  \  / /__` |    | |  \ |__  /__`
+#    |__/ /_ .__/ |___ | |__/ |___ .__/ core :€
+#
+#
+# The following block of code is not supposed to be edited.
+# But if you want to change the behavior of these slides,
+# feel free to hack it!
+#
+-->
+
+<div id="progress-bar"></div>
+
+<!-- Default Style -->
+<style>
+  * { margin: 0; padding: 0; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+  details { display: none; }
+  body {
+    width: 800px; height: 600px;
+    margin-left: -400px; margin-top: -300px;
+    position: absolute; top: 50%; left: 50%;
+    overflow: hidden;
+  }
+  section {
+    position: absolute;
+    pointer-events: none;
+    width: 100%; height: 100%;
+  }
+  section[aria-selected] { pointer-events: auto; }
+  html { overflow: hidden; }
+  body { display: none; }
+  body.loaded { display: block; }
+  .incremental {visibility: hidden; }
+  .incremental[active] {visibility: visible; }
+  #progress-bar{
+    bottom: 0;
+    position: absolute;
+    -moz-transition: width 400ms linear 0s;
+    -webkit-transition: width 400ms linear 0s;
+    -ms-transition: width 400ms linear 0s;
+    transition: width 400ms linear 0s;
+  }
+  figure {
+    width: 100%;
+    height: 100%;
+  }
+  figure > * {
+    position: absolute;
+  }
+  figure > img, figure > video {
+    width: 100%; height: 100%;
+  }
+</style>
+
+<script>
+  var Dz = {
+    remoteWindows: [],
+    idx: -1,
+    step: 0,
+    slides: null,
+    progressBar : null,
+    params: {
+      autoplay: "1"
+    }
+  };
+
+  Dz.init = function() {
+    document.body.className = "loaded";
+    this.slides = $$("body > section");
+    this.progressBar = $("#progress-bar");
+    this.setupParams();
+    this.onhashchange();
+    this.setupTouchEvents();
+    this.onresize();
+  }
+  
+  Dz.setupParams = function() {
+    var p = window.location.search.substr(1).split('&');
+    p.forEach(function(e, i, a) {
+      var keyVal = e.split('=');
+      Dz.params[keyVal[0]] = decodeURIComponent(keyVal[1]);
+    });
+  // Specific params handling
+    if (!+this.params.autoplay)
+      $$.forEach($$("video"), function(v){ v.controls = true });
+  }
+
+  Dz.onkeydown = function(aEvent) {
+    // Don't intercept keyboard shortcuts
+    if (aEvent.altKey
+      || aEvent.ctrlKey
+      || aEvent.metaKey
+      || aEvent.shiftKey) {
+      return;
+    }
+    if ( aEvent.keyCode == 37 // left arrow
+      || aEvent.keyCode == 38 // up arrow
+      || aEvent.keyCode == 33 // page up
+    ) {
+      aEvent.preventDefault();
+      this.back();
+    }
+    if ( aEvent.keyCode == 39 // right arrow
+      || aEvent.keyCode == 40 // down arrow
+      || aEvent.keyCode == 34 // page down
+    ) {
+      aEvent.preventDefault();
+      this.forward();
+    }
+    if (aEvent.keyCode == 35) { // end
+      aEvent.preventDefault();
+      this.goEnd();
+    }
+    if (aEvent.keyCode == 36) { // home
+      aEvent.preventDefault();
+      this.goStart();
+    }
+    if (aEvent.keyCode == 32) { // space
+      aEvent.preventDefault();
+      this.toggleContent();
+    }
+    if (aEvent.keyCode == 70) { // f
+      aEvent.preventDefault();
+      this.goFullscreen();
+    }
+  }
+
+  /* Touch Events */
+
+  Dz.setupTouchEvents = function() {
+    var orgX, newX;
+    var tracking = false;
+
+    var db = document.body;
+    db.addEventListener("touchstart", start.bind(this), false);
+    db.addEventListener("touchmove", move.bind(this), false);
+
+    function start(aEvent) {
+      aEvent.preventDefault();
+      tracking = true;
+      orgX = aEvent.changedTouches[0].pageX;
+    }
+
+    function move(aEvent) {
+      if (!tracking) return;
+      newX = aEvent.changedTouches[0].pageX;
+      if (orgX - newX > 100) {
+        tracking = false;
+        this.forward();
+      } else {
+        if (orgX - newX < -100) {
+          tracking = false;
+          this.back();
+        }
+      }
+    }
+  }
+
+  /* Adapt the size of the slides to the window */
+
+  Dz.onresize = function() {
+    var db = document.body;
+    var sx = db.clientWidth / window.innerWidth;
+    var sy = db.clientHeight / window.innerHeight;
+    var transform = "scale(" + (1/Math.max(sx, sy)) + ")";
+
+    db.style.MozTransform = transform;
+    db.style.WebkitTransform = transform;
+    db.style.OTransform = transform;
+    db.style.msTransform = transform;
+    db.style.transform = transform;
+  }
+
+
+  Dz.getDetails = function(aIdx) {
+    var s = $("section:nth-of-type(" + aIdx + ")");
+    var d = s.$("details");
+    return d ? d.innerHTML : "";
+  }
+
+  Dz.onmessage = function(aEvent) {
+    var argv = aEvent.data.split(" "), argc = argv.length;
+    argv.forEach(function(e, i, a) { a[i] = decodeURIComponent(e) });
+    var win = aEvent.source;
+    if (argv[0] === "REGISTER" && argc === 1) {
+      this.remoteWindows.push(win);
+      this.postMsg(win, "REGISTERED", document.title, this.slides.length);
+      this.postMsg(win, "CURSOR", this.idx + "." + this.step);
+      return;
+    }
+    if (argv[0] === "BACK" && argc === 1)
+      this.back();
+    if (argv[0] === "FORWARD" && argc === 1)
+      this.forward();
+    if (argv[0] === "START" && argc === 1)
+      this.goStart();
+    if (argv[0] === "END" && argc === 1)
+      this.goEnd();
+    if (argv[0] === "TOGGLE_CONTENT" && argc === 1)
+      this.toggleContent();
+    if (argv[0] === "SET_CURSOR" && argc === 2)
+      window.location.hash = "#" + argv[1];
+    if (argv[0] === "GET_CURSOR" && argc === 1)
+      this.postMsg(win, "CURSOR", this.idx + "." + this.step);
+    if (argv[0] === "GET_NOTES" && argc === 1)
+      this.postMsg(win, "NOTES", this.getDetails(this.idx));
+  }
+
+  Dz.toggleContent = function() {
+    // If a Video is present in this new slide, play it.
+    // If a Video is present in the previous slide, stop it.
+    var s = $("section[aria-selected]");
+    if (s) {
+      var video = s.$("video");
+      if (video) {
+        if (video.ended || video.paused) {
+          video.play();
+        } else {
+          video.pause();
+        }
+      }
+    }
+  }
+
+  Dz.setCursor = function(aIdx, aStep) {
+    // If the user change the slide number in the URL bar, jump
+    // to this slide.
+    aStep = (aStep != 0 && typeof aStep !== "undefined") ? "." + aStep : ".0";
+    window.location.hash = "#" + aIdx + aStep;
+  }
+
+  Dz.onhashchange = function() {
+    var cursor = window.location.hash.split("#"),
+        newidx = 1,
+        newstep = 0;
+    if (cursor.length == 2) {
+      newidx = ~~cursor[1].split(".")[0];
+      newstep = ~~cursor[1].split(".")[1];
+      if (newstep > Dz.slides[newidx - 1].$$('.incremental > *').length) {
+        newstep = 0;
+        newidx++;
+      }
+    }
+    this.setProgress(newidx, newstep);
+    if (newidx != this.idx) {
+      this.setSlide(newidx);
+    }
+    if (newstep != this.step) {
+      this.setIncremental(newstep);
+    }
+    for (var i = 0; i < this.remoteWindows.length; i++) {
+      this.postMsg(this.remoteWindows[i], "CURSOR", this.idx + "." + this.step);
+    }
+  }
+
+  Dz.back = function() {
+    if (this.idx == 1 && this.step == 0) {
+      return;
+    }
+    if (this.step == 0) {
+      this.setCursor(this.idx - 1,
+                     this.slides[this.idx - 2].$$('.incremental > *').length);
+    } else {
+      this.setCursor(this.idx, this.step - 1);
+    }
+  }
+
+  Dz.forward = function() {
+    if (this.idx >= this.slides.length &&
+        this.step >= this.slides[this.idx - 1].$$('.incremental > *').length) {
+        return;
+    }
+    if (this.step >= this.slides[this.idx - 1].$$('.incremental > *').length) {
+      this.setCursor(this.idx + 1, 0);
+    } else {
+      this.setCursor(this.idx, this.step + 1);
+    }
+  }
+
+  Dz.goStart = function() {
+    this.setCursor(1, 0);
+  }
+
+  Dz.goEnd = function() {
+    var lastIdx = this.slides.length;
+    var lastStep = this.slides[lastIdx - 1].$$('.incremental > *').length;
+    this.setCursor(lastIdx, lastStep);
+  }
+
+  Dz.setSlide = function(aIdx) {
+    this.idx = aIdx;
+    var old = $("section[aria-selected]");
+    var next = $("section:nth-of-type("+ this.idx +")");
+    if (old) {
+      old.removeAttribute("aria-selected");
+      var video = old.$("video");
+      if (video) {
+        video.pause();
+      }
+    }
+    if (next) {
+      next.setAttribute("aria-selected", "true");
+      var video = next.$("video");
+      if (video && !!+this.params.autoplay) {
+        video.play();
+      }
+    } else {
+      // That should not happen
+      this.idx = -1;
+      // console.warn("Slide doesn't exist.");
+    }
+  }
+
+  Dz.setIncremental = function(aStep) {
+    this.step = aStep;
+    var old = this.slides[this.idx - 1].$('.incremental > *[aria-selected]');
+    if (old) {
+      old.removeAttribute('aria-selected');
+    }
+    var incrementals = $$('.incremental');
+    if (this.step <= 0) {
+      $$.forEach(incrementals, function(aNode) {
+        aNode.removeAttribute('active');
+      });
+      return;
+    }
+    var next = this.slides[this.idx - 1].$$('.incremental > *')[this.step - 1];
+    if (next) {
+      next.setAttribute('aria-selected', true);
+      next.parentNode.setAttribute('active', true);
+      var found = false;
+      $$.forEach(incrementals, function(aNode) {
+        if (aNode != next.parentNode)
+          if (found)
+            aNode.removeAttribute('active');
+          else
+            aNode.setAttribute('active', true);
+        else
+          found = true;
+      });
+    } else {
+      setCursor(this.idx, 0);
+    }
+    return next;
+  }
+
+  Dz.goFullscreen = function() {
+    var html = $('html'),
+        requestFullscreen = html.requestFullscreen || html.requestFullScreen || html.mozRequestFullScreen || html.webkitRequestFullScreen;
+    if (requestFullscreen) {
+      requestFullscreen.apply(html);
+    }
+  }
+  
+  Dz.setProgress = function(aIdx, aStep) {
+    var slide = $("section:nth-of-type("+ aIdx +")");
+    if (!slide)
+      return;
+    var steps = slide.$$('.incremental > *').length + 1,
+        slideSize = 100 / (this.slides.length - 1),
+        stepSize = slideSize / steps;
+    this.progressBar.style.width = ((aIdx - 1) * slideSize + aStep * stepSize) + '%';
+  }
+  
+  Dz.postMsg = function(aWin, aMsg) { // [arg0, [arg1...]]
+    aMsg = [aMsg];
+    for (var i = 2; i < arguments.length; i++)
+      aMsg.push(encodeURIComponent(arguments[i]));
+    aWin.postMessage(aMsg.join(" "), "*");
+  }
+  
+  function init() {
+    Dz.init();
+    window.onkeydown = Dz.onkeydown.bind(Dz);
+    window.onresize = Dz.onresize.bind(Dz);
+    window.onhashchange = Dz.onhashchange.bind(Dz);
+    window.onmessage = Dz.onmessage.bind(Dz);
+  }
+
+  window.onload = init;
+</script>
+
+
+<script> // Helpers
+  if (!Function.prototype.bind) {
+    Function.prototype.bind = function (oThis) {
+
+      // closest thing possible to the ECMAScript 5 internal IsCallable
+      // function 
+      if (typeof this !== "function")
+      throw new TypeError(
+        "Function.prototype.bind - what is trying to be fBound is not callable"
+      );
+
+      var aArgs = Array.prototype.slice.call(arguments, 1),
+          fToBind = this,
+          fNOP = function () {},
+          fBound = function () {
+            return fToBind.apply( this instanceof fNOP ? this : oThis || window,
+                   aArgs.concat(Array.prototype.slice.call(arguments)));
+          };
+
+      fNOP.prototype = this.prototype;
+      fBound.prototype = new fNOP();
+
+      return fBound;
+    };
+  }
+
+  var $ = (HTMLElement.prototype.$ = function(aQuery) {
+    return this.querySelector(aQuery);
+  }).bind(document);
+
+  var $$ = (HTMLElement.prototype.$$ = function(aQuery) {
+    return this.querySelectorAll(aQuery);
+  }).bind(document);
+
+  $$.forEach = function(nodeList, fun) {
+    Array.prototype.forEach.call(nodeList, fun);
+  }
+
+</script>
+<!-- vim: set fdm=marker: }}} -->
+</body>
+</html>

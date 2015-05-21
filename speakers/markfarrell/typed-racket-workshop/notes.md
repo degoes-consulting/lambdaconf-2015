@@ -8,8 +8,6 @@ Typed Racket is designed to allow you to write programs in a style similar to ho
  * Subtyping: e.g. ```Any``` is the top type, ```Nothing``` is the bottom type and ```Real``` is a subtype of ```Number```.
  * All values are types: e.g. ```3``` is a subtype of ```Integer```.
  * Untagged union types: e.g. ```(U String Number)```.
- * Intersection types: e.g. define functions that when given a ```Number``` produces a ```Boolean```
-   and when given a ```String``` produces an ```Integer```.
  
 We'll have a closer look at these particular features of Typed Racket's type system later on in this workshop - and look at examples of how previously untyped Racket code can often type check with minimal modification.
 
@@ -168,7 +166,7 @@ In this section, we will explore the basic features of Typed Racket's type syste
   
   Suppose that we'd want to impose the constraints that each student's:
   
-  * `id` is an 8-digit string containing only numeric characters.
+  * `id` is a non-negative integer between 0 and 99999999.
   * `name` is a ```String```.
   * `age` is a positive integer between 16 and 80.
   * `faculty` is either `Mathematics`, `Science`, `Engineering`, `Arts` or `Applied Health Sciences`.
@@ -182,9 +180,7 @@ We don't want to be able to create student instances that don't satisfy these co
   In Typed Racket, we can impose some of these constraints at compile-time with
   types.
   
-  However, it's tricky to impose the constraint that a student's `id` is a 8-digit string 
-  containing only numeric characters at compile-time. It's also tricky to impose the 
-  constraint that their age is a positive integer between 16 and 80. Though, 
+  It's tricky to compose the contrainst that each student's `id` is a non-negative integer between 0 and 99999999 with types in Typed Racket. It's also tricky to impose the constraint that their age is a positive integer between 16 and 80. Though, 
   recall that in Typed Racket, all values are types: e.g. `16` is a subtype of `Positive-Integer`.
   We also have untagged union types in Type Racket: e.g. `(U Number String)`, meaning that 
   the inhabitants of this type can either be a `Number` or `String`, such as `3.0` or `"foo"`.
@@ -216,7 +212,7 @@ We don't want to be able to create student instances that don't satisfy these co
   We'll say that a valid `id` is a 1-digit string containing only numeric characters:
   
   ```
-  (define-type Id (U "0" "1" "2" "3" "4" "5" "6" "7" "8" "9"))
+  (define-type Id (U 0 1 2 3 4 5 6 7 8 9))
   ```
   
   Then we can define our student record type in Typed Racket as follows, and impose these
@@ -232,7 +228,7 @@ We don't want to be able to create student instances that don't satisfy these co
   ```
     
   ```racket
-  > (Student "9" "John Smith" 20 'mathematics '2A)
+  > (Student 9 "John Smith" 20 'mathematics '2A)
   - : Student
   #<Student>
   ```
@@ -289,15 +285,11 @@ We don't want to be able to create student instances that don't satisfy these co
   data Nat = Z | S Nat
   ```
   
-  Typed Racket currently lacks support for algebraic data types, and only let's you pattern match 
-  on the structure of types for control-flow at run-time, e.g. using ```match```. We might wish to 
-  have algebraic data types and ensure that we are pattern-matching on their structure for control-flow
-  at compile-time. We'll look at how we might add algebraic data types and a compile-time pattern matching
-  construct to Typed Racket later on in this workshop. 
+  Typed Racket currently lacks support for algebraic data types, and it's pattern-matching construct ```match```
+  does not provide compile-time case coverage for all variants of a data type. We'll look at adding algebraic data 
+  types and a ```type-case``` construct that provides compile-case coverage later on this workshop.
   
-  So, you've had an exercise where you've had to use record types in Typed Racket to represent the Peano 
-  numbers in Typed Racket. I simplified the specification for valid ```id```s and ```age```s of student's 
-  in my previous example of record types in Typed Racket. I said that you'd have to enumerate
+  I simplified the specification for valid ```id```s and ```age```s of student's in my previous example of record types in Typed Racket. I said that you'd have to enumerate
   all possible valid `id`s and `age`s, storing them in untagged union types that depend on values in 
   order to make types that allow to certain that the `id`s and `age`s of students are correct before 
   our programs run in Typed Racket. It's possible to write functions that enumerate all possible `id`s 
@@ -327,7 +319,7 @@ We don't want to be able to create student instances that don't satisfy these co
                         (syntax->datum (syntax upper-bound))))))))]))
  ```
  
- Check that it your ```define-range-type``` macro correct defines our `Age` type correctly.
+ Check that your ```define-range-type``` macro correct defines our `Age` type correctly.
  
  ```racket
  (define-range-type Age 16 80)
@@ -337,14 +329,6 @@ We don't want to be able to create student instances that don't satisfy these co
  > (:type Age)
  (U 16 17 ... 80)
  ```
-
-  
- Challenge problem:
-
- We could also create a macro that takes a type name and an integer ```n```, defining
- an untagged union type with all possible ```n```-digit strings with number characters
- as its inhabitants. This exercise is left to the reader - its solution will 
- not be covered as part of this workshop.
  
 ### Parametric Polymorphism
  
@@ -388,6 +372,27 @@ We don't want to be able to create student instances that don't satisfy these co
   
   We could make it more convenient to define ```Option``` or ```Either``` data types in Typed Racket by adding  support for algebraic data types to Typed Racket. As mentioned, we'll look at how we might add algebraic data types to Typed Racket later on in this workshop.
   
+ Exercise: type a polymorphic `chunk` function. 
+
+ ```racket
+ (define (chunk xs n)
+   (cond [(empty? xs) empty]
+         [(< (length xs) n)
+          (cons xs empty)]
+         [else (cons (take xs n)
+                     (chunk (drop xs n) n))]))
+ ```
+   
+ ```racket
+ (All (a) (-> (Listof a) Integer (Listof (Listof a)))))
+ (define (chunk xs n)
+   (cond [(empty? xs) empty]
+         [(< (length xs) n)
+             (cons xs empty)]
+         [else (cons (take xs n)
+                     (chunk (drop xs n) n))]))
+ ```
+  
 ### Recursive Type Constructors
   
   Typed Racket also supports recursive type constructors. This meanings that you can define 
@@ -423,8 +428,38 @@ We don't want to be able to create student instances that don't satisfy these co
   
   (define-type Nat (Rec Nat (U Z (S Nat))))
   ```
+  
+  Remark: I think it's possible to emulate recursive types with only record types and subtyping in Typed Racket.   Luckily, `Z` and `S` in this case are still treated as subtypes of `Nat`: we can still explicitly type annotate
+  `Z` or `(S n)` as `Nat` when we need to.
+  
+  Exercise: define a function that converts a `Nat` to a `Number` in Typed Racket. 
+  
+  Hint 1: use Racket's `match` construct.
+  
+  Hint 2: type-annotate this function.
+  
+  ```racket
+  (define (nat->number nat)
+    (match nat
+      [(S n)
+       (+ (nat->number n) 1)]
+      [(Z) 0]))
+  ```
+  
+  Answer:
 
+  ```racket
+  (: nat->number (-> Nat Number))
+  (define (nat->number nat)
+    (match nat
+      [(S n)
+       (+ (nat->number n) 1)]
+      [(Z) 0]))
+  ```
+  
 ### Occurrence Types
+
+Occurrence types allow us to derive types from predicate tests inside the body of a definition. This feature of Typed Racket's type system is useful for allowing us to use previously untyped Racket code in Typed Racket with minimal modification. 
 
 ```racket
 (: foo 
@@ -436,42 +471,7 @@ We don't want to be able to create student instances that don't satisfy these co
         [else "error"]))
 ```
 
-### Intersection Types
- 
-```racket
-> (:print-type random)
-  (case->
-   (->* (Positive-Fixnum) (Pseudo-Random-Generator) Nonnegative-Fixnum)
-   (->* (Integer) (Pseudo-Random-Generator) Nonnegative-Integer)
-   (->* () (Pseudo-Random-Generator) Flonum))
-```
-
-### Additional Exercises
-
-Here are a couple of additional exercises for you to try: 
-
-* Type a `chunk` function. 
-
-  ```racket
-  (define (chunk xs n)
-    (cond [(empty? xs) empty]
-          [(< (length xs) n)
-           (cons xs empty)]
-          [else (cons (take xs n)
-                      (chunk (drop xs n) n))]))
-   ```
-   
-   ```racket
-   (All (a) (-> (Listof a) Integer (Listof (Listof a)))))
-   (define (chunk xs n)
-     (cond [(empty? xs) empty]
-           [(< (length xs) n)
-            (cons xs empty)]
-           [else (cons (take xs n)
-                       (chunk (drop xs n) n))]))
-   ```
-   
-* Type a `zip` function.
+We'll see in the next section how Typed Racket's type system allows us to use previously untyped Racket code in Typed Racket with minimal modification.
 
 # Break
 
@@ -546,9 +546,11 @@ As mentioned, Typed Racket aims to allow you to write programs in a style simila
 
 # Adding Algebraic Data Types to Typed Racket
 
-* Create `define-datatype` macro.
-* Create `type-case` macro.
-* Algebraic data type examples:
+We saw in the previous section how Typed Racket type system let's use previous untyped Racket code in Typed Racket with minimal modification. Though, it felt rather cumbersome to define `Nat`, `Option` and `Either` using record types and subtyping in Typed Racket. We also couldn't provide compile-type case coverage of variants of a data type using `match`. Moreever, the style in which we may prefer to program in a typed functional programming language like Typed Racket may not reflect the style in which we have tended to program in untyped Racket; e.g. dispatching by predicates test inside the body of definitions at run-time. 
+
+It would be better if we could make it easier to define data types like `Nat`, `Option` and `Either`, as well as provide compile-time case coverage for when we have definitions that dispatch by pattern-matching on these data types. In fact, Andrew Kent, a graduate student at Indiana University, has been working on a solution to this problem: he has been working on a module that adds ML-like algebraic data types to Typed Racket.
+
+Let's look back at how we defined `Nat`, `Option` & `Either` using record types and subtyping in the previous sections. We want to make it easier to define these data types; though we want these data types to be functionally the same, even if we make it easier to define them. We'll create a `define-datatype` macro, that makes it easier to define these data types:
  
   ```racket 
   (require datatype)
@@ -560,20 +562,49 @@ As mentioned, Typed Racket aims to allow you to write programs in a style simila
     [Z ()])
   ```
   
-  ```racket
-  (: Zero Nat)
-  (define Zero (Z))
-  ```
+  Exercise: check that this definition macro-expands to the same definition 
+  that we made for `Nat` using record types and subtyping in the previous sections.
+  Hint: use the macro-expand in Dr. Racket.
+  
+  Now, recall the `nat->number` function that we made at one point. It 
+  works here too for the definition of `Nat` that we just made using
+  `define-datatype`.
+  
+  However, suppose that we forgot to provide case-coverage
+  for `Z`:
  
   ```racket
-  (: One Nat)
-  (define One (S (Z)))
+  (: nat->number (-> Nat Number))
+  (define (nat->number nat)
+    (match nat
+      [(S n)
+       (+ (nat->number n) 1)]))
   ```
+  
+  If we don't provide case-coverage for `Z`, then our program will fail at run-time:
  
   ```racket
-  (: Two Nat)
-  (define Two (S (S (Z))))
+  > (nat->number (Z))
+  - : Number
+  match: no matching clause for (Z)
   ```
+  
+  We can create a `type-case` construct that ensures that we provide full case-coverage
+  for all variants of `Nat`, or else or program won't compile:
+  
+  ```racket
+  (: nat->number (-> Nat Number))
+  (define (nat->number nat)
+    (type-case Nat nat
+      [(S n) => (+ (nat->number n) 1)])
+  ```
+  
+  ```racket
+  type-case: missing case(s) for the following: (Z)
+ in: (syntax (type-case Nat nat ((S n) => (+ (nat->number n) 1))))
+  ```
+  
+  Exercise: fix our `nat->number` function so that our program compiles.
   
   ```racket
   (: nat->number (-> Nat Number))
@@ -583,13 +614,21 @@ As mentioned, Typed Racket aims to allow you to write programs in a style simila
       [(Z) => 0]))
   ```
   
+  Test that it works:
+  
+  ```racket
+  > (nat->number (Z))
+  - : Number
+  0
+  ```
+  
   ```racket
   > (nat->number (S (S (S (Z)))))
   - : Number
   3
   ```
   
-  Exercise:
+  Exercise: define an algebraic data type for `Option`.
   
   ```racket
   (define-datatype (Option a)
@@ -597,20 +636,35 @@ As mentioned, Typed Racket aims to allow you to write programs in a style simila
     [None ()])
   ```
   
-  Exercise:
+  Exercise: define an algebraic data type for `Either`.
+  
   
   ```racket
   (define-datatype (Either a b)
     [Left (a)]
     [Right (b)])
   ```
+  
+  Exercise: check that these definitions macro-expand to the definitions
+  we made for `Option` and `Either` using record types in the previous 
+  section. Hint: press the macro-expander button in Dr. Racket.
+  
+# What Next?
 
-# Soundness Bugs
+We've talked about:
 
-There are currently soundness bugs in Typed Racket, where
-the compile-time type of a term differs from its run-time type.
+* The features of Typed Racket's type system.
+* Typed-annotated previously untyped Racket code.
+* Showed how Typed Racket's type system is designed to allow us to use our previously untyped Racket code in Typed Racket with as little modification as possible.
+* Added features to Typed Racket's type system to make it easier for us to ensure that our program's satisfy certain constraints before they run:
+  *  Range types made it easier for us to make sure that only valid students would be created before our programs run.
+  *  Algebraic data types and the type-case construct made it easier for us to define types for `Nat`, `Option` and `Either`. Our type-case construct allowed us to ensure that we provided full case coverage for all variants of our algebraic data types when pattern matching on them before our programs run.
 
-* Example: [call/cc + letrec + occurrence typing can be unsound](https://github.com/racket/typed-racket/issues/128)
+But, how might we improve Typed Racket?
+
+* There are several Racket libraries that still need explicit type-annotations added to them, e.g. [How do to Design Programs](https://github.com/lexi-lambda/racket-2htdp-typed).
+* There are currently soundness bugs in Typed Racket, where the compile-time type of a term differs from its run-time type.
+  * Example: [call/cc + letrec + occurrence typing can be unsound](https://github.com/racket/typed-racket/issues/128)
 
   ```racket
   (define-type klk [(List klk Boolean) -> Nothing])
@@ -631,12 +685,6 @@ the compile-time type of a term differs from its run-time type.
   > (foo)
   #t
   ```
-
-* Exercise: find another soundness bug reported in the issues for the Typed Racket project on GitHub.
-
-# What Next?
-
-* There are several Racket libraries that still need explicit type-annotations added to them, e.g. [How do to Design Programs](https://github.com/lexi-lambda/racket-2htdp-typed).
 * In the future, I'd like to try adding an experimental dependently typed functional programming language to Racket,
   e.g. ```#lang dependent/racket```. I wouldn't want this language to try to accodomate the style that untyped Racket
   programmers program in, nor would I strive for untyped Racket code. I'm not a fan of gradual typing: I find too
