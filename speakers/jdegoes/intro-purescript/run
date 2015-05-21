@@ -1,0 +1,3 @@
+#!/bin/sh
+gulp
+open output/game.html
