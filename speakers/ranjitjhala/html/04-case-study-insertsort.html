@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Programming with Refinement Types</title>
+
+    <link href="./css/bootstrap.css" rel="stylesheet">
+    <link href="./css/bootstrap-theme.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./css/rust-book-slides.css">
+    <link rel="stylesheet" type="text/css" href="./css/editor-slides.css">
+
+   
+    <style type="text/css">code{white-space: pre;}
+
+      .slideonly {
+        display: none;
+      }
+
+      .dropdown-menu {
+          min-width: 0px;
+      }
+      
+      #checker-status {
+          width: 30;
+          height: 20;
+          padding-top: 2px;
+          padding-right: 10px;
+          position: absolute;
+          top: 0;
+          right: 0;
+          z-index:99;
+      }
+    </style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+
+
+<!-- <script type="text/javascript" src="js/jquery/jquery-1.7.1.min.js"></script> -->
+<script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="./js/angular/angular.js"></script>
+<script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      True: "\\mathit{True}", 
+      RR:   "{\\bf R}",
+      Int:  "\\mathtt{Int}",
+      Nat:  "\\mathtt{Nat}",
+      Zero: "\\mathtt{Zero}", 
+      foo:   ["{\\bf Jhala FOO #1}", 1],
+      bindx: ["{{#1}\\!:\\!{#2}}", 2],
+      reft:  ["\\{\\bindx{#1}{#2} \\mid {#3}\\}", 3],
+      ereft: ["\\bindx{#1}{\\{#2 \\mid #3\\}}", 3],
+      reftx: ["\\{{#1}\\mid{#2}\\}", 2],
+      inferrule: ["\\frac{#2}{#3}\\;{#1}", 3]
+  }    
+  }
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+</head>
+
+<body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
+
+    <div id="nav">
+       <button id="toggle-nav" class="toggle-nav">
+         <span class="sr-only">Toggle navigation</span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+       </button>
+    </div>
+
+    
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a href='00-index.html'><b>1.</b>Well-Typed Programs Can Go Wrong</a></li>
+<ul class='section'>
+<li><a href='00-index.html#asd'><b>1.1.</b> </a></li>
+<li><a href='00-index.html#division-by-zero'><b>1.2.</b> Division By Zero</a></li>
+<li><a href='00-index.html#missing-keys'><b>1.3.</b> Missing Keys</a></li>
+<li><a href='00-index.html#segmentation-faults'><b>1.4.</b> Segmentation Faults</a></li>
+<li><a href='00-index.html#heartbleeds'><b>1.5.</b> &quot;HeartBleeds&quot;</a></li>
+<li><a href='00-index.html#goal'><b>1.6.</b> Goal</a></li>
+<li><a href='00-index.html#plan'><b>1.7.</b> Plan</a></li>
+<li><a href='00-index.html#i-refinement-types'><b>1.8.</b> I: Refinement Types</a></li>
+<li><a href='00-index.html#ii-case-studies'><b>1.9.</b> II: Case Studies</a></li>
+<li><a href='00-index.html#conclusion'><b>1.10.</b> Conclusion</a></li>
+<li><a href='00-index.html#current-future-work'><b>1.11.</b> Current &amp; Future Work</a></li>
+<li><a href='00-index.html#current-future-work-1'><b>1.12.</b> Current &amp; Future Work</a></li>
+<li><a href='00-index.html#thank-you'><b>1.13.</b> Thank You!</a></li>
+</ul>
+<li><a href='01-index.html'><b>2.</b>Well-Typed Programs <em>Can</em> Go Wrong</a></li>
+<ul class='section'>
+<li><a href='01-index.html#division-by-zero'><b>2.1.</b> Division By Zero</a></li>
+<li><a href='01-index.html#missing-keys'><b>2.2.</b> Missing Keys</a></li>
+<li><a href='01-index.html#segmentation-faults'><b>2.3.</b> Segmentation Faults</a></li>
+<li><a href='01-index.html#heartbleeds'><b>2.4.</b> &quot;HeartBleeds&quot;</a></li>
+<li><a href='01-index.html#goal-extend-type-system'><b>2.5.</b> Goal: Extend Type System</a></li>
+<li><a href='01-index.html#plan'><b>2.6.</b> Plan</a></li>
+<li><a href='01-index.html#conclusion'><b>2.7.</b> Conclusion</a></li>
+<li><a href='01-index.html#current-future-work'><b>2.8.</b> Current &amp; Future Work</a></li>
+<li><a href='01-index.html#current-future-work-1'><b>2.9.</b> Current &amp; Future Work</a></li>
+<li><a href='01-index.html#thank-you'><b>2.10.</b> Thank You!</a></li>
+</ul>
+<li><a href='02-refinements.html'><b>3.</b>Simple Refinement Types</a></li>
+<ul class='section'>
+<li><a href='02-refinements.html#simple-refinement-types-1'><b>3.1.</b> Simple Refinement Types</a></li>
+<li><a href='02-refinements.html#types'><b>3.2.</b> Types</a></li>
+<li><a href='02-refinements.html#predicates'><b>3.3.</b> Predicates</a></li>
+<li><a href='02-refinements.html#expressions'><b>3.4.</b> Expressions</a></li>
+<li><a href='02-refinements.html#example-integers-equal-to-0'><b>3.5.</b> Example: Integers equal to <code>0</code></a></li>
+<li><a href='02-refinements.html#example-natural-numbers'><b>3.6.</b> Example: Natural Numbers</a></li>
+<li><a href='02-refinements.html#exercise-positive-integers'><b>3.7.</b> Exercise: Positive Integers</a></li>
+<li><a href='02-refinements.html#refinement-type-checking'><b>3.8.</b> Refinement Type Checking</a></li>
+<li><a href='02-refinements.html#a-term-can-have-many-types'><b>3.9.</b> A Term Can Have <em>Many</em> Types</a></li>
+<li><a href='02-refinements.html#a-term-can-have-many-types-1'><b>3.10.</b> A Term Can Have <em>Many</em> Types</a></li>
+<li><a href='02-refinements.html#predicate-subtyping'><b>3.11.</b> Predicate Subtyping</a></li>
+<li><a href='02-refinements.html#predicate-subtyping-1'><b>3.12.</b> Predicate Subtyping</a></li>
+<li><a href='02-refinements.html#example-natural-numbers-1'><b>3.13.</b> Example: Natural Numbers</a></li>
+<li><a href='02-refinements.html#smt-automates-subtyping'><b>3.14.</b> <a href="http://en.wikipedia.org/wiki/Satisfiability_modulo_theories">SMT</a> Automates Subtyping</a></li>
+<li><a href='02-refinements.html#contracts-function-types'><b>3.15.</b> Contracts: Function Types</a></li>
+<li><a href='02-refinements.html#pre-conditions'><b>3.16.</b> Pre-Conditions</a></li>
+<li><a href='02-refinements.html#exercise-pre-conditions'><b>3.17.</b> Exercise: Pre-Conditions</a></li>
+<li><a href='02-refinements.html#precondition-checked-at-call-site'><b>3.18.</b> Precondition Checked at Call-Site</a></li>
+<li><a href='02-refinements.html#precondition-checked-at-call-site-1'><b>3.19.</b> Precondition Checked at Call-Site</a></li>
+<li><a href='02-refinements.html#exercise-check-that-data'><b>3.20.</b> Exercise: Check That Data</a></li>
+<li><a href='02-refinements.html#precondition-checked-at-call-site-2'><b>3.21.</b> Precondition Checked at Call-Site</a></li>
+<li><a href='02-refinements.html#size-returns-positive-values'><b>3.22.</b> <code>size</code> returns positive values</a></li>
+<li><a href='02-refinements.html#postconds-checked-at-return'><b>3.23.</b> Postconds Checked at Return</a></li>
+<li><a href='02-refinements.html#verifying-avg'><b>3.24.</b> Verifying <code>avg</code></a></li>
+<li><a href='02-refinements.html#recap'><b>3.25.</b> Recap</a></li>
+<li><a href='02-refinements.html#recap-01'><b>3.26.</b> </a></li>
+<li><a href='02-refinements.html#exit-01'><b>3.27.</b> </a></li>
+</ul>
+<li><a href='03-datatypes.html'><b>4.</b>Data Types</a></li>
+<ul class='section'>
+<li><a href='03-datatypes.html#as'><b>4.1.</b> </a></li>
+<li><a href='03-datatypes.html#example-lists'><b>4.2.</b> Example: Lists</a></li>
+<li><a href='03-datatypes.html#specifying-the-length-of-a-list'><b>4.3.</b> Specifying the Length of a List</a></li>
+<li><a href='03-datatypes.html#specifying-the-length-of-a-list-1'><b>4.4.</b> Specifying the Length of a List</a></li>
+<li><a href='03-datatypes.html#using-measures'><b>4.5.</b> Using Measures</a></li>
+<li><a href='03-datatypes.html#asdmeas'><b>4.6.</b> </a></li>
+<li><a href='03-datatypes.html#exercise-partial-functions'><b>4.7.</b> Exercise: <em>Partial</em> Functions</a></li>
+<li><a href='03-datatypes.html#naming-non-empty-lists'><b>4.8.</b> Naming Non-Empty Lists</a></li>
+<li><a href='03-datatypes.html#head-and-tail-are-safe'><b>4.9.</b> <code>head</code> and <code>tail</code> are Safe</a></li>
+<li><a href='03-datatypes.html#a-useful-partial-function-foldr1'><b>4.10.</b> A Useful Partial Function <code>foldr1</code></a></li>
+<li><a href='03-datatypes.html#exercise-average'><b>4.11.</b> Exercise: <code>average</code></a></li>
+<li><a href='03-datatypes.html#refining-data-types'><b>4.12.</b> Refining Data Types</a></li>
+<li><a href='03-datatypes.html#flasd'><b>4.13.</b> </a></li>
+<li><a href='03-datatypes.html#example-year-is-12-months'><b>4.14.</b> Example: Year is 12 Months</a></li>
+<li><a href='03-datatypes.html#example-year-is-12-months-1'><b>4.15.</b> Example: Year is 12 Months</a></li>
+<li><a href='03-datatypes.html#exercise-map'><b>4.16.</b> Exercise: <code>map</code></a></li>
+<li><a href='03-datatypes.html#exercise-init'><b>4.17.</b> Exercise: <code>init</code></a></li>
+<li><a href='03-datatypes.html#exercise-init-1'><b>4.18.</b> Exercise: <code>init'</code></a></li>
+<li><a href='03-datatypes.html#recap'><b>4.19.</b> Recap</a></li>
+</ul>
+<li><a href='04-case-study-insertsort.html'><b>5.</b>Case Study: Insertion Sort</a></li>
+<ul class='section'>
+<li><a href='04-case-study-insertsort.html#asdisort'><b>5.1.</b> </a></li>
+<li><a href='04-case-study-insertsort.html#goal-verified-insertion-sort'><b>5.2.</b> Goal: Verified Insertion Sort</a></li>
+<li><a href='04-case-study-insertsort.html#property-1-size'><b>5.3.</b> Property 1: Size</a></li>
+<li><a href='04-case-study-insertsort.html#pr1'><b>5.4.</b> </a></li>
+<li><a href='04-case-study-insertsort.html#exercise-insert'><b>5.5.</b> Exercise: <code>insert</code></a></li>
+<li><a href='04-case-study-insertsort.html#property-2-elements'><b>5.6.</b> Property 2: Elements</a></li>
+<li><a href='04-case-study-insertsort.html#pr2'><b>5.7.</b> </a></li>
+<li><a href='04-case-study-insertsort.html#permutation'><b>5.8.</b> Permutation</a></li>
+<li><a href='04-case-study-insertsort.html#smt-solvers-reason-about-sets'><b>5.9.</b> SMT Solvers Reason About Sets</a></li>
+<li><a href='04-case-study-insertsort.html#specifying-a-lists-elements'><b>5.10.</b> Specifying A <code>List</code>s Elements</a></li>
+<li><a href='04-case-study-insertsort.html#exercise-verifying-permutation'><b>5.11.</b> Exercise: Verifying Permutation</a></li>
+<li><a href='04-case-study-insertsort.html#property-3-order'><b>5.12.</b> Property 3: Order</a></li>
+<li><a href='04-case-study-insertsort.html#pr3'><b>5.13.</b> </a></li>
+<li><a href='04-case-study-insertsort.html#recall-refined-data-types'><b>5.14.</b> Recall: Refined Data Types</a></li>
+<li><a href='04-case-study-insertsort.html#refined-data-ordered-pairs'><b>5.15.</b> Refined Data: Ordered Pairs</a></li>
+<li><a href='04-case-study-insertsort.html#exercise-ordered-pairs'><b>5.16.</b> Exercise: Ordered Pairs</a></li>
+<li><a href='04-case-study-insertsort.html#refined-data-csv-tables'><b>5.17.</b> Refined Data: CSV Tables</a></li>
+<li><a href='04-case-study-insertsort.html#exercise-valid-csv-tables'><b>5.18.</b> Exercise: Valid CSV Tables</a></li>
+<li><a href='04-case-study-insertsort.html#property-3-ordered-lists'><b>5.19.</b> Property 3: Ordered Lists</a></li>
+<li><a href='04-case-study-insertsort.html#lists'><b>5.20.</b> Lists</a></li>
+<li><a href='04-case-study-insertsort.html#ordered-lists'><b>5.21.</b> Ordered Lists</a></li>
+<li><a href='04-case-study-insertsort.html#ordered-lists-1'><b>5.22.</b> Ordered Lists</a></li>
+<li><a href='04-case-study-insertsort.html#exercise-insertion-sort'><b>5.23.</b> Exercise: Insertion Sort</a></li>
+<li><a href='04-case-study-insertsort.html#multiple-measures'><b>5.24.</b> Multiple Measures</a></li>
+<li><a href='04-case-study-insertsort.html#multimeas'><b>5.25.</b> </a></li>
+<li><a href='04-case-study-insertsort.html#different-measures-for-list'><b>5.26.</b> Different Measures for <code>List</code></a></li>
+<li><a href='04-case-study-insertsort.html#multiple-measures-are-conjoined'><b>5.27.</b> Multiple Measures are Conjoined</a></li>
+<li><a href='04-case-study-insertsort.html#measures-vs.-indexed-types'><b>5.28.</b> Measures vs. Indexed Types</a></li>
+<li><a href='04-case-study-insertsort.html#refinements-vs.-full-dependent-types'><b>5.29.</b> Refinements vs. Full Dependent Types</a></li>
+<li><a href='04-case-study-insertsort.html#continue'><b>5.30.</b> Continue</a></li>
+</ul>
+<li><a href='05-case-study-eval.html'><b>6.</b></a></li>
+<ul class='section'>
+<li><a href='05-case-study-eval.html#case-study-associative-maps-evaluation'><b>6.1.</b> Case Study: Associative Maps &amp; Evaluation</a></li>
+<li><a href='05-case-study-eval.html#case-study-associative-maps-evaluation-1'><b>6.2.</b> Case Study: Associative Maps &amp; Evaluation</a></li>
+<li><a href='05-case-study-eval.html#associative-maps'><b>6.3.</b> Associative Maps</a></li>
+<li><a href='05-case-study-eval.html#safemap'><b>6.4.</b> </a></li>
+<li><a href='05-case-study-eval.html#a-simple-associative-map'><b>6.5.</b> A Simple Associative Map</a></li>
+<li><a href='05-case-study-eval.html#tracking-the-keys-in-a-map'><b>6.6.</b> Tracking the Keys in a Map</a></li>
+<li><a href='05-case-study-eval.html#specifying-the-set-of-keys'><b>6.7.</b> Specifying the Set of <code>keys</code></a></li>
+<li><a href='05-case-study-eval.html#the-empty-map'><b>6.8.</b> The Empty <code>Map</code></a></li>
+<li><a href='05-case-study-eval.html#inserting-a-new-key-value-binding'><b>6.9.</b> Inserting a New Key-Value Binding</a></li>
+<li><a href='05-case-study-eval.html#exercise-looking-up-a-keys-value'><b>6.10.</b> Exercise: Looking Up a Key's Value</a></li>
+<li><a href='05-case-study-eval.html#key-not-found-begone'><b>6.11.</b> Key Not Found Begone!</a></li>
+<li><a href='05-case-study-eval.html#well-scoped-evaluators'><b>6.12.</b> Well-Scoped Evaluators</a></li>
+<li><a href='05-case-study-eval.html#evalapi'><b>6.13.</b> </a></li>
+<li><a href='05-case-study-eval.html#expressions'><b>6.14.</b> Expressions</a></li>
+<li><a href='05-case-study-eval.html#values'><b>6.15.</b> Values</a></li>
+<li><a href='05-case-study-eval.html#exercise-operating-on-values'><b>6.16.</b> Exercise: Operating on Values</a></li>
+<li><a href='05-case-study-eval.html#environments'><b>6.17.</b> Environments</a></li>
+<li><a href='05-case-study-eval.html#evaluate-using-environments'><b>6.18.</b> Evaluate Using Environments</a></li>
+<li><a href='05-case-study-eval.html#free-variables'><b>6.19.</b> Free Variables</a></li>
+<li><a href='05-case-study-eval.html#free-variables-1'><b>6.20.</b> Free Variables</a></li>
+<li><a href='05-case-study-eval.html#well-scoped-expressions'><b>6.21.</b> Well-scoped Expressions</a></li>
+<li><a href='05-case-study-eval.html#exercise-well-scoped-eval'><b>6.22.</b> Exercise: Well-Scoped <code>eval</code></a></li>
+<li><a href='05-case-study-eval.html#exercise-top-level-evaluation'><b>6.23.</b> Exercise: Top-level Evaluation</a></li>
+<li><a href='05-case-study-eval.html#exercise-checked-top-level-evaluation'><b>6.24.</b> Exercise: Checked Top-level Evaluation</a></li>
+<li><a href='05-case-study-eval.html#continue'><b>6.25.</b> Continue</a></li>
+</ul>
+<li><a href='06-case-study-bytestring.html'><b>7.</b>Case Study: Low Level Memory</a></li>
+<ul class='section'>
+<li><a href='06-case-study-bytestring.html#mem'><b>7.1.</b> </a></li>
+<li><a href='06-case-study-bytestring.html#heartbleed-in-haskell'><b>7.2.</b> &quot;HeartBleed&quot; in Haskell</a></li>
+<li><a href='06-case-study-bytestring.html#heartbleed-in-haskell-13'><b>7.3.</b> &quot;HeartBleed&quot; in Haskell (1/3)</a></li>
+<li><a href='06-case-study-bytestring.html#heartbleed-in-haskell-23'><b>7.4.</b> &quot;HeartBleed&quot; in Haskell (2/3)</a></li>
+<li><a href='06-case-study-bytestring.html#heartbleed-in-haskell-33'><b>7.5.</b> &quot;HeartBleed&quot; in Haskell (3/3)</a></li>
+<li><a href='06-case-study-bytestring.html#types-against-overflows'><b>7.6.</b> Types Against Overflows</a></li>
+<li><a href='06-case-study-bytestring.html#ptr'><b>7.7.</b> </a></li>
+<li><a href='06-case-study-bytestring.html#low-level-pointer-api'><b>7.8.</b> 1. Low-level Pointer API</a></li>
+<li><a href='06-case-study-bytestring.html#low-level-pointer-api-1'><b>7.9.</b> 1. Low-Level Pointer API</a></li>
+<li><a href='06-case-study-bytestring.html#api-types'><b>7.10.</b> API: Types</a></li>
+<li><a href='06-case-study-bytestring.html#api-operations-12'><b>7.11.</b> API: Operations (1/2)</a></li>
+<li><a href='06-case-study-bytestring.html#api-operations-22'><b>7.12.</b> API: Operations (2/2)</a></li>
+<li><a href='06-case-study-bytestring.html#example'><b>7.13.</b> Example</a></li>
+<li><a href='06-case-study-bytestring.html#bs'><b>7.14.</b> </a></li>
+<li><a href='06-case-study-bytestring.html#bytestring-api'><b>7.15.</b> 2. ByteString API</a></li>
+<li><a href='06-case-study-bytestring.html#bytestring-api-1'><b>7.16.</b> 2. ByteString API</a></li>
+<li><a href='06-case-study-bytestring.html#type'><b>7.17.</b> Type</a></li>
+<li><a href='06-case-study-bytestring.html#refined-type'><b>7.18.</b> Refined Type</a></li>
+<li><a href='06-case-study-bytestring.html#refined-type-1'><b>7.19.</b> Refined Type</a></li>
+<li><a href='06-case-study-bytestring.html#legal-bytestrings'><b>7.20.</b> Legal Bytestrings</a></li>
+<li><a href='06-case-study-bytestring.html#illegal-bytestrings'><b>7.21.</b> Illegal Bytestrings</a></li>
+<li><a href='06-case-study-bytestring.html#api-create'><b>7.22.</b> API: <code>create</code></a></li>
+<li><a href='06-case-study-bytestring.html#api-pack'><b>7.23.</b> API: <code>pack</code></a></li>
+<li><a href='06-case-study-bytestring.html#api-unsafetake'><b>7.24.</b> API: <code>unsafeTake</code></a></li>
+<li><a href='06-case-study-bytestring.html#api-unpack'><b>7.25.</b> API: <code>unpack</code></a></li>
+<li><a href='06-case-study-bytestring.html#heartbleedredux'><b>7.26.</b> </a></li>
+<li><a href='06-case-study-bytestring.html#application-api'><b>7.27.</b> 3. Application API</a></li>
+<li><a href='06-case-study-bytestring.html#application-api-1'><b>7.28.</b> 3. Application API</a></li>
+<li><a href='06-case-study-bytestring.html#revisit-heartbleed'><b>7.29.</b> Revisit &quot;HeartBleed&quot;</a></li>
+<li><a href='06-case-study-bytestring.html#heartbleed-no-more'><b>7.30.</b> &quot;HeartBleed&quot; no more</a></li>
+<li><a href='06-case-study-bytestring.html#recap-types-vs-overflows'><b>7.31.</b> Recap: Types vs Overflows</a></li>
+<li><a href='06-case-study-bytestring.html#bonus-material'><b>7.32.</b> Bonus Material</a></li>
+<li><a href='06-case-study-bytestring.html#nested-bytestrings'><b>7.33.</b> Nested ByteStrings</a></li>
+<li><a href='06-case-study-bytestring.html#begincode'><b>7.34.</b> \begin{code}</a></li>
+<li><a href='06-case-study-bytestring.html#helper-code'><b>7.35.</b> -- Helper Code</a></li>
+</ul>
+</ul>
+
+</div>
+      
+       <div id="checker-status">
+         <!-- Verifying ... -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1"
+                ng-show="isChecking" ng-click="verifySource()">
+          <span class="glyphicon glyphicon-hourglass"></span>
+         </button>
+
+        
+         <!-- Safe -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
+                 ng-show="isSafe">
+           <span class="glyphicon glyphicon-ok"></span>
+         </button>
+
+         <div class="dropdown" ng-show="isBad">
+             <button class="btn btn-xs btn-link dropdown-toggle"
+                     type="button"
+                     id="errorblockdropdown"
+                     data-toggle="dropdown"
+                     style="font-size:30px; color:red; z-index:1">
+               <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span><font size="4">{{errorBlocks.length}}</font>
+               </span>
+             </button>
+             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+               <li ng-repeat="err in errorBlocks">
+                 <a tabindex="-1" ng-href="#program-{{err.data}}">{{err.index}}</a>
+               </li>
+             </ul>
+         </div>
+       </div>
+       
+
+<div id='page-wrapper'>
+<div id='page'>
+
+<div class="hidden">
+<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-0" class="programbox">{-@ LIQUID "--short-names"    @-}
+{-@ LIQUID "--no-warnings"    @-}
+{-@ LIQUID "--no-termination" @-}
+
+module InsertSort where
+
+import Prelude hiding (sum, length, map, filter, foldr, foldr1)
+import qualified Data.Set as S -- hiding (elems, insert)
+
+insert, insertE :: (Ord a) => a -> List a -> List a
+sort, sortE     :: (Ord a) => List a -> List a
+
+{-@ measure length @-}
+length :: List a -> Int
+length Emp        = 0
+length (_ ::: xs) = 1 + length xs
+
+
+data List a  = Emp
+             | (:::) { hd :: a, tl :: List a }
+             deriving (Eq, Ord, Show)
+
+infixr 9 :::
+
+infixr 9 :<:
+
+-- | Lists of a given size N
+{-@ type ListN a N = {v:List a | length v == N } @-}
+
+{-@ type OListE a S = {v:OList a | elemsO v = S} @-}
+
+{-@ measure elemsO @-}
+elemsO :: (Ord a) => OList a -> S.Set a
+elemsO OEmp       = S.empty
+elemsO (x :<: xs) = addElemO x xs
+
+{-@ inline addElemO @-}
+addElemO :: (Ord a) => a -> OList a -> S.Set a
+addElemO x xs = S.singleton x `S.union` elemsO xs</div>
+</div>
+
+</div>
+<section id="case-study-insertion-sort" class="level1">
+<h1>Case Study: Insertion Sort</h1>
+<section id="asdisort" class="level2">
+<h2></h2>
+<p>Recall the simplest sorting algorithm:</p>
+<p><br></p>
+<pre class="spec"><code>sort :: (Ord a) =&gt; List a -&gt; List a
+sort []           = Emp
+sort (x:xs)       = insert x (sort xs)
+
+insert :: (Ord a) =&gt; a -&gt; List a -&gt; List a
+insert x Emp      = x ::: Emp
+insert x (y:::ys)
+  | x &lt;= y        = x ::: y ::: ys
+  | otherwise     = y ::: insert x ys
+</code></pre>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="goal-verified-insertion-sort" class="level2">
+<h2>Goal: Verified Insertion Sort</h2>
+<p><br></p>
+<p><strong>Goal:</strong> specify &amp; verify that output:</p>
+<p><br></p>
+<ol type="1">
+<li>Is the same <strong>size</strong> as the input,</li>
+<li>Has the same <strong>elements</strong> as the input,</li>
+<li>Is in increasing <strong>order</strong>.</li>
+</ol>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+</section>
+<section id="property-1-size" class="level1">
+<h1>Property 1: Size</h1>
+<section id="pr1" class="level2">
+<h2></h2>
+<p><br> <br> <br> <br> <br></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="exercise-insert" class="level2">
+<h2>Exercise: <code>insert</code></h2>
+<p><strong>Q:</strong> Can you fix the type of <code>insert</code> so <code>sort</code> checks?</p>
+<div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-1" class="programbox">{-@ sort :: (Ord a) => xs:List a -> ListN a {length xs} @-}
+sort Emp          = Emp
+sort (x:::xs)     = insert x (sort xs)
+
+{-@ insert :: (Ord a) => a -> xs:List a -> List a @-}
+insert x Emp      = x ::: Emp
+insert x (y:::ys)
+  | x <= y        = x ::: y ::: ys
+  | otherwise     = y ::: insert x ys</div>
+</div>
+
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+</section>
+<section id="property-2-elements" class="level1">
+<h1>Property 2: Elements</h1>
+<section id="pr2" class="level2">
+<h2></h2>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="permutation" class="level2">
+<h2>Permutation</h2>
+<p><br></p>
+<p>Same size is all fine, how about <strong>same elements</strong> in output?</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="smt-solvers-reason-about-sets" class="level2">
+<h2>SMT Solvers Reason About Sets</h2>
+<p><br></p>
+<p>Hence, we can write <em>Set-valued</em> measures</p>
+<p><br></p>
+<p>Using the <code>Data.Set</code> API for convenience</p>
+<p><br></p>
+<pre class="spec"><code>import qualified Data.Set as S
+</code></pre>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="specifying-a-lists-elements" class="level2">
+<h2>Specifying A <code>List</code>s Elements</h2>
+<p><br></p>
+<div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-2" class="programbox">{-@ measure elems @-}
+elems :: (Ord a) => List a -> S.Set a
+elems Emp      = S.empty
+elems (x:::xs) = addElem x xs
+
+{-@ inline addElem @-}
+addElem :: (Ord a) => a -> List a -> S.Set a
+addElem x xs = S.singleton x `S.union` elems xs</div>
+</div>
+
+<p><br></p>
+<code>inline</code> lets us reuse Haskell terms in refinements.
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="exercise-verifying-permutation" class="level2">
+<h2>Exercise: Verifying Permutation</h2>
+<p><br></p>
+<p>Lets verify that <code>sortE</code> returns the same set of elements:</p>
+<p><br></p>
+<div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-3" class="programbox">{-@ type ListE a S = {v:List a | elems v = S }@-}
+
+{-@ sortE :: (Ord a) => xs:List a -> ListE a {elems xs} @-}
+sortE Emp         = Emp
+sortE (x:::xs)    = insertE x (sortE xs)
+
+{-@ insertE :: (Ord a) => x:a -> xs:List a -> List a @-}
+insertE x Emp     = x ::: Emp
+insertE x (y:::ys)
+  | x <= y        = x ::: y ::: ys
+  | otherwise     = y ::: insertE x ys</div>
+</div>
+
+<p><br></p>
+<p><strong>Q:</strong> Can you fix the type for <code>insertE</code> so <code>sortE</code> verifies?</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+</section>
+<section id="property-3-order" class="level1">
+<h1>Property 3: Order</h1>
+<section id="pr3" class="level2">
+<h2></h2>
+<p><br></p>
+<p>Yes, yes, but does <code>sort</code> actually <strong>sort</strong> ?</p>
+<p><br></p>
+<p>How to specify <strong>ordered lists</strong> ?</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="recall-refined-data-types" class="level2">
+<h2>Recall: Refined Data Types</h2>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="refined-data-ordered-pairs" class="level2">
+<h2>Refined Data: Ordered Pairs</h2>
+<p><br></p>
+<p>Lets write a type for <strong>ordered pairs</strong></p>
+<p><br></p>
+<div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-4" class="programbox">data OrdPair = OP {opX :: Int, opY :: Int}</div>
+</div>
+
+<p><br></p>
+<p><strong>Legal Values</strong> value of <code>opX &lt; opY</code></p>
+<p><br></p>
+<pre class="spec"><code>okPair  = OP 2 4  -- legal
+badPair = OP 4 2  -- illegal
+</code></pre>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="exercise-ordered-pairs" class="level2">
+<h2>Exercise: Ordered Pairs</h2>
+<p><br></p>
+<p><strong>Q:</strong> Can you refine the data type to <em>legal</em> values only?</p>
+<p><br></p>
+<div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-5" class="programbox">{-@ data OrdPair = OP { opX :: Int, opY :: Int} @-}
+
+okPair  = OP 2 4  -- legal
+badPair = OP 4 2  -- illegal</div>
+</div>
+
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="refined-data-csv-tables" class="level2">
+<h2>Refined Data: CSV Tables</h2>
+<p><br></p>
+<div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-6" class="programbox">data Csv = Csv {
+   hdrs :: List String
+ , vals :: List (List Int)
+ }
+
+scores  = Csv {
+   hdrs =  "Id" ::: "Midterm" ::: "Final" ::: Emp
+ , vals = (   1 :::       25  :::      88 ::: Emp)
+      ::: (   2 :::       27  :::      83 ::: Emp)
+      ::: (   3 :::       19  :::      93 ::: Emp)
+      ::: Emp
+ }</div>
+</div>
+
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="exercise-valid-csv-tables" class="level2">
+<h2>Exercise: Valid CSV Tables</h2>
+<p><br></p>
+<p><strong>Q:</strong> Can you refine <code>Csv</code> so <code>scores'</code> is rejected?</p>
+<div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-7" class="programbox">{-@ data Csv = Csv {
+      hdrs :: List String
+    , vals :: List (List Int)
+    }                                          @-}
+
+scores' = Csv {
+   hdrs =  "Id" ::: "Midterm" ::: "Final" ::: Emp
+ , vals = (   1 :::       25  :::      88 ::: Emp)
+      ::: (   2 :::                    83 ::: Emp)
+      ::: (   3 :::       19  :::      93 ::: Emp)
+      ::: Emp
+ }</div>
+</div>
+
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="property-3-ordered-lists" class="level2">
+<h2>Property 3: Ordered Lists</h2>
+<p><br></p>
+<p><strong>Refine</strong> the <code>List</code> data type to enforce *ordering**!</p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="lists" class="level2">
+<h2>Lists</h2>
+<p><br></p>
+<p>Lets <strong>define</strong> a type for ordered lists</p>
+<p><br></p>
+<div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-8" class="programbox">data OList a =
+      OEmp
+    | (:<:) { oHd :: a
+            , oTl :: OList a }</div>
+</div>
+
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="ordered-lists" class="level2">
+<h2>Ordered Lists</h2>
+<p><br></p>
+<p>Lets <strong>refine</strong> the type to enforce <strong>order</strong></p>
+<p><br></p>
+<div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-9" class="programbox">{-@ data OList a =
+      OEmp
+    | (:<:) { oHd :: a
+            , oTl :: OList {v:a | oHd <= v}} @-}</div>
+</div>
+
+<p><br></p>
+<p>Head <code>oHd</code> is <strong>smaller than every value</strong> <code>v</code> in tail <code>oTl</code></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="ordered-lists-1" class="level2">
+<h2>Ordered Lists</h2>
+<p><br></p>
+<p><em>Illegal values unrepresentable</em></p>
+<p><br></p>
+<div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-10" class="programbox">okList :: OList Int
+okList = 1 :<: 2 :<: 3 :<: OEmp
+
+badList :: OList Int
+badList = 1 :<: 3 :<: 2 :<: OEmp</div>
+</div>
+
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="exercise-insertion-sort" class="level2">
+<h2>Exercise: Insertion Sort</h2>
+<p><br></p>
+<p><strong>Q:</strong> Oops. There's a problem! Can you fix it?</p>
+<p><br></p>
+<div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-11" class="programbox">{-@ sortO ::  xs:List a -> OListE a {elems xs} @-}
+sortO Emp      = OEmp
+sortO (x:::xs) = insertO x (sortO xs)
+
+{-@ insertO :: x:a -> xs:_  -> OListE a {addElemO x xs} @-}
+insertO x (y :<: ys)
+  | x <= y     = y :<: x :<: ys
+  | otherwise  = y :<: insertO x ys
+insertO x _    = x :<: OEmp</div>
+</div>
+
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+</section>
+<section id="multiple-measures" class="level1">
+<h1>Multiple Measures</h1>
+<section id="multimeas" class="level2">
+<h2></h2>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="different-measures-for-list" class="level2">
+<h2>Different Measures for <code>List</code></h2>
+<p><br></p>
+<p>We just wrote <em>two</em> measures for <code>List</code></p>
+<p><br></p>
+<ul>
+<li><code>length :: List a -&gt; Nat</code></li>
+<li><code>elems  :: List a -&gt; Set a</code></li>
+</ul>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="multiple-measures-are-conjoined" class="level2">
+<h2>Multiple Measures are Conjoined</h2>
+<p><br></p>
+<p>Data constructor refinements are <strong>conjoined</strong></p>
+<p><br></p>
+<pre class="spec"><code>data List a where
+  Emp   :: {v:List a |  length v = 0
+                 &amp;&amp; elems  v = empty}
+  (:::) :: x:a
+        -&gt; xs:List a
+        -&gt; {v:List a |  length v = 1 + length xs
+                     &amp;&amp; elems v  = addElem x  xs }
+</code></pre>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="measures-vs.-indexed-types" class="level2">
+<h2>Measures vs. Indexed Types</h2>
+<p><br></p>
+<p>Unlike <a href="http://dl.acm.org/citation.cfm?id=270793">indexed types</a>, measures ...</p>
+<p><br></p>
+<ul>
+<li><p><strong>Decouple</strong> properties from data type</p></li>
+<li><p><strong>Reuse</strong> same data type with different invariants</p></li>
+</ul>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="refinements-vs.-full-dependent-types" class="level2">
+<h2>Refinements vs. Full Dependent Types</h2>
+<p><br></p>
+<ul>
+<li><p><em>Limited</em> to <strong>decidable logics</strong> but ...</p></li>
+<li><p><em>Offer</em> massive amounts of <strong>automation</strong></p></li>
+</ul>
+<p><br></p>
+<p>Compare with <code>insertionSort</code> in:</p>
+<ul>
+<li><a href="https://github.com/goldfirere/singletons/blob/master/tests/compile-and-dump/InsertionSort/InsertionSortImp.hs">Haskell-Singletons</a></li>
+<li><a href="https://github.com/davidfstr/idris-insertion-sort/tree/master">Idris</a></li>
+<li><a href="http://www.enseignement.polytechnique.fr/informatique/INF551/TD/TD5/aux/Insert_Sort.v">Coq</a></li>
+</ul>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="continue" class="level2">
+<h2>Continue</h2>
+<p><br></p>
+<p><strong>Next: Case Studies</strong></p>
+<ul>
+<li><a href="04-case-study-insertsort.html">Insertion Sort</a></li>
+<li><a href="05-case-study-eval.html">Well Scoped Evaluator</a></li>
+<li><a href="06-case-study-bytestring.html">Low-level Memory</a></li>
+</ul>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+</section>
+
+</div>
+</div>
+
+<div class="hidden">
+<!--Site Meter -->
+  <script type="text/javascript" src="http://s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <noscript>
+    <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
+      target="_top">
+      <img src="http://s23.sitemeter.com/meter.asp?site=s23liquidtypes" 
+      alt="Site Meter" border="0"/></a>
+  </noscript>
+  <!-- Copyright (c)2009 Site Meter -->
+</div>
+
+
+
+
+
+<!-- JavaScript below! ============================================== -->
+
+  <script src="./js/ace/ace.js" type="text/javascript" charset="utf-8"></script> 
+  <script src="./js/ace/theme-monokai.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/ace/mode-haskell.js"  type="text/javascript" charset="utf-8"></script>
+  <script src="./js/liquid/tooltip.js"></script> 
+  <script src="./js/liquid/annot.js"></script> 
+  <script src="./js/liquid/config.js"></script> 
+  <script src="./js/liquid/liquid.js"></script>
+
+  <script type="text/javascript">
+    var queryServerURL = "http://goto.ucsd.edu:8090/" ;
+  </script>
+  
+  <!-- rust nav JS --> 
+  <script type="text/javascript">
+    window.playgroundUrl = "";
+  </script>
+  
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(event) {
+
+ document.getElementById("toggle-nav").onclick = toggleNav;
+
+  function toggleNav() {
+    var toc         = document.getElementById("toc");
+    var pagewrapper = document.getElementById("page-wrapper");
+    var status      = document.getElementById("checker-status");
+
+    toggleClass(toc,         "mobile-hidden");
+    // toggleClass(status,      "mobile-hidden");
+    toggleClass(pagewrapper, "mobile-hidden");
+  };
+
+  function toggleClass(el, className) {
+     // from http://youmightnotneedjquery.com/
+     if (el.classList) {
+       el.classList.toggle(className);
+     } else {
+       var classes = el.className.split(' ');
+       var existingIndex = classes.indexOf(className);
+
+       if (existingIndex >= 0) {
+         classes.splice(existingIndex, 1);
+       } else {
+         classes.push(className);
+       }
+       el.className = classes.join(' ');
+     }
+  }
+});
+</script>
+</body>
+</html>
