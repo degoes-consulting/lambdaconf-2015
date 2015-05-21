@@ -166,7 +166,7 @@ In this section, we will explore the basic features of Typed Racket's type syste
   
   Suppose that we'd want to impose the constraints that each student's:
   
-  * `id` is an 8-digit string containing only numeric characters.
+  * `id` is a non-negative integer between 0 and 99999999.
   * `name` is a ```String```.
   * `age` is a positive integer between 16 and 80.
   * `faculty` is either `Mathematics`, `Science`, `Engineering`, `Arts` or `Applied Health Sciences`.
@@ -180,9 +180,7 @@ We don't want to be able to create student instances that don't satisfy these co
   In Typed Racket, we can impose some of these constraints at compile-time with
   types.
   
-  However, it's tricky to impose the constraint that a student's `id` is a 8-digit string 
-  containing only numeric characters at compile-time. It's also tricky to impose the 
-  constraint that their age is a positive integer between 16 and 80. Though, 
+  It's tricky to compose the contrainst that each student's `id` is a non-negative integer between 0 and 99999999 with types in Typed Racket. It's also tricky to impose the constraint that their age is a positive integer between 16 and 80. Though, 
   recall that in Typed Racket, all values are types: e.g. `16` is a subtype of `Positive-Integer`.
   We also have untagged union types in Type Racket: e.g. `(U Number String)`, meaning that 
   the inhabitants of this type can either be a `Number` or `String`, such as `3.0` or `"foo"`.
@@ -214,7 +212,7 @@ We don't want to be able to create student instances that don't satisfy these co
   We'll say that a valid `id` is a 1-digit string containing only numeric characters:
   
   ```
-  (define-type Id (U "0" "1" "2" "3" "4" "5" "6" "7" "8" "9"))
+  (define-type Id (U 0 1 2 3 4 5 6 7 8 9))
   ```
   
   Then we can define our student record type in Typed Racket as follows, and impose these
@@ -230,7 +228,7 @@ We don't want to be able to create student instances that don't satisfy these co
   ```
     
   ```racket
-  > (Student "9" "John Smith" 20 'mathematics '2A)
+  > (Student 9 "John Smith" 20 'mathematics '2A)
   - : Student
   #<Student>
   ```
@@ -287,15 +285,11 @@ We don't want to be able to create student instances that don't satisfy these co
   data Nat = Z | S Nat
   ```
   
-  Typed Racket currently lacks support for algebraic data types, and only let's you pattern match 
-  on the structure of types for control-flow at run-time, e.g. using ```match```. We might wish to 
-  have algebraic data types and ensure that we are pattern-matching on their structure for control-flow
-  at compile-time. We'll look at how we might add algebraic data types and a compile-time pattern matching
-  construct to Typed Racket later on in this workshop. 
+  Typed Racket currently lacks support for algebraic data types, and it's pattern-matching construct ```match```
+  does not provide compile-time case coverage for all variants of a data type. We'll look at adding algebraic data 
+  types and a ```type-case``` construct that provides compile-case coverage later on this workshop.
   
-  So, you've had an exercise where you've had to use record types in Typed Racket to represent the Peano 
-  numbers in Typed Racket. I simplified the specification for valid ```id```s and ```age```s of student's 
-  in my previous example of record types in Typed Racket. I said that you'd have to enumerate
+  I simplified the specification for valid ```id```s and ```age```s of student's in my previous example of record types in Typed Racket. I said that you'd have to enumerate
   all possible valid `id`s and `age`s, storing them in untagged union types that depend on values in 
   order to make types that allow to certain that the `id`s and `age`s of students are correct before 
   our programs run in Typed Racket. It's possible to write functions that enumerate all possible `id`s 
@@ -325,7 +319,7 @@ We don't want to be able to create student instances that don't satisfy these co
                         (syntax->datum (syntax upper-bound))))))))]))
  ```
  
- Check that it your ```define-range-type``` macro correct defines our `Age` type correctly.
+ Check that your ```define-range-type``` macro correct defines our `Age` type correctly.
  
  ```racket
  (define-range-type Age 16 80)
@@ -335,13 +329,6 @@ We don't want to be able to create student instances that don't satisfy these co
  > (:type Age)
  (U 16 17 ... 80)
  ```
-  
- Challenge problem:
-
- We could also create a macro that takes a type name and an integer ```n```, defining
- an untagged union type with all possible ```n```-digit strings with number characters
- as its inhabitants. This exercise is left to the reader - its solution will 
- not be covered as part of this workshop.
  
 ### Parametric Polymorphism
  
@@ -643,7 +630,7 @@ As mentioned, Typed Racket aims to allow you to write programs in a style simila
     [None ()])
   ```
   
-  Exercise: define an algebraic data type for 'Either'.
+  Exercise: define an algebraic data type for `Either`.
   
   
   ```racket
