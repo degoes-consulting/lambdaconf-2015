@@ -8,8 +8,6 @@ Typed Racket is designed to allow you to write programs in a style similar to ho
  * Subtyping: e.g. ```Any``` is the top type, ```Nothing``` is the bottom type and ```Real``` is a subtype of ```Number```.
  * All values are types: e.g. ```3``` is a subtype of ```Integer```.
  * Untagged union types: e.g. ```(U String Number)```.
- * Intersection types: e.g. define functions that when given a ```Number``` produces a ```Boolean```
-   and when given a ```String``` produces an ```Integer```.
  
 We'll have a closer look at these particular features of Typed Racket's type system later on in this workshop - and look at examples of how previously untyped Racket code can often type check with minimal modification.
 
@@ -387,6 +385,27 @@ We don't want to be able to create student instances that don't satisfy these co
   
   We could make it more convenient to define ```Option``` or ```Either``` data types in Typed Racket by adding  support for algebraic data types to Typed Racket. As mentioned, we'll look at how we might add algebraic data types to Typed Racket later on in this workshop.
   
+ Exercise: type a `chunk` function. 
+
+ ```racket
+ (define (chunk xs n)
+   (cond [(empty? xs) empty]
+         [(< (length xs) n)
+          (cons xs empty)]
+         [else (cons (take xs n)
+                     (chunk (drop xs n) n))]))
+ ```
+   
+ ```racket
+ (All (a) (-> (Listof a) Integer (Listof (Listof a)))))
+ (define (chunk xs n)
+   (cond [(empty? xs) empty]
+         [(< (length xs) n)
+             (cons xs empty)]
+         [else (cons (take xs n)
+                     (chunk (drop xs n) n))]))
+ ```
+  
 ### Recursive Type Constructors
   
   Typed Racket also supports recursive type constructors. This meanings that you can define 
@@ -443,41 +462,6 @@ We don't want to be able to create student instances that don't satisfy these co
          (string-length str-or-any)]
         [else "error"]))
 ```
-
-### Intersection Types
- 
-```racket
-> (:print-type random)
-  (case->
-   (->* (Positive-Fixnum) (Pseudo-Random-Generator) Nonnegative-Fixnum)
-   (->* (Integer) (Pseudo-Random-Generator) Nonnegative-Integer)
-   (->* () (Pseudo-Random-Generator) Flonum))
-```
-
-### Additional Exercises
-
-Here are a couple of additional exercises for you to try: 
-
-* Type a `chunk` function. 
-
-  ```racket
-  (define (chunk xs n)
-    (cond [(empty? xs) empty]
-          [(< (length xs) n)
-           (cons xs empty)]
-          [else (cons (take xs n)
-                      (chunk (drop xs n) n))]))
-   ```
-   
-   ```racket
-   (All (a) (-> (Listof a) Integer (Listof (Listof a)))))
-   (define (chunk xs n)
-     (cond [(empty? xs) empty]
-           [(< (length xs) n)
-            (cons xs empty)]
-           [else (cons (take xs n)
-                       (chunk (drop xs n) n))]))
-   ```
 
 # Break
 
@@ -580,7 +564,7 @@ As mentioned, Typed Racket aims to allow you to write programs in a style simila
   (: Two Nat)
   (define Two (S (S (Z))))
   ```
- * 
+* 
  
   ```racket
   (: nat->number (-> Nat Number))
