@@ -1,0 +1,163 @@
+\documentclass{article}
+
+\begin{document}
+
+\section{Modeling verbs in English}
+
+Completing this exercise will not result in a completely accurate model of verbs in the English language, but it should provide an opportunity to kick around some datatypes in Haskell. There are a lot of edge cases in the English language being ignored here.
+
+You'll need to use products and sums. You can use `String` to store textual representations of the words involved, but the goal is to structure as much metadata as possible.
+
+\subsection{Verbs}
+
+Verbs are action words in English. Words like \emph{bring}, \emph{read}, \emph{walk}, and \emph{give} are verbs in their normal form or \emph{lemma form}.
+
+Verbs have an argument structure, called \emph{valency} or \emph{transitivity}. By \emph{valency} we often mean a total count of the verb's arguments, including the subject of the sentence as an argument of the verb. References to a verb's \emph{transitivity}, on the other hand, focus just on the objects controlled by the verb. Verbs can be \emph{intransitive}, \emph{transitive}, or \emph{ditransitive}. Those valencies correspond to verbs which take none, one, or two objects as their arguments respectively. Verbs have a subject, but sometimes that subject isn't a concrete word but rather the ``implied you''. 
+%% i'm curious why you didn't use a Maybe for Subject. It seems like the Nothing would be the "impliedYou" case because there is no literal subject in the sentence, i.e., no value. is it because the Nothing case would only be for one form of the verb (well, two--the lemma, of course, and the imperative)? 
+
+\subsection{Conjugations}
+
+Verbs have a conjugation. This conjugation can be regular or irregular. If it's irregular it can be a strong, weak, or anomalous conjugation. Conjugations can be past tense or past participle. 
+
+\subsection{Goals}
+
+Model the linguistic categories above in Haskell datatypes. Ask for help if you need it. If you have a model you think you're satisfied with, try using one of the examples below to create an example value. If you'd like to continue moving the code forward, try parsing simple Subject-Verb-Object sentences into your datatype, like so:
+
+\begin{verbatim}
+exampleSentence = "cat swats dog"
+
+parseVerb :: String -> Verb
+parseVerb = ???
+\end{verbatim}
+
+
+\section{Verbs examples}
+
+Here are examples of the verb types for understanding the above.
+
+\subsection{Conjugation}
+lemma form, past, past participle
+\begin{enumerate}
+\item Regular:
+\begin{itemize}
+\item roll, rolled, rolled
+\item plan, planned, planned
+\item wag, wagged, wagged
+\item walk, walked, walked
+\item climb, climbed, climbed
+\item kiss, kissed, kissed
+\item wonder, wondered, wondered
+\item adopt, adopted, adopted
+
+\end{itemize}
+
+\subsubsection{Irregular verbs}
+
+Categorizing irregular verbs is difficult in English. Roughly speaking we group them as ``strong'' or ``weak'' based largely on the Germanic verb types they came from. In general, the strong verbs undergo internal vowel changes (called ``ablaut'') rather than using suffixes to denote past/past particple. The weak verbs generally use both internal vowel changes and a change in the end of the word, usually to -n, -d, or -t. 
+
+\item Irregular, strong, with suffix:
+\begin{itemize}
+\item know, knew, known (also: throw, blow)
+\item give, gave, given
+\item break, broke, broken
+\item choose, chose, chosen
+\item eat, ate, eaten
+\item fly, flew, flown
+\item write, wrote, written
+\end{itemize}
+
+\item Irregular, strong, no suffix:
+\begin{itemize}
+\item sing, sang, sung
+\item swim, swam, swum
+\item come, came, come
+\item begin, began, begun
+\item drink, drank, drunk
+\item grind, ground, ground
+\end{itemize}
+
+\item Irregular, weak:
+
+\begin{itemize}
+\item keep, kept, kept
+\item hear, heard, heard
+\item feel, felt, felt
+\item lose, lost, lost
+\item put, put, put
+\item cost, cost, cost
+\item build, built, built
+\item meet, met, met
+\item bring, brought, brought
+\item buy, bought, bought
+\item think, thought, thought
+\item have, has, had
+\item make, made, made
+\item say, says, said
+\end{itemize}
+
+\item Irregular, anomalous:
+There are perfectly reasonable historical explanations for these behaviors:
+
+\begin{itemize}
+\item can, could
+\item shall, should
+\item will, would
+\item may, might
+\item (must)
+\item (ought)
+\item be, was/were, been
+\item go, went, gone
+\item do, did, done
+\end{itemize}
+\end{enumerate}
+
+\subsection{Transitivity}
+
+Valency usually refers to the verb's arity including subjects. Avalent verbs, like ``rain'' have dummy subjects. Monovalent verbs have just a subject but no objects. And so on. Transitivity refers only to the number of objects.
+
+\begin{enumerate}
+\item Intransitive verbs:
+\begin{itemize}
+\item We went to Boulder. [go]
+\item The dog came to me. [come]
+\item The kids swam in the river. [swim]
+\item She sings really well. [sing; can also be transitive]
+\item The baby laughed today. [laugh]
+\item I smile a lot. [smile]
+\item He is a good father. [be]
+\item It rained yesterday. [rain]
+\end{itemize}
+
+\item Transitive verbs:
+\begin{itemize}
+\item The choir sang carols. [sing]
+\item He drove his car to the park. [drive]
+\item She drove me around town. [drove]
+\item I have ridden horses before. [ride]
+\item They bought a new house. [buy]
+\item We met our friends at the cafe. [meet]
+\item I already did my homework! [do]
+\item They ate all the muffins. [eat]
+
+\end{itemize}
+
+\item Ditransitive verbs:
+In general, the indirect object can be expressed the way I have them here or in a prepositional phrase. I'm not sure you want to fuss with the prepositional phrases, especially since they can shift, as in ``he gave me the book'' vs ``he gave the book to me'' vs ``he gave me it*.'' If you want me to generate such sentences, let me know.
+
+\begin{itemize}
+\item He showed me his vacation photos. [show]
+\item Mom read us a story before bed. [read]
+\item We gave Chris a bottle of whiskey. [give]
+\item I brought you the ice cream. [bring]
+\item He sold me his car. [sell]
+\item We bought hamburgers for our dogs. [buy]
+\item Can you pass me the salt? [pass]
+\item She offered me a job. [offer]
+\end{itemize}
+
+\item Anomalies
+There are just a few weird verbs that can potentially take more than 2 objects, though exactly how to categorize them is somewhat controversial. I doubt you want to fool with them for these purposes either. The most paradigmatic is ``bet'', as in, ``I bet him five dollars he couldn't eat the worms.'' In some languages there seem to be true tritransitives but not in English.
+
+\end{enumerate}
+
+\end{document}
