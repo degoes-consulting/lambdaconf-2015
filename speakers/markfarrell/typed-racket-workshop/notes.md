@@ -546,9 +546,11 @@ As mentioned, Typed Racket aims to allow you to write programs in a style simila
 
 # Adding Algebraic Data Types to Typed Racket
 
-* Create `define-datatype` macro.
-* Create `type-case` macro.
-* Algebraic data type examples:
+We saw in the previous section how Typed Racket type system let's use previous untyped Racket code in Typed Racket with minimal modification. Though, it felt rather cumbersome to define `Nat`, `Option` and `Either` using record types and subtyping in Typed Racket. We also couldn't provide compile-type case coverage of variants of a data type using `match`. Moreever, the style in which we may prefer to program in a typed functional programming language like Typed Racket may not reflect the style in which we have tended to program in untyped Racket; e.g. dispatching by predicates test inside the body of definitions at run-time. 
+
+It would be better if we could make it easier to define data types like `Nat`, `Option` and `Either`, as well as provide compile-time case coverage for when we have definitions that dispatch by pattern-matching on these data types. In fact, Andrew Kent, a graduate student at Indiana University, has been working on a solution to this problem: he has been working on a module that adds ML-like algebraic data types to Typed Racket.
+
+Let's look back at how we defined `Nat`, `Option` & `Either` using record types and subtyping in the previous sections. We want to make it easier to define these data types; though we want these data types to be functionally the same, even if we make it easier to define them. We'll create a `define-datatype` macro, that makes it easier to define these data types:
  
   ```racket 
   (require datatype)
@@ -560,21 +562,16 @@ As mentioned, Typed Racket aims to allow you to write programs in a style simila
     [Z ()])
   ```
   
-  ```racket
-  (: Zero Nat)
-  (define Zero (Z))
-  ```
- 
-  ```racket
-  (: One Nat)
-  (define One (S (Z)))
-  ```
- 
-  ```racket
-  (: Two Nat)
-  (define Two (S (S (Z))))
-  ```
-* 
+  Exercise: check that this definition macro-expands to the same definition 
+  that we made for `Nat` using record types and subtyping in the previous sections.
+  Hint: use the macro-expand in Dr. Racket.
+  
+  Now, recall the `nat->number` function that we made at one point. It 
+  works here too for the definition of `Nat` that we just made using
+  `define-datatype`.
+  
+  However, suppose that we forgot to provide case-coverage
+  for `Z`:
  
   ```racket
   (: nat->number (-> Nat Number))
@@ -583,12 +580,17 @@ As mentioned, Typed Racket aims to allow you to write programs in a style simila
       [(S n)
        (+ (nat->number n) 1)]))
   ```
+  
+  If we don't provide case-coverage for `Z`, then our program will fail at run-time:
  
   ```racket
   > (nat->number (Z))
   - : Number
   match: no matching clause for (Z)
   ```
+  
+  We can create a `type-case` construct that ensures that we provide full case-coverage
+  for all variants of `Nat`, or else or program won't compile:
   
   ```racket
   (: nat->number (-> Nat Number))
@@ -602,6 +604,8 @@ As mentioned, Typed Racket aims to allow you to write programs in a style simila
  in: (syntax (type-case Nat nat ((S n) => (+ (nat->number n) 1))))
   ```
   
+  Exercise: fix our `nat->number` function so that our program compiles.
+  
   ```racket
   (: nat->number (-> Nat Number))
   (define (nat->number nat)
@@ -609,6 +613,8 @@ As mentioned, Typed Racket aims to allow you to write programs in a style simila
       [(S n) => (+ (nat->number n) 1)]
       [(Z) => 0]))
   ```
+  
+  Test that it works:
   
   ```racket
   > (nat->number (Z))
