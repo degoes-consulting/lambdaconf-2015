@@ -574,6 +574,21 @@ As mentioned, Typed Racket aims to allow you to write programs in a style simila
   (: Two Nat)
   (define Two (S (S (Z))))
   ```
+ * 
+ 
+  ```racket
+  (: nat->number (-> Nat Number))
+  (define (nat->number nat)
+    (match nat
+      [(S n)
+       (+ (nat->number n) 1)]))
+  ```
+ 
+  ```racket
+  > (nat->number (Z))
+  - : Number
+  match: no matching clause for (Z)
+  ```
   
   ```racket
   (: nat->number (-> Nat Number))
@@ -587,6 +602,12 @@ As mentioned, Typed Racket aims to allow you to write programs in a style simila
   > (nat->number (S (S (S (Z)))))
   - : Number
   3
+  ```
+  
+  ```racket
+  > (nat->number (Z))
+  - : Number
+  0
   ```
   
   Exercise:
