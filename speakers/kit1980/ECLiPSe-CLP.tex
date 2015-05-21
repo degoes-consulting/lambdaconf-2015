@@ -1,0 +1,171 @@
+\documentclass{beamer}
+\usetheme{Boadilla}
+
+\usepackage{hyperref}
+
+\title{Introduction to constraint logic programming with ECLiPSe}
+\author{Sergii Dymchenko}
+\institute{\url{http://sdymchenko.com}}
+\date{May 22, 2015}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}
+\frametitle{CLP}
+Constraint Logic Programming (CLP) is an augmentation of logic programming paradigm where relations between variables are specified with constraints.
+\begin{itemize}
+\item $X \le 10$
+\item $X > Y$
+\item $Y = 9$
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{CLP: Pros}
+\begin{itemize}
+\item Declarative
+\item Compact
+\item Understandable
+\item Easy to modify
+\item Often fast enough
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{CLP: Cons}
+\begin{itemize}
+\item Running time extremely depends on the instance
+\item Running time extremely depends on heuristics
+\item Optimization (vs any feasible solution) is slow
+\item Based on non-mainstream logic programming paradigm
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{ECLiPSe}
+ECLiPSe CLP (\url{http://eclipseclp.org/}) is an open-source Prolog-based system which
+aims to serve as a platform for integrating various logic programming extensions, in particular constraint logic programming.
+\end{frame}
+
+\begin{frame}
+\frametitle{ECLiPSe: libraries}
+\begin{itemize}
+\item \texttt{ic}: interval arithmetic constraint library
+\item \texttt{gfd}: interface to Gecode (\url{http://www.gecode.org/})
+\item Other CLP libraries (constraints on graphs, sets, \dots)
+\item Interfaces to linear programming solvers
+\item A lot of them: \url{http://eclipseclp.org/doc/bips/index.html}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Demo some Prolog in ECLiPSe}
+Demo some Prolog in ECLiPSe (incl. \texttt{append}).
+\end{frame}
+
+\begin{frame}
+\frametitle{TPK}
+TPK is a simple algorithm proposed by D.\,E.\,Knuth and L.\,T.\,Pardo in ``The Early Development
+of Programming Languages''. It is used to demonstrate some basic syntax of a language beyond the ``Hello, World!''.
+\begin{itemize}
+\item Prompt for 11 real numbers ($a_0 \dots a_{10}$)
+\item For each $a_i$ compute $b_i = f(a_i)$, where $f(t) = \sqrt{|t|} + 5 {t}^3$
+\item For $i = 10 \dots 0$ (in that order) output a pair $(i, b_i)$ if $b_i \leq 400$, or \\$(i,$ TOO LARGE$)$ otherwise
+\end{itemize}
+Demo \texttt{tpk.ecl}.
+\end{frame}
+
+\begin{frame}
+\frametitle{Arithmetic in Prolog}
+\begin{itemize}
+\item \texttt{is}-based arithmetic in Prolog is not relational
+\item CLP can be seen as extension that brings relational arithmetic to Prolog
+\item Demo $c = a / b$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Exercise: relational factorial}
+\begin{itemize}
+\item Complete code in \texttt{factorial.ecl}
+\item \texttt{factorial} should work ``both ways'': each argument can be input or output
+\item Demo \texttt{factorial.ecl}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{SEND + MORE = MONEY}
+\begin{itemize}
+\item Cryptarithmetic puzzle (\url{http://en.wikipedia.org/wiki/Verbal_arithmetic})
+\item Demo \texttt{money.ecl}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Constraint propagation and search}
+\begin{itemize}
+\item Just constraint propagation is not enough in general case
+\item Search is needed
+\item Parameters: \url{http://eclipseclp.org/doc/bips/lib/ic/search-6.html}
+\item Demo \texttt{alldifferent.ecl}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{N-queens puzzle}
+\begin{itemize}
+\item Place N non-attacking chess queens on an $N \times N$ board
+\item \url{http://en.wikipedia.org/wiki/Eight_queens_puzzle}
+\item Different formulations are possible: $N^2$ 0/1 vars, $2 \times N$ 1..N vars, $N$ 1..N vars
+\item Demo \texttt{queens.ecl}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Exercise: playing with N-queens}
+Try to introduce different changes:
+\begin{itemize}
+\item Different variable ordering heuristic
+\item Different value ordering heuristic
+\item Arrays instead of lists
+\item \texttt{gfd} instead of \texttt{ic}
+\item Maybe something else
+\end{itemize}
+Observe changes in running time for larger problem instances.
+\end{frame}
+
+\begin{frame}
+\frametitle{Optimization}
+\begin{itemize}
+\item Optimal vs any feasible solution
+\item branch-and-bound: \url{http://eclipseclp.org/doc/bips/lib/branch_and_bound/index.html}
+\item Demo \texttt{alldifferent-bb.ecl}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Real world}
+\begin{itemize}
+\item \url{http://eclipseclp.org/reports/index.html\#Applications}
+\item Almost any combinatorial problem
+\item Interfaces to Java, C++, Python, \dots
+\item Development tools: testing, debugging, profiling, \dots
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{More info}
+\begin{itemize}
+\item ECLiPSe official site -- \url{http://www.eclipseclp.org/}
+\item Book ``Constraint Logic Programming using ECLiPSe'' by Krzysztof Apt and Mark Wallace
+\item ELearning course by Helmut Simonis -- \url{http://4c.ucc.ie/~hsimonis/ELearning/index.htm}
+\item Examples by Hakan Kjellerstrand -- \url{http://www.hakank.org/eclipse/}
+\end{itemize}
+\end{frame}
+
+\end{document}
