@@ -337,7 +337,6 @@ We don't want to be able to create student instances that don't satisfy these co
  > (:type Age)
  (U 16 17 ... 80)
  ```
-
   
  Challenge problem:
 
