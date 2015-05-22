@@ -1,0 +1,14 @@
+-class(square).
+-constructor([new/2]).
+-export([calculate_area/0]).
+
+attributes.
+
+Width;
+Height.
+
+methods.
+
+new(W, H) -> self::Width = W, self::Height = H.
+
+calculate_area() -> self::Width * self::Height.

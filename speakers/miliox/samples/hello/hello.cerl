@@ -1,0 +1,9 @@
+-class(hello).
+
+class_methods.
+
+main() ->
+    io:format("Hello LambdaConf2015~n").
+
+
+
