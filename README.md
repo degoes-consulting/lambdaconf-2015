@@ -11,9 +11,11 @@ The official supporting materials repository for LambdaConf 2015.
  * [Freya (F#) for HTTP Systems](speakers/andrew-cherry) by [Andrew Cherry](https://twitter.com/kolektiv)  
  * [LiquidHaskell: Refinement Types for Haskell](speakers/ranjitjhala/) by [Ranjit Jhala](http://twitter.com/ranjitjhala) 
  * [Introduction to Constraint Logic Programming](speakers/kit1980) by [Sergii Dymchenko](http://twitter.com/kit1980) 
+ * [Data-driven Webapps with ClojureScript and Om](speakers/tennety/Data-driven%20Webapps%20with%20ClojureScript%20and%20Om.pdf) by [Chandu Tennety](http://tennety.github.io)
 
 # Talk Materials
 
  * [How to Learn Haskell in Less Than 5 Years](speakers/bitemyapp/howtolearnhaskell) by [Chris Allen](http://twitter.com/bitemyapp) 
  * [Scalaz 102 - Level Up Your Scalaz Foo!](speakers/cfrederickson/) by [Colt Frederickson](http://twitter.com/coltfred)
  * [The Case for the Cutting Edge](speakers/farmdawgnation/) by [Matt Farmer](http://twitter.com/farmdawgnation)
+ * [A Bird's Eye View of ClojureScript](speakers/tennety/A%20Bird's%20Eye%20View%20of%20ClojureScript.pdf) by [Chandu Tennety](http://tennety.github.io)
