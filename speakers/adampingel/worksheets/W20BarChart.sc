@@ -37,7 +37,7 @@ object W20BarChart {
                                                   //| 0,600,50,0.8,20,50,80,Some(LambdaConf 2015 Age Distribution),Courier New,12,
                                                   //| Palatino,20,0.0,None,None,UnittedQuantity(36.0,UnitOfMeasurement(degree,°,S
                                                   //| ome(http://en.wikipedia.org/wiki/Degree_(angle)))),List(java.awt.Color[r=0,g
-                                                  //| =0,b=255]))/
+                                                  //| =0,b=255]))\
 
  // draw(chart)
 }
