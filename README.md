@@ -12,6 +12,7 @@ The official supporting materials repository for LambdaConf 2015.
  * [LiquidHaskell: Refinement Types for Haskell](speakers/ranjitjhala/) by [Ranjit Jhala](http://twitter.com/ranjitjhala) 
  * [Introduction to Constraint Logic Programming](speakers/kit1980) by [Sergii Dymchenko](http://twitter.com/kit1980) 
  * [Data-driven Webapps with ClojureScript and Om](speakers/tennety/Data-driven%20Webapps%20with%20ClojureScript%20and%20Om.pdf) by [Chandu Tennety](http://tennety.github.io)
+ * [Introduction to Erlang](/speakers/stevenproctor/README.md) by [Proctor](https://twitter.com/stevenproctor)
 
 # Talk Materials
 
