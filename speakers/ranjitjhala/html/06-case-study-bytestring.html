@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="rustdoc">
+    <title>Programming with Refinement Types</title>
+
+    <link href="./css/bootstrap.css" rel="stylesheet">
+    <link href="./css/bootstrap-theme.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="./css/rust-book-slides.css">
+    <link rel="stylesheet" type="text/css" href="./css/editor-slides.css">
+
+   
+    <style type="text/css">code{white-space: pre;}
+
+      .slideonly {
+        display: none;
+      }
+
+      .dropdown-menu {
+          min-width: 0px;
+      }
+      
+      #checker-status {
+          width: 30;
+          height: 20;
+          padding-top: 2px;
+          padding-right: 10px;
+          position: absolute;
+          top: 0;
+          right: 0;
+          z-index:99;
+      }
+    </style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+  </style>
+
+
+<!-- <script type="text/javascript" src="js/jquery/jquery-1.7.1.min.js"></script> -->
+<script type="text/javascript" src="./js/jquery/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="./js/angular/angular.js"></script>
+<script type="text/javascript" src="./js/bootstrap/bootstrap.js"></script>
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+    Macros: {
+      True: "\\mathit{True}", 
+      RR:   "{\\bf R}",
+      Int:  "\\mathtt{Int}",
+      Nat:  "\\mathtt{Nat}",
+      Zero: "\\mathtt{Zero}", 
+      foo:   ["{\\bf Jhala FOO #1}", 1],
+      bindx: ["{{#1}\\!:\\!{#2}}", 2],
+      reft:  ["\\{\\bindx{#1}{#2} \\mid {#3}\\}", 3],
+      ereft: ["\\bindx{#1}{\\{#2 \\mid #3\\}}", 3],
+      reftx: ["\\{{#1}\\mid{#2}\\}", 2],
+      inferrule: ["\\frac{#2}{#3}\\;{#1}", 3]
+  }    
+  }
+});
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+</head>
+
+<body class="rustdoc" data-spy="scroll" data-target=".bs-docs-sidebar" ng-app="liquidDemo" ng-controller="LiquidDemoCtrl">
+
+    <div id="nav">
+       <button id="toggle-nav" class="toggle-nav">
+         <span class="sr-only">Toggle navigation</span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+         <span class="bar"></span>
+       </button>
+    </div>
+
+    
+<div id='toc' class='mobile-hidden'>
+<ul class='chapter'>
+<li><a href='00-index.html'><b>1.</b>Well-Typed Programs Can Go Wrong</a></li>
+<ul class='section'>
+<li><a href='00-index.html#asd'><b>1.1.</b> </a></li>
+<li><a href='00-index.html#division-by-zero'><b>1.2.</b> Division By Zero</a></li>
+<li><a href='00-index.html#missing-keys'><b>1.3.</b> Missing Keys</a></li>
+<li><a href='00-index.html#segmentation-faults'><b>1.4.</b> Segmentation Faults</a></li>
+<li><a href='00-index.html#heartbleeds'><b>1.5.</b> &quot;HeartBleeds&quot;</a></li>
+<li><a href='00-index.html#goal'><b>1.6.</b> Goal</a></li>
+<li><a href='00-index.html#plan'><b>1.7.</b> Plan</a></li>
+<li><a href='00-index.html#i-refinement-types'><b>1.8.</b> I: Refinement Types</a></li>
+<li><a href='00-index.html#ii-case-studies'><b>1.9.</b> II: Case Studies</a></li>
+<li><a href='00-index.html#conclusion'><b>1.10.</b> Conclusion</a></li>
+<li><a href='00-index.html#current-future-work'><b>1.11.</b> Current &amp; Future Work</a></li>
+<li><a href='00-index.html#current-future-work-1'><b>1.12.</b> Current &amp; Future Work</a></li>
+<li><a href='00-index.html#thank-you'><b>1.13.</b> Thank You!</a></li>
+</ul>
+<li><a href='01-index.html'><b>2.</b>Well-Typed Programs <em>Can</em> Go Wrong</a></li>
+<ul class='section'>
+<li><a href='01-index.html#division-by-zero'><b>2.1.</b> Division By Zero</a></li>
+<li><a href='01-index.html#missing-keys'><b>2.2.</b> Missing Keys</a></li>
+<li><a href='01-index.html#segmentation-faults'><b>2.3.</b> Segmentation Faults</a></li>
+<li><a href='01-index.html#heartbleeds'><b>2.4.</b> &quot;HeartBleeds&quot;</a></li>
+<li><a href='01-index.html#goal-extend-type-system'><b>2.5.</b> Goal: Extend Type System</a></li>
+<li><a href='01-index.html#plan'><b>2.6.</b> Plan</a></li>
+<li><a href='01-index.html#conclusion'><b>2.7.</b> Conclusion</a></li>
+<li><a href='01-index.html#current-future-work'><b>2.8.</b> Current &amp; Future Work</a></li>
+<li><a href='01-index.html#current-future-work-1'><b>2.9.</b> Current &amp; Future Work</a></li>
+<li><a href='01-index.html#thank-you'><b>2.10.</b> Thank You!</a></li>
+</ul>
+<li><a href='02-refinements.html'><b>3.</b>Simple Refinement Types</a></li>
+<ul class='section'>
+<li><a href='02-refinements.html#simple-refinement-types-1'><b>3.1.</b> Simple Refinement Types</a></li>
+<li><a href='02-refinements.html#types'><b>3.2.</b> Types</a></li>
+<li><a href='02-refinements.html#predicates'><b>3.3.</b> Predicates</a></li>
+<li><a href='02-refinements.html#expressions'><b>3.4.</b> Expressions</a></li>
+<li><a href='02-refinements.html#example-integers-equal-to-0'><b>3.5.</b> Example: Integers equal to <code>0</code></a></li>
+<li><a href='02-refinements.html#example-natural-numbers'><b>3.6.</b> Example: Natural Numbers</a></li>
+<li><a href='02-refinements.html#exercise-positive-integers'><b>3.7.</b> Exercise: Positive Integers</a></li>
+<li><a href='02-refinements.html#refinement-type-checking'><b>3.8.</b> Refinement Type Checking</a></li>
+<li><a href='02-refinements.html#a-term-can-have-many-types'><b>3.9.</b> A Term Can Have <em>Many</em> Types</a></li>
+<li><a href='02-refinements.html#a-term-can-have-many-types-1'><b>3.10.</b> A Term Can Have <em>Many</em> Types</a></li>
+<li><a href='02-refinements.html#predicate-subtyping'><b>3.11.</b> Predicate Subtyping</a></li>
+<li><a href='02-refinements.html#predicate-subtyping-1'><b>3.12.</b> Predicate Subtyping</a></li>
+<li><a href='02-refinements.html#example-natural-numbers-1'><b>3.13.</b> Example: Natural Numbers</a></li>
+<li><a href='02-refinements.html#smt-automates-subtyping'><b>3.14.</b> <a href="http://en.wikipedia.org/wiki/Satisfiability_modulo_theories">SMT</a> Automates Subtyping</a></li>
+<li><a href='02-refinements.html#contracts-function-types'><b>3.15.</b> Contracts: Function Types</a></li>
+<li><a href='02-refinements.html#pre-conditions'><b>3.16.</b> Pre-Conditions</a></li>
+<li><a href='02-refinements.html#exercise-pre-conditions'><b>3.17.</b> Exercise: Pre-Conditions</a></li>
+<li><a href='02-refinements.html#precondition-checked-at-call-site'><b>3.18.</b> Precondition Checked at Call-Site</a></li>
+<li><a href='02-refinements.html#precondition-checked-at-call-site-1'><b>3.19.</b> Precondition Checked at Call-Site</a></li>
+<li><a href='02-refinements.html#exercise-check-that-data'><b>3.20.</b> Exercise: Check That Data</a></li>
+<li><a href='02-refinements.html#precondition-checked-at-call-site-2'><b>3.21.</b> Precondition Checked at Call-Site</a></li>
+<li><a href='02-refinements.html#size-returns-positive-values'><b>3.22.</b> <code>size</code> returns positive values</a></li>
+<li><a href='02-refinements.html#postconds-checked-at-return'><b>3.23.</b> Postconds Checked at Return</a></li>
+<li><a href='02-refinements.html#verifying-avg'><b>3.24.</b> Verifying <code>avg</code></a></li>
+<li><a href='02-refinements.html#recap'><b>3.25.</b> Recap</a></li>
+<li><a href='02-refinements.html#recap-01'><b>3.26.</b> </a></li>
+<li><a href='02-refinements.html#exit-01'><b>3.27.</b> </a></li>
+</ul>
+<li><a href='03-datatypes.html'><b>4.</b>Data Types</a></li>
+<ul class='section'>
+<li><a href='03-datatypes.html#as'><b>4.1.</b> </a></li>
+<li><a href='03-datatypes.html#example-lists'><b>4.2.</b> Example: Lists</a></li>
+<li><a href='03-datatypes.html#specifying-the-length-of-a-list'><b>4.3.</b> Specifying the Length of a List</a></li>
+<li><a href='03-datatypes.html#specifying-the-length-of-a-list-1'><b>4.4.</b> Specifying the Length of a List</a></li>
+<li><a href='03-datatypes.html#using-measures'><b>4.5.</b> Using Measures</a></li>
+<li><a href='03-datatypes.html#asdmeas'><b>4.6.</b> </a></li>
+<li><a href='03-datatypes.html#exercise-partial-functions'><b>4.7.</b> Exercise: <em>Partial</em> Functions</a></li>
+<li><a href='03-datatypes.html#naming-non-empty-lists'><b>4.8.</b> Naming Non-Empty Lists</a></li>
+<li><a href='03-datatypes.html#head-and-tail-are-safe'><b>4.9.</b> <code>head</code> and <code>tail</code> are Safe</a></li>
+<li><a href='03-datatypes.html#a-useful-partial-function-foldr1'><b>4.10.</b> A Useful Partial Function <code>foldr1</code></a></li>
+<li><a href='03-datatypes.html#exercise-average'><b>4.11.</b> Exercise: <code>average</code></a></li>
+<li><a href='03-datatypes.html#refining-data-types'><b>4.12.</b> Refining Data Types</a></li>
+<li><a href='03-datatypes.html#flasd'><b>4.13.</b> </a></li>
+<li><a href='03-datatypes.html#example-year-is-12-months'><b>4.14.</b> Example: Year is 12 Months</a></li>
+<li><a href='03-datatypes.html#example-year-is-12-months-1'><b>4.15.</b> Example: Year is 12 Months</a></li>
+<li><a href='03-datatypes.html#exercise-map'><b>4.16.</b> Exercise: <code>map</code></a></li>
+<li><a href='03-datatypes.html#exercise-init'><b>4.17.</b> Exercise: <code>init</code></a></li>
+<li><a href='03-datatypes.html#exercise-init-1'><b>4.18.</b> Exercise: <code>init'</code></a></li>
+<li><a href='03-datatypes.html#recap'><b>4.19.</b> Recap</a></li>
+</ul>
+<li><a href='04-case-study-insertsort.html'><b>5.</b>Case Study: Insertion Sort</a></li>
+<ul class='section'>
+<li><a href='04-case-study-insertsort.html#asdisort'><b>5.1.</b> </a></li>
+<li><a href='04-case-study-insertsort.html#goal-verified-insertion-sort'><b>5.2.</b> Goal: Verified Insertion Sort</a></li>
+<li><a href='04-case-study-insertsort.html#property-1-size'><b>5.3.</b> Property 1: Size</a></li>
+<li><a href='04-case-study-insertsort.html#pr1'><b>5.4.</b> </a></li>
+<li><a href='04-case-study-insertsort.html#exercise-insert'><b>5.5.</b> Exercise: <code>insert</code></a></li>
+<li><a href='04-case-study-insertsort.html#property-2-elements'><b>5.6.</b> Property 2: Elements</a></li>
+<li><a href='04-case-study-insertsort.html#pr2'><b>5.7.</b> </a></li>
+<li><a href='04-case-study-insertsort.html#permutation'><b>5.8.</b> Permutation</a></li>
+<li><a href='04-case-study-insertsort.html#smt-solvers-reason-about-sets'><b>5.9.</b> SMT Solvers Reason About Sets</a></li>
+<li><a href='04-case-study-insertsort.html#specifying-a-lists-elements'><b>5.10.</b> Specifying A <code>List</code>s Elements</a></li>
+<li><a href='04-case-study-insertsort.html#exercise-verifying-permutation'><b>5.11.</b> Exercise: Verifying Permutation</a></li>
+<li><a href='04-case-study-insertsort.html#property-3-order'><b>5.12.</b> Property 3: Order</a></li>
+<li><a href='04-case-study-insertsort.html#pr3'><b>5.13.</b> </a></li>
+<li><a href='04-case-study-insertsort.html#recall-refined-data-types'><b>5.14.</b> Recall: Refined Data Types</a></li>
+<li><a href='04-case-study-insertsort.html#refined-data-ordered-pairs'><b>5.15.</b> Refined Data: Ordered Pairs</a></li>
+<li><a href='04-case-study-insertsort.html#exercise-ordered-pairs'><b>5.16.</b> Exercise: Ordered Pairs</a></li>
+<li><a href='04-case-study-insertsort.html#refined-data-csv-tables'><b>5.17.</b> Refined Data: CSV Tables</a></li>
+<li><a href='04-case-study-insertsort.html#exercise-valid-csv-tables'><b>5.18.</b> Exercise: Valid CSV Tables</a></li>
+<li><a href='04-case-study-insertsort.html#property-3-ordered-lists'><b>5.19.</b> Property 3: Ordered Lists</a></li>
+<li><a href='04-case-study-insertsort.html#lists'><b>5.20.</b> Lists</a></li>
+<li><a href='04-case-study-insertsort.html#ordered-lists'><b>5.21.</b> Ordered Lists</a></li>
+<li><a href='04-case-study-insertsort.html#ordered-lists-1'><b>5.22.</b> Ordered Lists</a></li>
+<li><a href='04-case-study-insertsort.html#exercise-insertion-sort'><b>5.23.</b> Exercise: Insertion Sort</a></li>
+<li><a href='04-case-study-insertsort.html#multiple-measures'><b>5.24.</b> Multiple Measures</a></li>
+<li><a href='04-case-study-insertsort.html#multimeas'><b>5.25.</b> </a></li>
+<li><a href='04-case-study-insertsort.html#different-measures-for-list'><b>5.26.</b> Different Measures for <code>List</code></a></li>
+<li><a href='04-case-study-insertsort.html#multiple-measures-are-conjoined'><b>5.27.</b> Multiple Measures are Conjoined</a></li>
+<li><a href='04-case-study-insertsort.html#measures-vs.-indexed-types'><b>5.28.</b> Measures vs. Indexed Types</a></li>
+<li><a href='04-case-study-insertsort.html#refinements-vs.-full-dependent-types'><b>5.29.</b> Refinements vs. Full Dependent Types</a></li>
+<li><a href='04-case-study-insertsort.html#continue'><b>5.30.</b> Continue</a></li>
+</ul>
+<li><a href='05-case-study-eval.html'><b>6.</b></a></li>
+<ul class='section'>
+<li><a href='05-case-study-eval.html#case-study-associative-maps-evaluation'><b>6.1.</b> Case Study: Associative Maps &amp; Evaluation</a></li>
+<li><a href='05-case-study-eval.html#case-study-associative-maps-evaluation-1'><b>6.2.</b> Case Study: Associative Maps &amp; Evaluation</a></li>
+<li><a href='05-case-study-eval.html#associative-maps'><b>6.3.</b> Associative Maps</a></li>
+<li><a href='05-case-study-eval.html#safemap'><b>6.4.</b> </a></li>
+<li><a href='05-case-study-eval.html#a-simple-associative-map'><b>6.5.</b> A Simple Associative Map</a></li>
+<li><a href='05-case-study-eval.html#tracking-the-keys-in-a-map'><b>6.6.</b> Tracking the Keys in a Map</a></li>
+<li><a href='05-case-study-eval.html#specifying-the-set-of-keys'><b>6.7.</b> Specifying the Set of <code>keys</code></a></li>
+<li><a href='05-case-study-eval.html#the-empty-map'><b>6.8.</b> The Empty <code>Map</code></a></li>
+<li><a href='05-case-study-eval.html#inserting-a-new-key-value-binding'><b>6.9.</b> Inserting a New Key-Value Binding</a></li>
+<li><a href='05-case-study-eval.html#exercise-looking-up-a-keys-value'><b>6.10.</b> Exercise: Looking Up a Key's Value</a></li>
+<li><a href='05-case-study-eval.html#key-not-found-begone'><b>6.11.</b> Key Not Found Begone!</a></li>
+<li><a href='05-case-study-eval.html#well-scoped-evaluators'><b>6.12.</b> Well-Scoped Evaluators</a></li>
+<li><a href='05-case-study-eval.html#evalapi'><b>6.13.</b> </a></li>
+<li><a href='05-case-study-eval.html#expressions'><b>6.14.</b> Expressions</a></li>
+<li><a href='05-case-study-eval.html#values'><b>6.15.</b> Values</a></li>
+<li><a href='05-case-study-eval.html#exercise-operating-on-values'><b>6.16.</b> Exercise: Operating on Values</a></li>
+<li><a href='05-case-study-eval.html#environments'><b>6.17.</b> Environments</a></li>
+<li><a href='05-case-study-eval.html#evaluate-using-environments'><b>6.18.</b> Evaluate Using Environments</a></li>
+<li><a href='05-case-study-eval.html#free-variables'><b>6.19.</b> Free Variables</a></li>
+<li><a href='05-case-study-eval.html#free-variables-1'><b>6.20.</b> Free Variables</a></li>
+<li><a href='05-case-study-eval.html#well-scoped-expressions'><b>6.21.</b> Well-scoped Expressions</a></li>
+<li><a href='05-case-study-eval.html#exercise-well-scoped-eval'><b>6.22.</b> Exercise: Well-Scoped <code>eval</code></a></li>
+<li><a href='05-case-study-eval.html#exercise-top-level-evaluation'><b>6.23.</b> Exercise: Top-level Evaluation</a></li>
+<li><a href='05-case-study-eval.html#exercise-checked-top-level-evaluation'><b>6.24.</b> Exercise: Checked Top-level Evaluation</a></li>
+<li><a href='05-case-study-eval.html#continue'><b>6.25.</b> Continue</a></li>
+</ul>
+<li><a href='06-case-study-bytestring.html'><b>7.</b>Case Study: Low Level Memory</a></li>
+<ul class='section'>
+<li><a href='06-case-study-bytestring.html#mem'><b>7.1.</b> </a></li>
+<li><a href='06-case-study-bytestring.html#heartbleed-in-haskell'><b>7.2.</b> &quot;HeartBleed&quot; in Haskell</a></li>
+<li><a href='06-case-study-bytestring.html#heartbleed-in-haskell-13'><b>7.3.</b> &quot;HeartBleed&quot; in Haskell (1/3)</a></li>
+<li><a href='06-case-study-bytestring.html#heartbleed-in-haskell-23'><b>7.4.</b> &quot;HeartBleed&quot; in Haskell (2/3)</a></li>
+<li><a href='06-case-study-bytestring.html#heartbleed-in-haskell-33'><b>7.5.</b> &quot;HeartBleed&quot; in Haskell (3/3)</a></li>
+<li><a href='06-case-study-bytestring.html#types-against-overflows'><b>7.6.</b> Types Against Overflows</a></li>
+<li><a href='06-case-study-bytestring.html#ptr'><b>7.7.</b> </a></li>
+<li><a href='06-case-study-bytestring.html#low-level-pointer-api'><b>7.8.</b> 1. Low-level Pointer API</a></li>
+<li><a href='06-case-study-bytestring.html#low-level-pointer-api-1'><b>7.9.</b> 1. Low-Level Pointer API</a></li>
+<li><a href='06-case-study-bytestring.html#api-types'><b>7.10.</b> API: Types</a></li>
+<li><a href='06-case-study-bytestring.html#api-operations-12'><b>7.11.</b> API: Operations (1/2)</a></li>
+<li><a href='06-case-study-bytestring.html#api-operations-22'><b>7.12.</b> API: Operations (2/2)</a></li>
+<li><a href='06-case-study-bytestring.html#example'><b>7.13.</b> Example</a></li>
+<li><a href='06-case-study-bytestring.html#bs'><b>7.14.</b> </a></li>
+<li><a href='06-case-study-bytestring.html#bytestring-api'><b>7.15.</b> 2. ByteString API</a></li>
+<li><a href='06-case-study-bytestring.html#bytestring-api-1'><b>7.16.</b> 2. ByteString API</a></li>
+<li><a href='06-case-study-bytestring.html#type'><b>7.17.</b> Type</a></li>
+<li><a href='06-case-study-bytestring.html#refined-type'><b>7.18.</b> Refined Type</a></li>
+<li><a href='06-case-study-bytestring.html#refined-type-1'><b>7.19.</b> Refined Type</a></li>
+<li><a href='06-case-study-bytestring.html#legal-bytestrings'><b>7.20.</b> Legal Bytestrings</a></li>
+<li><a href='06-case-study-bytestring.html#illegal-bytestrings'><b>7.21.</b> Illegal Bytestrings</a></li>
+<li><a href='06-case-study-bytestring.html#api-create'><b>7.22.</b> API: <code>create</code></a></li>
+<li><a href='06-case-study-bytestring.html#api-pack'><b>7.23.</b> API: <code>pack</code></a></li>
+<li><a href='06-case-study-bytestring.html#api-unsafetake'><b>7.24.</b> API: <code>unsafeTake</code></a></li>
+<li><a href='06-case-study-bytestring.html#api-unpack'><b>7.25.</b> API: <code>unpack</code></a></li>
+<li><a href='06-case-study-bytestring.html#heartbleedredux'><b>7.26.</b> </a></li>
+<li><a href='06-case-study-bytestring.html#application-api'><b>7.27.</b> 3. Application API</a></li>
+<li><a href='06-case-study-bytestring.html#application-api-1'><b>7.28.</b> 3. Application API</a></li>
+<li><a href='06-case-study-bytestring.html#revisit-heartbleed'><b>7.29.</b> Revisit &quot;HeartBleed&quot;</a></li>
+<li><a href='06-case-study-bytestring.html#heartbleed-no-more'><b>7.30.</b> &quot;HeartBleed&quot; no more</a></li>
+<li><a href='06-case-study-bytestring.html#recap-types-vs-overflows'><b>7.31.</b> Recap: Types vs Overflows</a></li>
+<li><a href='06-case-study-bytestring.html#bonus-material'><b>7.32.</b> Bonus Material</a></li>
+<li><a href='06-case-study-bytestring.html#nested-bytestrings'><b>7.33.</b> Nested ByteStrings</a></li>
+<li><a href='06-case-study-bytestring.html#begincode'><b>7.34.</b> \begin{code}</a></li>
+<li><a href='06-case-study-bytestring.html#helper-code'><b>7.35.</b> -- Helper Code</a></li>
+</ul>
+</ul>
+
+</div>
+      
+       <div id="checker-status">
+         <!-- Verifying ... -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; z-index:1"
+                ng-show="isChecking" ng-click="verifySource()">
+          <span class="glyphicon glyphicon-hourglass"></span>
+         </button>
+
+        
+         <!-- Safe -->
+         <button class="btn btn-xs btn-link actbutton" type="button" style="font-size:30px; color:green; z-index:1"
+                 ng-show="isSafe">
+           <span class="glyphicon glyphicon-ok"></span>
+         </button>
+
+         <div class="dropdown" ng-show="isBad">
+             <button class="btn btn-xs btn-link dropdown-toggle"
+                     type="button"
+                     id="errorblockdropdown"
+                     data-toggle="dropdown"
+                     style="font-size:30px; color:red; z-index:1">
+               <span class="glyphicon glyphicon-remove" style="vertical-align:middle"></span><font size="4">{{errorBlocks.length}}</font>
+               </span>
+             </button>
+             <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+               <li ng-repeat="err in errorBlocks">
+                 <a tabindex="-1" ng-href="#program-{{err.data}}">{{err.index}}</a>
+               </li>
+             </ul>
+         </div>
+       </div>
+       
+
+<div id='page-wrapper'>
+<div id='page'>
+
+<div class="hidden">
+<div id="program-pane-0" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-0" class="programbox">{-@ LIQUID "--no-termination" @-}
+{-@ LIQUID "--short-names"    @-}
+{-@ LIQUID "--diffcheck"     @-}
+
+module Memory where
+
+import Prelude hiding (null)
+import Data.Char
+import Data.Word
+import Foreign.C.Types
+import Foreign.ForeignPtr
+import Foreign.Ptr
+import Foreign.Storable
+import System.IO.Unsafe
+import Data.ByteString.Internal (c2w, w2c)
+import Language.Haskell.Liquid.Prelude
+
+create :: Int -> (Ptr Word8 -> IO ()) -> ByteString</div>
+</div>
+
+</div>
+<p><br> <br> <br> <br> <br> <br></p>
+<section id="case-study-low-level-memory" class="level1">
+<h1>Case Study: Low Level Memory</h1>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<section id="heartbleed-in-haskell" class="level2">
+<h2>&quot;HeartBleed&quot; in Haskell</h2>
+<p><br></p>
+<p><strong>Modern languages are built on top of C</strong></p>
+<p><br></p>
+Implementation errors could open up vulnerabilities
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="heartbleed-in-haskell-13" class="level2">
+<h2>&quot;HeartBleed&quot; in Haskell (1/3)</h2>
+<p><br></p>
+<p><strong>A String Truncation Function</strong></p>
+<p><br></p>
+<pre class="spec"><code>import Data.ByteString.Char8  (pack, unpack)
+import Data.ByteString.Unsafe (unsafeTake)
+
+chop     :: String -&gt; Int -&gt; String
+chop s n = s&#39;
+  where
+    b    = pack s         -- down to low-level
+    b&#39;   = unsafeTake n b -- grab n chars
+    s&#39;   = unpack b&#39;      -- up to high-level
+</code></pre>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="heartbleed-in-haskell-23" class="level2">
+<h2>&quot;HeartBleed&quot; in Haskell (2/3)</h2>
+<p><br></p>
+<p><img src="img/overflow.png" height=100px></p>
+<p><br></p>
+<p>Works if you use a <strong>valid prefix</strong> size</p>
+<pre class="spec"><code>λ&gt; let ex = &quot;Ranjit Loves Burritos&quot;
+
+λ&gt; chop ex 10
+&quot;Ranjit Lov&quot;
+</code></pre>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="heartbleed-in-haskell-33" class="level2">
+<h2>&quot;HeartBleed&quot; in Haskell (3/3)</h2>
+<p><br></p>
+<p><img src="img/overflow.png" height=100px></p>
+<p><br></p>
+<p>Leaks <em>overflow buffer</em> if <strong>invalid prefix</strong> size!</p>
+<pre class="spec"><code>λ&gt; let ex = &quot;Ranjit Loves Burritos&quot;
+
+λ&gt; chop ex 30
+&quot;Ranjit Loves Burritos\NUL\201\&amp;1j\DC3\SOH\NUL&quot;
+</code></pre>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+</section>
+<section id="types-against-overflows" class="level1">
+<h1>Types Against Overflows</h1>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<section id="types-against-overflows-1" class="level2">
+<h2>Types Against Overflows</h2>
+<p><br></p>
+<p><strong>Strategy: Specify and Verify Types for</strong></p>
+<p><br></p>
+<ol type="1">
+<li>Low-level <code>Pointer</code> API</li>
+<li>Lib-level <code>ByteString</code> API</li>
+<li>User-level <code>Application</code> API</li>
+</ol>
+<p><br></p>
+Errors at <em>each</em> level are prevented by types at <em>lower</em> levels
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+</section>
+<section id="low-level-pointer-api" class="level1">
+<h1>1. Low-Level Pointer API</h1>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<section id="api-types" class="level2">
+<h2>API: Types</h2>
+<p><br></p>
+<p><strong>Low-level Pointers</strong></p>
+<pre class="spec"><code>data Ptr a
+</code></pre>
+<p><br></p>
+<p><strong>Foreign Pointers</strong></p>
+<pre class="spec"><code>data ForeignPtr a
+</code></pre>
+<p><br></p>
+<code>ForeignPtr</code> wraps around <code>Ptr</code>; can be exported to/from C.
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="api-operations-12" class="level2">
+<h2>API: Operations (1/2)</h2>
+<p><br></p>
+<p><strong>Read</strong></p>
+<pre class="spec"><code>peek     :: Ptr a -&gt; IO a
+</code></pre>
+<br>
+<p><strong>Write</strong></p>
+<pre class="spec"><code>poke     :: Ptr a -&gt; a -&gt; IO ()
+</code></pre>
+<br>
+<strong>Arithmetic</strong>
+<pre class="spec"><code>plusPtr  :: Ptr a -&gt; Int -&gt; Ptr b
+</code></pre>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="api-operations-22" class="level2">
+<h2>API: Operations (2/2)</h2>
+<p><br></p>
+<p><strong>Create</strong></p>
+<pre class="spec"><code>malloc  :: Int -&gt; ForeignPtr a
+</code></pre>
+<p><br></p>
+<p><strong>Unwrap and Use</strong></p>
+<pre class="spec"><code>withForeignPtr :: ForeignPtr a     -- pointer
+               -&gt; (Ptr a -&gt; IO b)  -- action
+               -&gt; IO b             -- result
+</code></pre>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="low-level-api-example" class="level2">
+<h2>Low-Level API: Example</h2>
+<p><br></p>
+<p><strong>Allocate a block and write 4 zeros into it</strong></p>
+<p><br></p>
+<div id="program-pane-1" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-1" class="programbox">zero4 = do fp <- malloc 4
+           withForeignPtr fp $ \p -> do
+             poke (p `plusPtr` 0) zero
+             poke (p `plusPtr` 1) zero
+             poke (p `plusPtr` 2) zero
+             poke (p `plusPtr` 3) zero
+           return fp
+        where
+           zero = 0 :: Word8</div>
+</div>
+
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="low-level-api-example-1" class="level2">
+<h2>Low-Level API: Example</h2>
+<p><br></p>
+<p><strong>Allocate a block and write <code>4</code> zeros into it</strong></p>
+<p>How to <em>prevent overflows</em> e.g. writing <code>5</code> or <code>50</code> zeros?</p>
+<p><br></p>
+<p><strong>Step 1</strong></p>
+<em>Refine pointers</em> with allocated size
+<p><br></p>
+<p><strong>Step 2</strong></p>
+<em>Track sizes</em> in pointer operations
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="refined-api-types" class="level2">
+<h2>Refined API: Types</h2>
+<p><br></p>
+<p><strong>Step 1. Refine pointers with allocated size</strong></p>
+<pre class="spec"><code>measure plen  :: Ptr a -&gt; Int
+measure fplen :: ForeignPtr a -&gt; Int
+</code></pre>
+<p><br></p>
+<p><strong>Pointers of a Given Size</strong></p>
+<pre class="spec"><code>type PtrN a N        = {v:Ptr a         | plen v  == N }
+type ForeignPtrN a N = {v:ForeignPtrN a | fplen v == N }
+</code></pre>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="refined-api-ops-13" class="level2">
+<h2>Refined API: Ops (1/3)</h2>
+<p><br></p>
+<p><strong>Create</strong></p>
+<pre class="spec"><code>malloc  :: n:Nat -&gt; ForeignPtrN a n
+</code></pre>
+<p><br></p>
+<p><strong>Unwrap and Use</strong></p>
+<pre class="spec"><code>withForeignPtr :: fp:ForeignPtr a
+               -&gt; (PtrN a (fplen fp) -&gt; IO b)
+               -&gt; IO b
+</code></pre>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="refined-api-ops-23" class="level2">
+<h2>Refined API: Ops (2/3)</h2>
+<p><br></p>
+<p><strong>Arithmetic</strong></p>
+<p>Refine type to track <em>remaining</em> buffer size</p>
+<p><br></p>
+<pre class="spec"><code>plusPtr :: p:Ptr a
+        -&gt; o:{Nat|o &lt;= plen p}   -- in bounds
+        -&gt; PtrN b {plen b - o}   -- remainder
+</code></pre>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="refined-api-ops-33" class="level2">
+<h2>Refined API: Ops (3/3)</h2>
+<p><br></p>
+<p><strong>Read &amp; Write require non-empty remaining buffer</strong></p>
+<p><br></p>
+<p><strong>Read</strong></p>
+<pre class="spec"><code>peek :: {v:Ptr a | 0 &lt; plen v} -&gt; IO a
+</code></pre>
+<br>
+<p><strong>Write</strong></p>
+<pre class="spec"><code>poke :: {v:Ptr a | 0 &lt; plen v} -&gt; a -&gt; IO ()
+</code></pre>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="example-overflow-prevented" class="level2">
+<h2>Example: Overflow Prevented</h2>
+<p><br></p>
+<p>How to <em>prevent overflows</em> e.g. writing 5 or 50 zeros?</p>
+<p><br></p>
+<div id="program-pane-2" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-2" class="programbox">exBad = do fp <- malloc 4
+           withForeignPtr fp $ \p -> do
+             poke (p `plusPtr` 0) zero
+             poke (p `plusPtr` 1) zero
+             poke (p `plusPtr` 2) zero
+             poke (p `plusPtr` 5) zero
+           return fp
+        where
+           zero = 0 :: Word8</div>
+</div>
+
+</section>
+<section id="types-against-overflows-2" class="level2">
+<h2>Types Against Overflows</h2>
+<p><br></p>
+<p><strong>Strategy: Specify and Verify Types for</strong></p>
+<p><br></p>
+<ol type="1">
+<li>Low-level <code>Pointer</code> API</li>
+<li><strong>Lib-level <code>ByteString</code> API</strong></li>
+<li>User-level <code>Application</code> API</li>
+</ol>
+<p><br></p>
+Errors at <em>each</em> level are prevented by types at <em>lower</em> levels
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+</section>
+<section id="bytestring-api" class="level1">
+<h1>2. ByteString API</h1>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<section id="bytestring-type" class="level2">
+<h2>ByteString Type</h2>
+<p><br></p>
+<p><img src="img/bytestring.png" height=150px></p>
+<p><br></p>
+<div id="program-pane-3" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-3" class="programbox">data ByteString = PS {
+    bPtr :: ForeignPtr Word8
+  , bOff :: !Int
+  , bLen :: !Int
+  }</div>
+</div>
+
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="refined-bytestring-type" class="level2">
+<h2>Refined ByteString Type</h2>
+<p><br></p>
+<p><img src="img/bytestring.png" height=150px></p>
+<p><br></p>
+<div id="program-pane-4" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-4" class="programbox">{-@ data ByteString = PS {
+      bPtr :: ForeignPtr Word8
+    , bOff :: {v:Nat| v        <= fplen bPtr}
+    , bLen :: {v:Nat| v + bOff <= fplen bPtr}
+    }                                       @-}</div>
+</div>
+
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="refined-bytestring-type-1" class="level2">
+<h2>Refined ByteString Type</h2>
+<p><br></p>
+<p><img src="img/bytestring.png" height=150px></p>
+<p><br></p>
+<p><strong>ByteStrings of a Given Size</strong></p>
+<pre class="spec"><code>type ByteStringN N = {v:ByteString| bLen v = N}
+</code></pre>
+<div class="hidden">
+<div id="program-pane-5" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-5" class="programbox">{-@ type ByteStringN N = {v:ByteString | bLen v = N} @-}</div>
+</div>
+
+</div>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="legal-bytestrings" class="level2">
+<h2>Legal Bytestrings</h2>
+<p><br></p>
+<div id="program-pane-6" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-6" class="programbox">{-@ good1 :: IO (ByteStringN 5) @-}
+good1 = do fp <- malloc 5
+           return (PS fp 0 5)
+
+{-@ good2 :: IO (ByteStringN 3) @-}
+good2 = do fp <- malloc 5
+           return (PS fp 2 3)</div>
+</div>
+
+<p><br></p>
+<strong>Note:</strong> <em>length</em> of <code>good2</code> is <code>3</code> which is <em>less than</em> allocated size <code>5</code>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="illegal-bytestrings" class="level2">
+<h2>Illegal Bytestrings</h2>
+<p><br></p>
+<div id="program-pane-7" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-7" class="programbox">bad1 = do fp <- malloc 3
+          return (PS fp 0 10)
+
+bad2 = do fp <- malloc 3
+          return (PS fp 2 2)</div>
+</div>
+
+<p><br></p>
+Claimed length <em>exceeds</em> allocation ... <strong>rejected</strong> at compile time
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="bytestring-api-create" class="level2">
+<h2>ByteString API: <code>create</code></h2>
+<p><br></p>
+<p><strong>Allocate and fill a <code>ByteString</code></strong></p>
+<p><br></p>
+<div id="program-pane-8" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-8" class="programbox">{-@ create :: n:Nat
+           -> (PtrN Word8 n -> IO ())
+           -> ByteStringN n
+  @-}
+create n fill = unsafePerformIO $ do
+  fp  <- malloc n
+  withForeignPtr fp fill
+  return (PS fp 0 n)</div>
+</div>
+
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="api-pack" class="level2">
+<h2>API: <code>pack</code></h2>
+<p><br></p>
+<p><strong>Pack a high-level <code>String</code> into a <code>ByteString</code></strong></p>
+<p><br></p>
+<div id="program-pane-9" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-9" class="programbox">{-@ pack      :: s:String -> ByteStringN {len s} @-}
+pack str      = create n $ \p -> go p xs
+  where
+  n           = length str
+  xs          = map c2w str
+  go p (x:xs) = poke p x >> go (plusPtr p 1) xs
+  go _ []     = return  ()</div>
+</div>
+
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+</section>
+<section id="api-unsafetake" class="level2">
+<h2>API: <code>unsafeTake</code></h2>
+<p>Extract <em>prefix</em> string of size <code>n</code></p>
+<p><br></p>
+<p><strong>Specification</strong></p>
+<div id="program-pane-10" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-10" class="programbox">{-@ unsafeTake :: n:Nat
+               -> b:{ByteString | n <= bLen b}
+               -> ByteStringN n            @-}</div>
+</div>
+
+<p><br></p>
+<p><strong>Implementation</strong></p>
+<div id="program-pane-11" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-11" class="programbox">unsafeTake n (PS x s l) = PS x s n</div>
+</div>
+
+</section>
+<section id="api-unpack" class="level2">
+<h2>API: <code>unpack</code></h2>
+<p><strong>Specification</strong></p>
+<pre class="spec"><code>unpack
+ :: b:ByteString -&gt; StringN (bLen b)
+</code></pre>
+<p><br></p>
+<p><strong>Implementation</strong></p>
+<pre class="spec"><code>unpack b = you . get . the . idea -- see source
+</code></pre>
+<div class="hidden">
+<div id="program-pane-12" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-12" class="programbox">{-@ qualif Unpack(v:a, acc:b, n:int) : len v = 1 + n + len acc @-}
+
+{-@ unpack :: b:ByteString -> StringN (bLen b) @-}
+unpack :: ByteString -> String
+unpack (PS _  _ 0)  = []
+unpack (PS ps s l)  = unsafePerformIO $ withForeignPtr ps $ \p ->
+   go (p `plusPtr` s) (l - 1)  []
+  where
+   go p 0 acc = peek p >>= \e -> return (w2c e : acc)
+   go p n acc = peek (p `plusPtr` n) >>=   \e -> go p (n-1) (w2c e : acc)</div>
+</div>
+
+</div>
+</section>
+</section>
+<section id="heartbleedredux" class="level1">
+<h1></h1>
+<section id="application-api" class="level2">
+<h2>3. Application API</h2>
+<p><br></p>
+<p>Strategy: Specify and Verify Types for</p>
+<p><br></p>
+<ol type="1">
+<li>Low-level <code>Pointer</code> API</li>
+<li>Lib-level <code>ByteString</code> API</li>
+<li><strong>User-level <code>Application</code> API</strong></li>
+</ol>
+<p><br></p>
+<p>Errors at <em>each</em> level are prevented by types at <em>lower</em> levels</p>
+</section>
+</section>
+<section id="application-api-1" class="level1">
+<h1>3. Application API</h1>
+<section id="revisit-heartbleed" class="level2">
+<h2>Revisit &quot;HeartBleed&quot;</h2>
+<p>Lets revisit our potentially &quot;bleeding&quot; <code>chop</code></p>
+<p><br></p>
+<div class="hidden">
+<div id="program-pane-13" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-13" class="programbox">{-@ type StringN N = {v:String | len v = N} @-}</div>
+</div>
+
+</div>
+<div id="program-pane-14" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-14" class="programbox">{-@ chop :: s:String
+         -> n:{Nat | n <= len s}
+         -> StringN n
+  @-}
+chop s n =  s'
+  where
+    b    = pack s          -- down to low-level
+    b'   = unsafeTake n b  -- grab n chars
+    s'   = unpack b'       -- up to high-level</div>
+</div>
+
+</section>
+<section id="heartbleed-no-more" class="level2">
+<h2>&quot;HeartBleed&quot; no more</h2>
+<p><br></p>
+<div id="program-pane-15" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-15" class="programbox">demo     = [ex6, ex30]
+  where
+    ex   = ['N','o','r','m','a','n']
+    ex6  = chop ex 6  -- ok
+    ex30 = chop ex 30  -- out of bounds</div>
+</div>
+
+<p><br></p>
+<p>&quot;Bleeding&quot; <code>chop ex 30</code> <em>rejected</em> by compiler</p>
+</section>
+<section id="recap-types-vs-overflows" class="level2">
+<h2>Recap: Types vs Overflows</h2>
+<p><br></p>
+<p><strong>Strategy: Specify and Verify Types for</strong></p>
+<p><br></p>
+<ol type="1">
+<li>Low-level <code>Pointer</code> API</li>
+<li>Lib-level <code>ByteString</code> API</li>
+<li>User-level <code>Application</code> API</li>
+</ol>
+<p><br></p>
+<p><strong>Errors at <em>each</em> level are prevented by types at <em>lower</em> levels</strong></p>
+<p><br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br></p>
+<div class="hidden">
+<div id="program-pane-16" class="welleditor" style="background:#fff; position:relative">
+
+  <!-- Verify Source -->
+  <button class="btn btn-xs btn-link actbutton" type="button" style="z-index:1"
+          ng-show="isUnknown" ng-click="verifySource()">
+    <span class="glyphicon glyphicon-play"></span>
+  </button>
+ 
+  <div id="program-16" class="programbox">{-@ unsafeCreate :: l:Nat -> ((PtrN Word8 l) -> IO ()) -> (ByteStringN l) @-}
+unsafeCreate = create -- unsafePerformIO $ create n f
+
+{-@ invariant {v:ByteString   | bLen  v >= 0} @-}
+
+{-@ qualif PLLen(v:a, p:b) : (len v) <= (plen p) @-}
+{-@ qualif ForeignPtrN(v:ForeignPtr a, n:int): fplen v = n @-}
+{-@ qualif FPLenPLen(v:Ptr a, fp:ForeignPtr a): fplen fp = plen v @-}
+{-@ qualif PtrLen(v:Ptr a, xs:List b): plen v = len xs @-}
+{-@ qualif PlenEq(v: Ptr a, x: int): x <= (plen v) @-}
+{-@ type ForeignPtrN a N = {v:ForeignPtr a | fplen v = N} @-}
+
+{-@ malloc :: n:Nat -> IO (ForeignPtrN a n) @-}
+{-@ assume mallocForeignPtrBytes :: n:Nat -> IO (ForeignPtrN a n) @-}
+malloc = mallocForeignPtrBytes
+
+{-@ memcpy :: dst:PtrV Word8
+           -> src:PtrV Word8
+           -> size: {v:CSize | (v <= (plen src) && v <= (plen dst))}
+           -> IO ()
+  @-}
+memcpy :: Ptr Word8 -> Ptr Word8 -> CSize -> IO ()
+memcpy p q s = undefined -- c_memcpy p q s >> return ()</div>
+</div>
+
+</div>
+</section>
+</section>
+
+</div>
+</div>
+
+<div class="hidden">
+<!--Site Meter -->
+  <script type="text/javascript" src="http://s23.sitemeter.com/js/counter.js?site=s23liquidtypes"></script>
+  <noscript>
+    <a href="http://s23.sitemeter.com/stats.asp?site=s23liquidtypes" 
+      target="_top">
+      <img src="http://s23.sitemeter.com/meter.asp?site=s23liquidtypes" 
+      alt="Site Meter" border="0"/></a>
+  </noscript>
+  <!-- Copyright (c)2009 Site Meter -->
+</div>
+
+
+
+
+
+<!-- JavaScript below! ============================================== -->
+
+  <script src="./js/ace/ace.js" type="text/javascript" charset="utf-8"></script> 
+  <script src="./js/ace/theme-monokai.js" type="text/javascript" charset="utf-8"></script>
+  <script src="./js/ace/mode-haskell.js"  type="text/javascript" charset="utf-8"></script>
+  <script src="./js/liquid/tooltip.js"></script> 
+  <script src="./js/liquid/annot.js"></script> 
+  <script src="./js/liquid/config.js"></script> 
+  <script src="./js/liquid/liquid.js"></script>
+
+  <script type="text/javascript">
+    var queryServerURL = "http://goto.ucsd.edu:8090/" ;
+  </script>
+  
+  <!-- rust nav JS --> 
+  <script type="text/javascript">
+    window.playgroundUrl = "";
+  </script>
+  
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(event) {
+
+ document.getElementById("toggle-nav").onclick = toggleNav;
+
+  function toggleNav() {
+    var toc         = document.getElementById("toc");
+    var pagewrapper = document.getElementById("page-wrapper");
+    var status      = document.getElementById("checker-status");
+
+    toggleClass(toc,         "mobile-hidden");
+    // toggleClass(status,      "mobile-hidden");
+    toggleClass(pagewrapper, "mobile-hidden");
+  };
+
+  function toggleClass(el, className) {
+     // from http://youmightnotneedjquery.com/
+     if (el.classList) {
+       el.classList.toggle(className);
+     } else {
+       var classes = el.className.split(' ');
+       var existingIndex = classes.indexOf(className);
+
+       if (existingIndex >= 0) {
+         classes.splice(existingIndex, 1);
+       } else {
+         classes.push(className);
+       }
+       el.className = classes.join(' ');
+     }
+  }
+});
+</script>
+</body>
+</html>
