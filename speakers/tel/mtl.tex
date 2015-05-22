@@ -1,0 +1,496 @@
+\documentclass[pdf]{beamer}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{tcolorbox}
+\usepackage[all]{xy}
+
+\mode<presentation>{}
+
+% ------------------------------------------------------------------------------
+% Theme
+
+\usetheme[usetitleprogressbar, nosmallcapitals, protectframetitle, usetotalslideindicator]{m}
+
+\lstloadlanguages{Haskell}
+\lstnewenvironment{code}
+    {\lstset{}%
+      \csname lst@SetFirstLabel\endcsname}
+    {\csname lst@SaveFirstLabel\endcsname}
+    \lstset{
+      basicstyle=\ttfamily\footnotesize,
+      flexiblecolumns=false,
+      basewidth={0.5em,0.45em},
+      literate={+}{{$+$}}1 {/}{{$/$}}1 {*}{{$*$}}1
+               {\\\\}{{\char`\\\char`\\}}1
+               {=>}{{$\Rightarrow$}}2
+               {forall}{{$\forall$}}2
+               {->}{{$\rightarrow$}}2
+               {<-}{{$\leftarrow$}}2
+               {>>}{{>>}}3 {>>=}{{>>=}}3,
+      commentstyle={\ttfamily\color{gray}},
+      language=haskell
+    }
+    
+% ------------------------------------------------------------------------------
+% Presentation
+
+\title{Finally \texttt{mtl}!}
+\date{\today}
+\author{Joseph Tel Abrahamson}
+
+\renewcommand{\to}{\ensuremath{\rightarrow}}
+\DeclareMathOperator{\ty}{\texttt{ :: }}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}
+  \frametitle{Synopsis}
+  \begin{itemize}
+  \item What is ``Finally Tagless''? What's important about it?
+  \item What is the ``Monad Transformer Library'', \texttt{mtl}?
+  \item \texttt{mtl} is a ``finally tagless'' effect library
+  \item Comparing effect handlers
+  \end{itemize}
+\end{frame}
+
+\section{A tale of three DSLs}
+
+\begin{frame}[fragile]
+  \frametitle{Hutton's Razor}
+\begin{lstlisting}
+data AddLang
+  = AddLangIntLit Integer
+  | Add AddLang AddLang
+  deriving ( Show, Eq )
+
+interpAddLang :: AddLang -> Integer
+interpAddLang = \case
+  AddLangIntLit i -> i
+  Add l r  -> interpAddLang l + interpAddLang r
+
+addLangExp :: AddLang
+addLangExp = Add (AddLangIntLit 1) (AddLangIntLit 3)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Hutton's Backup Razor}
+\begin{lstlisting}
+data MultLang
+  = MultLangIntLit Integer
+  | Mult MultLang MultLang
+  deriving ( Show, Eq )
+
+interpMultLang :: MultLang -> Integer
+interpMultLang = \case
+  MultLangIntLit i -> i
+  Mult l r -> interpMultLang l * interpMultLang r
+
+multLangExp :: MultLang
+multLangExp = Mult (MultLangIntLit 1) (MultLangIntLit 3)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Hutton's Travel Kit}
+\begin{lstlisting}
+data RingLang
+  = RingLangIntLit Integer
+  | RingAdd  RingLang RingLang
+  | RingMult RingLang RingLang
+  deriving ( Show, Eq )
+
+interpRingLang :: RingLang -> Integer
+interpRingLang = \case
+  RingLangIntLit i -> i
+  RingAdd  l r -> interpRingLang l + interpRingLang r
+  RingMult l r -> interpRingLang l * interpRingLang r
+
+ringLangExp :: RingLang
+ringLangExp = RingMult (RingAdd (RingLangIntLit 3) 
+                                (RingLangIntLit 2)) 
+                       (RingLangIntLit 3)
+\end{lstlisting}
+\end{frame}
+
+\section{What's wrong with this picture?}
+
+\begin{frame}[fragile]
+  \frametitle{D. R. Y.}
+\begin{lstlisting}
+data RingLang
+  = RingLangIntLit Integer
+  | RingAdd  RingLang RingLang
+  | RingMult RingLang RingLang
+  deriving ( Show, Eq )
+
+interpRingLang :: RingLang -> Integer
+interpRingLang = \case
+  RingLangIntLit i -> i
+  RingAdd  l r -> interpRingLang l + interpRingLang r
+  RingMult l r -> interpRingLang l * interpRingLang r
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{D. R. Y.}
+\begin{lstlisting}
+
+  = RingLangIntLit Integer
+  | RingAdd  RingLang RingLang
+  | RingMult RingLang RingLang
+
+
+
+
+  RingLangIntLit i -> i
+  RingAdd  l r -> interpRingLang l + interpRingLang r
+  RingMult l r -> interpRingLang l * interpRingLang r
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{D. R. Y.}
+\begin{lstlisting}
+
+
+  | RingAdd  RingLang RingLang
+  | RingMult RingLang RingLang
+
+
+
+
+
+  RingAdd  l r -> interpRingLang l + interpRingLang r
+  RingMult l r -> interpRingLang l * interpRingLang r
+\end{lstlisting}
+\end{frame}
+
+\plain{Nooooooooooooooooooooo- oooooooooooooooooo!}
+
+\begin{frame}
+  \frametitle{Let's use category theory!}
+  \begin{displaymath}
+    \xymatrix{
+      \mathtt{AddLang} & \bullet \ar[rdd]_{???} & & \ar[ldd]^{???} \bullet & \mathtt{MultLang} \\
+      & & & & \\
+      & & \bullet & & \\
+      & & \mathtt{RingLang} & & \\
+    }
+  \end{displaymath}
+\end{frame}
+
+\section{Once more, with feeling!}
+
+\begin{frame}[fragile]
+  \frametitle{Routine recursion scheme surgery}
+\begin{lstlisting}[p]
+newtype Fix f = Fix { unFix :: f (Fix f) }
+
+fixFold :: Functor f => (f a -> a) -> (Fix f -> a)
+fixFold phi = go where go = phi . fmap go . unFix
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Routine recursion scheme surgery}
+\begin{lstlisting}
+{-# LANGUAGE UndecidableInstances #-}
+
+deriving instance Show (f (Fix f)) => Show (Fix f)
+deriving instance Eq   (f (Fix f)) => Eq   (Fix f)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Routine recursion scheme surgery}
+\begin{lstlisting}
+{-# LANGUAGE DeriveFunctor #-}
+
+data AddF  x = AddI  Integer | AddF  x x deriving ( Show, Eq, Functor )
+data MultF x = MultI Integer | MultF x x deriving ( Show, Eq, Functor )
+
+type AddLang'  = Fix AddF
+type MultLang' = Fix MultF
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Routine recursion scheme surgery}
+\begin{lstlisting}
+addLangExp' :: AddLang'
+addLangExp' = Fix (AddF (Fix (AddI 1)) (Fix (AddI 3)))
+
+multLangExp' :: MultLang'
+multLangExp' = Fix (MultF (Fix (MultI 1)) (Fix (MultI 3)))
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Routine recursion scheme surgery}
+\begin{lstlisting}
+-- Smart constructors! Yessssssss!
+addI :: Integer -> AddLang'
+addI = Fix . AddI
+
+multI :: Integer -> MultLang'
+multI = Fix . MultI
+
+addAdd :: AddLang' -> AddLang' -> AddLang'
+addAdd l r = Fix (AddF l r)
+
+multMult :: MultLang' -> MultLang' -> MultLang'
+multMult l r = Fix (MultF l r)
+
+addLangExp' :: AddLang'
+addLangExp' = addAdd (addI 1) (addI 3)
+
+multLangExp' :: MultLang'
+multLangExp' = multMult (multI 1) (multI 3)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Routine recursion scheme surgery}
+\begin{lstlisting}
+interpAddF :: AddF Integer -> Integer
+interpAddF = \case
+  AddI i   -> i
+  AddF l r -> l + r
+
+interpMultF :: MultF Integer -> Integer
+interpMultF = \case
+  MultI i   -> i
+  MultF l r -> l * r
+
+interpAddLang' :: AddLang' -> Integer
+interpAddLang' = fixFold interpAddF
+
+interpMultLang' :: MultLang' -> Integer
+interpMultLang' = fixFold interpMultF
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Routine recursion scheme surgery}
+\begin{lstlisting}
+{-# LANGUAGE TypeOperators #-}
+
+data (f :+: g) x 
+  = Inl (f x) 
+  | Inr (g x) 
+  deriving ( Eq, Show, Functor )
+
+-- Natural :+: eliminator
+foldSum :: (f a -> a) -> (g a -> a) -> ((f :+: g) a -> a)
+foldSum falg galg = \case
+  Inl fa -> falg fa
+  Inr ga -> galg ga
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{The prize!}
+\begin{lstlisting}
+type RingLang' = Fix (AddF :+: MultF)
+
+-- More smart constructors!
+ringI :: Integer -> AddLang'
+ringI = Fix . Inl . AddI  -- why not via MultI?
+
+ringAdd :: AddLang' -> AddLang' -> AddLang'
+ringAdd l r = Fix (Inl (AddF l r))
+
+ringMult :: MultLang' -> MultLang' -> MultLang'
+ringMult l r = Fix (Inr (MultF l r))
+
+ringLangExp' :: RingLang'
+ringLangExp' = ringMult (ringAdd (ringI 3) (ringI 2)) (ringI 3)
+
+interpRingLang' :: RingLang' -> Integer
+interpRingLang' = fixFold (foldSum interpAddF interpMultF)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+Prelude> interpRingLang' ringLangExp'
+
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+Prelude> interpRingLang' ringLangExp'
+15
+\end{lstlisting}
+\end{frame}
+
+\plain{Yessssssss! HASKELL! \\ \textbackslash{}textbackslash o/}
+
+\begin{frame}
+  \frametitle{D. R. Y. Stats}
+  \begin{center}
+    40 additions, 3 new PRAGMAs
+    
+    \pause
+
+    Used \texttt{Fix} in anger
+  \end{center}
+\end{frame}
+
+\plain{Yessssssss! HASKELL! \\ (+1 Functional Programming)}
+
+\begin{frame}
+  \frametitle{In all seriousness...}
+  Generalizing \lstinline{:+:}
+
+  Wouter Swierstra, \textit{Data types \`a la carte}.
+
+  Really cool.
+\end{frame}
+
+\section{Data types \`a la Carette, Kiselyov, and Shan}
+
+\begin{frame}
+  Let's try this again...
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Design by wishful thinking}
+\begin{lstlisting}
+class Adds v where
+  add :: v -> v -> v
+
+class Multiplies v where
+  mult :: v -> v -> v
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+instance Adds Integer where add = (+)
+instance Multiplies Integer where mult = (*)
+
+addsExp :: Integer
+addsExp = add 1 3
+
+multsExp :: Integer
+multsExp = mult 1 3
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+class FromInteger v where
+  i :: Integer -> v
+
+instance FromInteger Integer where
+  i = id
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+addsExp :: (FromInteger v, Adds v) => v
+addsExp = add (i 1) (i 3)
+
+multsExp :: (FromInteger v, Multiplies v) => v
+multsExp = mult (i 1) (i 3)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+{-# LANGUAGE ConstraintKinds #-}
+
+type Rings v = (FromInteger v, Adds v, Multiplies v)
+
+ringsExp :: Rings v => v
+ringsExp = mult (add (i 3) (i 2)) (i 3)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+Prelude> ringsExp
+
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+Prelude> ringsExp
+15
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+Prelude> ringsExp :: Integer
+15
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{But then!}
+\begin{lstlisting}
+instance FromInteger RingLang where i    = RingLangIntLit
+instance Adds        RingLang where add  = RingAdd
+instance Multiplies  RingLang where mult = RingMult
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+Prelude> ringsExp :: RingLang
+
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+Prelude> ringsExp :: RingLang
+RingMult (RingAdd (RingLangIntLit 3) 
+                  (RingLangIntLit 2)) 
+         (RingLangIntLit 3)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Recap}
+  \begin{itemize}
+  \pause
+  \item One-line composabiity
+  \pause
+  \item Needn't mention concrete data types or \lstinline{Inl}/\lstinline{Inr}
+    \pause
+    \begin{itemize}
+    \item ``tagless''
+    \end{itemize}
+  \pause
+  \item But if we have them, we can still recover ``raw'' ASTs
+  \end{itemize}
+\end{frame}
+
+\section{"Does is scale?"}
+
+\begin{frame}
+  Yes.
+\end{frame}
+
+\section{The "Monad Transformer Library"}
+
+
+
+\end{document}
+
+%%% Local Variables: 
+%%% coding: utf-8
+%%% mode: latex
+%%% TeX-engine: xetex
+%%% End: 
