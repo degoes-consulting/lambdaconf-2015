@@ -16,3 +16,4 @@ The official supporting materials repository for LambdaConf 2015.
 
  * [How to Learn Haskell in Less Than 5 Years](speakers/bitemyapp/howtolearnhaskell) by [Chris Allen](http://twitter.com/bitemyapp) 
  * [Scalaz 102 - Level Up Your Scalaz Foo!](speakers/cfrederickson/) by [Colt Frederickson](http://twitter.com/coltfred)
+ * [The Case for the Cutting Edge](speakers/farmdawgnation/) by [Matt Farmer](http://twitter.com/farmdawgnation)
