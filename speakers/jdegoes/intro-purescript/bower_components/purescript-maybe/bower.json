@@ -1,0 +1,23 @@
+{
+  "name": "purescript-maybe",
+  "homepage": "https://github.com/purescript/purescript-maybe",
+  "description": "Optional values",
+  "keywords": [
+    "purescript"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "tests",
+    "tmp",
+    "bower.json",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "dependencies": {
+    "purescript-control": "~0.2.0"
+  }
+}

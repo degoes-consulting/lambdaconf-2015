@@ -1012,8 +1012,8 @@ class (Eq a) <= Ord a where
 
 ```haskell
 class (Eq a) <= Ord a where
-         |
-         |
+--       |
+--       |
 -- The superclass.
 --
 -- Read: "Ord a implies Eq a"

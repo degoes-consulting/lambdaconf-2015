@@ -1,0 +1,30 @@
+{
+  "name": "purescript-exceptions",
+  "homepage": "https://github.com/purescript/purescript-exceptions",
+  "description": "Exception effects",
+  "keywords": [
+    "purescript"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "tests",
+    "tmp",
+    "bower.json",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "version": "0.2.3",
+  "_release": "0.2.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.3",
+    "commit": "f785aafdbaf386e350d781cbc2734091d8f899e6"
+  },
+  "_source": "git://github.com/purescript/purescript-exceptions.git",
+  "_target": "~0.2.3",
+  "_originalSource": "purescript-exceptions"
+}

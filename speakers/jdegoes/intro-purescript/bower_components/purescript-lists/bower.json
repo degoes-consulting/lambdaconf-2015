@@ -1,0 +1,31 @@
+{
+  "name": "purescript-lists",
+  "description": "Linked lists",
+  "keywords": ["purescript"],
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "tests",
+    "js",
+    "tmp",
+    "bower.json",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "dependencies": {
+    "purescript-arrays": "~0.3.0",
+    "purescript-maybe": "~0.2.1",
+    "purescript-foldable-traversable": "~0.3.0",
+    "purescript-unfoldable": "~0.3.0",
+    "purescript-transformers": "~0.5.0",
+    "purescript-lazy": "~0.3.0",
+    "purescript-strings": "~0.4.1",
+    "purescript-monoid": "~0.2.0",
+    "purescript-tuples": "~0.3.0"
+  },
+  "devDependencies": {
+    "purescript-quickcheck" : "~0.5.0"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "purescript-simple-dom",
+  "description": "A hopefully easy to use library for dealing with the DOM and general javascript APIs.",
+  "keywords": [
+    "purescript"
+  ],
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "tests",
+    "js",
+    "tmp",
+    "bower.json",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "main": [],
+  "dependencies": {
+    "purescript-dom": "~0.1.1",
+    "purescript-arrays": "~0.3.2",
+    "purescript-maybe": "~0.2.1",
+    "purescript-foldable-traversable": "~0.3.0",
+    "purescript-tuples": "~0.3.0",
+    "purescript-strings": "~0.4.3",
+    "purescript-sets": "~0.3.0"
+  },
+  "devDependencies": {
+    "purescript-math": "~0.1.0",
+    "purescript-quickcheck": "~0.5.0"
+  }
+}

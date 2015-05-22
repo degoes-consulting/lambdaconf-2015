@@ -1,0 +1,33 @@
+{
+  "name": "purescript-strings",
+  "homepage": "https://github.com/purescript/purescript-strings",
+  "description": "String utility functions and regular expressions",
+  "keywords": [
+    "purescript"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "tests",
+    "tmp",
+    "bower.json",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "dependencies": {
+    "purescript-maybe": "~0.2.1"
+  },
+  "version": "0.4.5",
+  "_release": "0.4.5",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.4.5",
+    "commit": "bba91eee347ca73ad5ddb0fc868bef77991008b0"
+  },
+  "_source": "git://github.com/purescript/purescript-strings.git",
+  "_target": "~0.4.5",
+  "_originalSource": "purescript-strings"
+}

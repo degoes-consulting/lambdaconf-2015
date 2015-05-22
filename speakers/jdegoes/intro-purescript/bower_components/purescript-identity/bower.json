@@ -1,0 +1,25 @@
+{
+  "name": "purescript-identity",
+  "homepage": "https://github.com/purescript/purescript-identity",
+  "description": "Identity value/functor",
+  "keywords": [
+    "purescript"
+  ],
+  "authors": [
+    "Gary Burgess <gary.burgess@gmail.com>",
+    "Hardy Jones <jones3.hardy@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "bower.json",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "dependencies": {
+    "purescript-foldable-traversable": "~0.3.0"
+  }
+}
