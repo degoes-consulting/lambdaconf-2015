@@ -39,7 +39,7 @@
 \title{Give me freedom!}
 \subtitle{Or let me forget}
 \date{\today}
-\author{Joseph Tel Abrahamson}
+\author{Joseph Tel Abrahamson / @sdbo / \texttt{github.com/tel} }
 
 \renewcommand{\to}{\ensuremath{\rightarrow}}
 \DeclareMathOperator{\Free}{\texttt{Free}}
@@ -56,16 +56,17 @@
 \begin{frame}
   \frametitle{Synopsis}
   \begin{itemize}
-  \item Freedom: a \textit{noun}, no an \textit{adjective}, no a \textit{verb}!
-  \item Knowing about Freedom by Forgetting what we know
-  \item Putting Forgetfulness to work
+  \item Ways of seeing Freedom: a noun, an adjective, a verb
+  \item Thinking through Freedom as a process
+  \item Using Category Theory as a tool of insight
   \end{itemize}
 \end{frame}
 
-\section{\texttt{Free} is a noun}
+\section{A first glimpse of Freedom}
 
 \begin{frame}[fragile]
-  \frametitle{The \texttt{Free} monad}
+  \frametitle{\texttt{Free} is a noun}
+  \pause
 \begin{lstlisting}
 data Free f a
   = Return a
@@ -73,33 +74,32 @@ data Free f a
 \end{lstlisting}
 \end{frame}
 
-\begin{frame}
-  \frametitle{Construction and destruction}
+\begin{frame}[fragile,fragile]
+  \frametitle{What are Free Monads anyway?}
+  \pause
+\begin{lstlisting}
+newtype Identity a = Identity a
+newtype Fix f = Fix (f (Fix f))
 
-  \begin{itemize}
-  \item<1> When \texttt{f} is a \texttt{Functor}, \texttt{Free f} is a
-    \texttt{Monad}
-  \item<2> For any value \texttt{x :: f a} we have \texttt{lift x :: Free f a}
-  \item<3> For any 
-    \begin{enumerate}
-    \item \texttt{Monad} \texttt{m} and
-    \item \textit{interpretation} of \texttt{f} into \texttt{m}, \texttt{phi ::
-        forall x. f x -> m x},
-    \end{enumerate}
-    we have \texttt{fold phi :: forall a . Free f a -> m a}.
-  \end{itemize}
+-- Free f a ~= Identity a + Fix f
+\end{lstlisting}
+  \pause
+\begin{lstlisting}
+-- I don't know, something like that, not quite kind of?
+\end{lstlisting}
 \end{frame}
 
+\plain{What's going on here?}
+
 \begin{frame}[fragile]
-  \frametitle{e.g.}
 \begin{lstlisting}
-lift :: Functor f => f a -> Free f a
-fold :: Monad m => (forall x . f x -> m x) -> (forall x . Free f x -> m x)
+lift     :: Functor f => f a -> Free f a
+foldFree :: Monad m => (forall x . f x -> m x) -> (Free f a -> m a)
 \end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]
-  \frametitle{Very nice embedded DSLs... for \textit{less}!}
+  \frametitle{Free Monads as "interpreters"}
 \begin{lstlisting}
 data TeletypeF a 
   = PutStrLn String a 
@@ -141,35 +141,75 @@ echoIO = fold interp echoTT
 \end{lstlisting}
 \end{frame}
 
+\begin{frame}
+  ``Less'' $\neq$ Free
+\end{frame}
+
+\plain{What's going on here?}
+
 \section{Free is an adjective}
 
 \begin{frame}
-  \begin{center}
-    \texttt{Free}
-  \end{center}
+  \frametitle{"Free" things!}
+  \begin{itemize}
+  \item \lstinline{Free} makes free \lstinline{Monad}s! \pause
+  \item Free \lstinline{Monoid}s are lists?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Free \texttt{Monoid}s are lists}
+\begin{lstlisting}
+pure    :: a -> [a]
+foldMap :: Monoid m => (a -> m) -> ([a] -> m)
+\end{lstlisting}
+  \pause  
+  ``\lstinline{Foldable} just means \lstinline{toList}''
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Free \texttt{Monoid}s are lists}
+\begin{lstlisting}
+lift     :: Functor f => f a -> Free f a
+foldFree :: Monad m => (forall x . f x -> m x) -> (Free f a -> m a)
+\end{lstlisting}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Other Freedoms we have}
-  \begin{enumerate}
-  \pause\item Free \texttt{Monad}s
-  \pause\item Free \texttt{MonadPlus}es
-  \pause\item Free \texttt{Applicative}s
-  \pause\item Free \texttt{Alternative}s
-  \pause\item Free \texttt{Monoid}s (``lists'')
-  \pause\item Free \texttt{Category}s
-  \pause\item ...
-  \end{enumerate}
+  \frametitle{"Free" things!}
+  \begin{itemize}
+  \item \lstinline{Free} makes free \lstinline{Monad}s! \pause
+  \item Free \lstinline{Monoid}s are lists! \pause
+  \item We can make free \lstinline{Applicative}s, I hear \pause
+  \item Can there be free things of any kind? Sure looks like it! \pause
+  \item Let's free all the things!
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{What does it mean to be free?}
-  \pause
-
-  \textit{This is the wrong question!}
+  \begin{itemize}
+  \item Lists are the ``largest'' \lstinline{Monoid}s
+  \item Lists are the ``simplest'' \lstinline{Monoid}s \pause
+  \item What are the largest and simplest examples of other things?
+  \end{itemize}
 \end{frame}
 
-\section{Free is a verb}
+\begin{frame}
+  \frametitle{More questions than answers}
+  \begin{itemize}
+  \item \lstinline{Free f} is the ``largest'' \lstinline{Monad}?  \pause
+  \item Does that mean that both \lstinline{Free TeletypeF} and
+    \lstinline{Free []} are \textit{both} the ``largest'' \lstinline{Monad}?
+    \pause
+  \item I hear that \lstinline{Free f} and \lstinline{Operational f} are
+    \textit{both} free monads? \pause But they're not isomorphic.
+  \end{itemize}
+\end{frame}
+
+\plain{Wat.}
+\plain{What's going on here?}
+
+\section{Freedom is a process}
 
 \begin{frame}[fragile]
   \frametitle{What is \texttt{Free}, really?}
@@ -177,58 +217,25 @@ echoIO = fold interp echoTT
   \uncover<3->{But really more like...}
 
   \begin{align*}
-    & \action<+->{\mathtt{>}\ \mathtt{:kind}\ \Free_{\Monad}} \\
+    & \action<+->{\mathtt{>}\ \mathtt{:kind}\ \Free} \\
     & \action<+->{
-        \Free_{\Monad} \ty 
+        \Free \ty 
           (\star \to \star)_{\uncover<3->{\Functor}} \to
           (\star \to \star)_{\uncover<3->{\Monad}}
       }
   \end{align*}
   
-\pause
+  \pause
 
-\begin{tcolorbox}[boxrule=0pt, arc=0pt, outer arc=0pt]
+  \begin{tcolorbox}[boxrule=0pt, arc=0pt, outer arc=0pt]
 \begin{lstlisting}
 -- remember...
 instance Functor f => Monad (Free f)
 \end{lstlisting}
-\end{tcolorbox}
+  \end{tcolorbox}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{Freedom is a process}
-
-\begin{lstlisting}
-data IsAFunctor f
-  = IsAFunctor 
-    { fmap :: forall a b . (a -> b) -> (f a -> f b) 
-    }
-
-data IsAMonad f
-  = IsAMonad
-    { return :: forall a   . a -> f a
-    , bind   :: forall a b . (a -> f b) -> (f a -> f b)
-    }
-
-free :: IsAFunctor f -> IsAMonad (Free f)
-\end{lstlisting}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Other ``Freedoms'' we have}
-  \begin{enumerate}
-  \item Free \texttt{Monad}s
-  \item Free \texttt{MonadPlus}es
-  \item Free \texttt{Applicative}s
-  \item Free \texttt{Alternative}s
-  \item Free \texttt{Monoid}s
-  \item Free \texttt{Category}s
-  \end{enumerate}
-  
-  \pause
-
-  All \textit{underdefined}. Freedom goes from a source to a target!
-\end{frame}
+\plain{Oh, an \textit{arrow}! \pause Time to use some category theory!}
 
 \begin{frame}
   \frametitle{A picture of ``Free monads"}
@@ -248,12 +255,10 @@ free :: IsAFunctor f -> IsAMonad (Free f)
       \mathtt{Hask}_{(\star\to\star)} \xymatrix{\bullet \ar[r]^{\Free} & \bullet}\mathtt{Functor}
     \end{displaymath}
   \end{description}
-  
 \end{frame}
 
-\section{Gaining Freedom and Forgetting it all}
-
 \begin{frame}
+  \frametitle{Dualize!}
   \begin{center}
     \begin{displaymath}
       \mathtt{Functor}
@@ -267,6 +272,7 @@ free :: IsAFunctor f -> IsAMonad (Free f)
 \end{frame}
 
 \begin{frame}
+  \frametitle{Dualize!}
   \begin{center}
     \begin{displaymath}
       \mathtt{Functor}
@@ -279,31 +285,22 @@ free :: IsAFunctor f -> IsAMonad (Free f)
   \end{center}
 \end{frame}
 
-\begin{frame}[fragile]
-  \frametitle{It's easy to forget}
-  \begin{align*}
-    \Forget_{\Monad} \ty 
-        (\star \to \star)_{{\Monad}} \to
-        (\star \to \star)_{{\Functor}}
-  \end{align*}
-\end{frame}
-
-\begin{frame}[fragile]
-\begin{lstlisting}
-type Forget f a = f a
-
-forget :: IsAMonad f -> IsAFunctor (Forget f)
-forget (IsAMonad { bind, return }) = IsAFunctor fmap where
-  fmap f = bind (return . f)
-\end{lstlisting}
+\begin{frame}
+  \begin{itemize}
+  \item If $\Forget \ty \Monad \to \Functor$ \textit{forgets} that some type is
+    a \lstinline{Monad}... \pause
+  \item Is $\Free \ty \Functor \to \Monad$ remembering it?
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Too much to ask for}
+  \frametitle{Not quite}
   \begin{align*}
     (\Free \circ \Forget)(M) &\neq M \\
     (\Forget \circ \Free)(F) &\neq F
   \end{align*}
+  \pause
+  For good reason!
 \end{frame}
 
 \begin{frame}
@@ -333,14 +330,152 @@ forget (IsAMonad { bind, return }) = IsAFunctor fmap where
 \begin{frame}
   \frametitle{Adjunctions}
   \begin{align*}
-    F \circ G \circ F &= Id \\
-    G \circ F \circ G &= Id 
+    Free &\dashv Forget
+  \end{align*}
+  \begin{align*}
+    Free \circ Forget \circ Free &= Free \\
+    Forget \circ Free \circ Forget &= Forget 
   \end{align*}
 \end{frame}
 
+\begin{frame}[fragile]
+  \frametitle{What does an Adjunction buy us?}
+  \begin{align*}
+    F &: \mathcal{C} \to \mathcal{D} \\
+    G &: \mathcal{D} \to \mathcal{C}
+  \end{align*}
+  \pause
+  \begin{align*}
+    \forall c : \mathcal{C}, d &: \mathcal{D}, \mathcal{D}(F c, d) \equiv \mathcal{D}(c, G d)
+  \end{align*}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{What does an Adjunction buy us?}
+\begin{lstlisting}
+type Forget f a = f a
+
+-- "Natural transformations"
+type f :-> g = forall x . f x -> g x
+
+fwd :: Monad m => (Free f :-> m) -> (f :-> Forget m)
+bwd :: Monad m => (f :-> Forget m) -> (Free f :-> m)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{What does an Adjunction buy us?}
+\begin{lstlisting}
+
+
+
+
+
+fwd :: Monad m => (forall x . Free f x -> m x) -> (f a -> m a)
+bwd :: Monad m => (forall x . f x -> m x) -> (Free f a -> m a)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+foldFree :: Monad m => (forall x . f x -> m x) -> (Free f a -> m a)
+foldFree = bwd
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+idFree :: Free f x -> Free f x
+idFree = id
+
+-- m ~ Free f
+lift :: f a -> Free f a
+lift = fwd idFre
+\end{lstlisting}
+\end{frame}
+
 \begin{frame}
-  \frametitle{Adjunctions}
-  
+  \frametitle{What does an Adjunction buy us?}
+  Everything we need.
+\end{frame}
+
+\section{Bonus: Freedom for everyone}
+
+\begin{frame}[fragile]
+  \frametitle{Definition by elimination}
+  \pause
+\begin{lstlisting}
+curious :: _
+curious = flip bwd
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Definition by elimination}
+\begin{lstlisting}
+curious :: Monad m => Free f a -> (f :-> m) -> m a
+curious = flip bwd
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Definition by elimination}
+\begin{lstlisting}
+
+
+newtype Free f a 
+  = Free { runFree :: forall m . Monad m => (f :-> m) -> m a }
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Definition by elimination}
+\begin{lstlisting}
+{-# LANGUAGE ConstraintKinds #-}
+
+newtype Free c f a 
+  = Free { runFree :: forall m . c m => (f :-> m) -> m a }
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Definition by elimination}
+\begin{lstlisting}
+{-# LANGUAGE ConstraintKinds #-}
+
+newtype HFree c f a 
+  = HFree { runHFree :: forall m . c m => (f :-> m) -> m a }
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Definition by elimination}
+\begin{lstlisting}
+{-# LANGUAGE ConstraintKinds #-}
+
+newtype Free c a 
+  = Free { runFree :: forall r . c r => (a -> r) -> r }
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Definition by elimination}
+\begin{lstlisting}
+free :: [a] -> Free Monoid a
+free as = Free $ \ar -> foldMap ar as
+
+unfree :: Free Monoid a -> [a]
+unfree f = runFree f (\x -> [x])
+\end{lstlisting}
+\end{frame}
+
+\section{Thanks!}
+
+\begin{frame}
+  \frametitle{Tweet at me!}
+  \begin{center}
+    @sdbo
+  \end{center}
 \end{frame}
 
 \end{document}

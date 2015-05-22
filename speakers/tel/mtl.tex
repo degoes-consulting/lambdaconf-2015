@@ -38,7 +38,7 @@
 
 \title{Finally \texttt{mtl}!}
 \date{\today}
-\author{Joseph Tel Abrahamson}
+\author{Joseph Tel Abrahamson / @sdbo / \texttt{github.com/tel} }
 
 \renewcommand{\to}{\ensuremath{\rightarrow}}
 \DeclareMathOperator{\ty}{\texttt{ :: }}
@@ -52,8 +52,8 @@
   \begin{itemize}
   \item What is ``Finally Tagless''? What's important about it?
   \item What is the ``Monad Transformer Library'', \texttt{mtl}?
-  \item \texttt{mtl} is a ``finally tagless'' effect library
-  \item Comparing effect handlers
+  \item \texttt{mtl} is a ``finally tagless'' effect library---and that's quite
+    nice!
   \end{itemize}
 \end{frame}
 
@@ -485,7 +485,143 @@ RingMult (RingAdd (RingLangIntLit 3)
 
 \section{The "Monad Transformer Library"}
 
+\begin{frame}
+  Or: ``Haskell2010 Composable Effects Through Prolog Technology''
+\end{frame}
 
+\begin{frame}
+  Or: ``Haskell2010 Composable Effects Through Typeclass Technology''
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+import Control.Monad.State
+
+inc :: MonadState Int m => m Int
+inc = do
+  count <- get
+  set (count + 1)
+  return count
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+-- let's get a concrete stack from `transformers`
+import Control.Monad.Trans.State (runState)
+
+Prelude> flip runState 0 inc 
+(1, 1)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{lstlisting}
+-- let's get a concrete stack from `transformers`
+import Control.Monad.Trans.State (runState)
+
+Prelude> flip runState 0 (inc :: StateT Int Identity Int)
+(1, 1)
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  Solve your monad stacks at compile time! \pause Not runtime\pause, nor write-time.
+\end{frame}
+
+\section{Complaints}
+
+\begin{frame}[fragile]
+  \frametitle{Just a few points in the lattice}
+\begin{lstlisting}
+MonadTrans (ContT r) Source	 
+Monad (ContT r m) Source	 
+Functor (ContT r m) Source	 
+Applicative (ContT r m) Source	 
+MonadIO m => MonadIO (ContT r m) Source	 
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{All points in the lattice}
+\begin{lstlisting}
+MonadCont (ContT r m) Source	 
+\end{lstlisting}
+  \pause
+\begin{lstlisting}
+MonadCont m => MonadCont (MaybeT m) Source	 
+MonadCont m => MonadCont (ListT m) Source	 
+MonadCont m => MonadCont (IdentityT m) Source	 
+(Monoid w, MonadCont m) => MonadCont (WriterT w m) Source	 
+(Monoid w, MonadCont m) => MonadCont (WriterT w m) Source	 
+(Error e, MonadCont m) => MonadCont (ErrorT e m) Source	 
+MonadCont m => MonadCont (ExceptT e m) Source	 
+MonadCont m => MonadCont (StateT s m) Source	 
+MonadCont m => MonadCont (StateT s m) Source	 
+MonadCont m => MonadCont (ReaderT r m) Source	 
+(Monoid w, MonadCont m) => MonadCont (RWST r w s m) Source	 
+(Monoid w, MonadCont m) => MonadCont (RWST r w s m) Source
+...
+-- This gets quite complex
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+  \frametitle{All points in the lattice}
+  But this is just the name of the game! Effects don't commute.
+\end{frame}
+
+\begin{frame}[fragile,fragile]
+  \frametitle{Lose control of ordering}
+\begin{lstlisting}
+op :: (MonadError e m, MonadState s m) => m ()
+\end{lstlisting}
+  \pause
+\begin{lstlisting}
+op ==> StateT s (Either e) ()
+op ==> EitherT e (State s) ()
+\end{lstlisting}
+  \pause
+No right answer!
+\end{frame}
+
+\begin{frame}
+  \frametitle{Loose control of ordering}
+  This is why we have laws.
+  \pause
+  Combining laws ``correctly'' \textit{is} hard.
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Loose control of ordering}
+\begin{lstlisting}
+class (MonadState s m, MonadError e m) => MonadParser s e m where {}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Tight denotation of semantics}
+\begin{lstlisting}
+-- Tighten to your domain
+class MonadParser m where
+  type family Char m :: *
+  type family Error m :: *
+
+  peekChar :: m (Char m)
+  getChar  :: m (Char m)
+  
+  failParse :: Error m -> m a
+\end{lstlisting}
+\end{frame}
+
+\section{Thanks!}
+
+\begin{frame}
+  \frametitle{Tweet at me!}
+  \begin{center}
+    @sdbo
+  \end{center}
+\end{frame}
 
 \end{document}
 
