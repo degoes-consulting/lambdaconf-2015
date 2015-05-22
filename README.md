@@ -11,6 +11,7 @@ The official supporting materials repository for LambdaConf 2015.
  * [Scalaz 102 - Level Up Your Scalaz Foo!](speakers/cfrederickson/) by [Colt Frederickson](http://twitter.com/coltfred)
  * [Freya (F#) for HTTP Systems](speakers/andrew-cherry) by [Andrew Cherry](https://twitter.com/kolektiv)  
  * [LiquidHaskell: Refinement Types for Haskell](speakers/ranjitjhala/) by [Ranjit Jhala](http://twitter.com/ranjitjhala) 
+ * [Introduction to Constraint Logic Programming](speakers/kit1980) by [Sergii Dymchenko](http://twitter.com/kit1980) 
 
 # Talk Materials
 
