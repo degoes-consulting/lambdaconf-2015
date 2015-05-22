@@ -1,0 +1,14 @@
+-class(circle).
+-constructor([new/1]).
+-export([calculate_area/0]).
+
+attributes.
+
+Radius.
+
+methods.
+
+new(R) -> self::Radius = R.
+
+calculate_area() -> 3.1415 * self::Radius * self::Radius.
+

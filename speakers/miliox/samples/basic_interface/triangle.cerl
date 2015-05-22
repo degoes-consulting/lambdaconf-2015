@@ -1,0 +1,13 @@
+-class(triangle).
+-constructor([new/2]).
+-export([calculate_area/0]).
+
+attributes.
+
+Base; HeightBase.
+
+methods.
+
+new(B, HB) -> self::Base = B, self::HeightBase = HB.
+
+calculate_area() -> (self::Base * self::HeightBase) / 2.

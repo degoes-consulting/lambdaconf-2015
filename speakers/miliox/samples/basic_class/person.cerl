@@ -1,0 +1,30 @@
+-class(person).
+-constructor([new/3]).
+-export([print/0]).
+
+attributes.
+
+FirstName;
+LastName;
+Age.
+
+methods.
+
+new(FirstName, LastName, Age) when
+        is_list(FirstName) andalso
+        is_list(LastName)  andalso
+        is_number(Age) ->
+    self::FirstName = FirstName,
+    self::LastName = LastName,
+    self::Age = Age.
+
+print() ->
+    io:format("~s ~s ~w years old.~n",
+        [self::FirstName, self::LastName, self::Age]),
+    ok.
+
+class_methods.
+
+main() ->
+    P = person::new("Emiliano", "Firmino", 27),
+    P::print().

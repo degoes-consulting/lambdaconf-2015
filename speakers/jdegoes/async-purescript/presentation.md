@@ -276,6 +276,7 @@ A growing number of libraries & projects use `Aff`.
  * purescript-node-postgres
  * purescript-node-mongodb
  * purescript-routing
+ * purescript-spec
  * giflib-web
  * gulp-purescript
  * purefn/naggy

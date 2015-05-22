@@ -16,7 +16,7 @@ The repo to the LambdaConf 2015 presentations can be found here:
 https://github.com/degoes-consulting/lambdaconf-2015
 
 The Markov application template we will be working from can be
-found in speakers/stevenproctor/markov.
+found at https://github.com/stevenproctor/markov_workshop_template.
 
 This is the template of the project we are going to be updating
 and extending to write an Erlang application to generate Markov

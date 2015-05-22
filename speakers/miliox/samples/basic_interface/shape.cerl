@@ -1,0 +1,8 @@
+-interface(shape).
+-export([calculate_area/0]).
+
+
+methods.
+
+calculate_area().
+
