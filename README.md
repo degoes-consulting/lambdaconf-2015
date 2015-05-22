@@ -21,3 +21,4 @@ The official supporting materials repository for LambdaConf 2015.
  * [The Case for the Cutting Edge](speakers/farmdawgnation/) by [Matt Farmer](http://twitter.com/farmdawgnation)
  * [A Bird's Eye View of ClojureScript](speakers/tennety/A%20Bird's%20Eye%20View%20of%20ClojureScript.pdf) by [Chandu Tennety](http://tennety.github.io)
  * [Computation Expressions in Scala](speakers/jedesah) by [Jean-Rémi Desjardins](https://github.com/jedesah)
+ * [Axle: A Spire-based DSL](speakers/adampingel) by [Adam Pingel](https://github.com/adampingel)
