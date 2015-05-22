@@ -57,4 +57,4 @@ Finally, if you prefer, you can build LiquidHaskell from:
 
 2. [github](https://github.com/ucsd-progsys/liquidhaskell/#how-to-clone-build-and-install)
 
-And then run the code in `ranjitjhala/src/`
+And then run `liquid` on [these files](speakers/ranjitjhala/src/) 
