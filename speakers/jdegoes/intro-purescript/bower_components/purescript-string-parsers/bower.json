@@ -1,0 +1,30 @@
+{
+  "name": "purescript-string-parsers",
+  "description": "A parsing library for parsing strings",
+  "keywords": [
+    "purescript"
+  ],
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "tests",
+    "js",
+    "tmp",
+    "bower.json",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "dependencies": {
+    "purescript-control": "~0.2.0",
+    "purescript-arrays": "~0.3.0",
+    "purescript-maybe": "~0.2.0",
+    "purescript-strings": "~0.4.2",
+    "purescript-foldable-traversable": "~0.3.0"
+  },
+  "devDependencies": {
+    "purescript-math": "~0.1.0",
+    "purescript-quickcheck": "~0.5.0"
+  }
+}

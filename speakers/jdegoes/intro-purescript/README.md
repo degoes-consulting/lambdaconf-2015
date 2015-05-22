@@ -20,16 +20,24 @@ You can do this by running `psc` from the command-line. If you get an error, you
 
 <https://nodejs.org/download/>
 
-## 4. Install NPM Dependencies
+## 4. Install Bower &amp; Gulp
+
+Bower is used for managing dependencies for most PureScript projects, and Gulp is used to build the project.
+
+```bash
+npm install -g bower
+npm install -g gulp
+```
+
+## 5. Install NPM Dependencies
 
 This installs the tools required to build the project specified in `package.json`.
 
 ```bash
-npm install -g gulp
 npm install
 ```
 
-## 5. Install Bower Dependencies
+## 6. Install Bower Dependencies
 
 This installs the PureScript dependencies specified in `bower.json`.
 
@@ -37,7 +45,7 @@ This installs the PureScript dependencies specified in `bower.json`.
 bower install
 ```
 
-## 6. Compile with PureScript
+## 7. Compile with PureScript
 
 This runs the build process, which will generate a `psc.js` in the `output` directory.
 
@@ -45,7 +53,7 @@ This runs the build process, which will generate a `psc.js` in the `output` dire
 gulp
 ```
 
-## 7. Open HTML to Run Game
+## 8. Open HTML to Run Game
 
 On Mac OS X:
 

@@ -1,0 +1,23 @@
+{
+  "name": "purescript-either",
+  "homepage": "https://github.com/purescript/purescript-either",
+  "description": "Values with two possibilities",
+  "keywords": [
+    "purescript"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "tests",
+    "tmp",
+    "bower.json",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "dependencies": {
+    "purescript-control": "~0.2.0"
+  } 
+}

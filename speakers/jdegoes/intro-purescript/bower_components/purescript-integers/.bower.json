@@ -1,0 +1,30 @@
+{
+  "name": "purescript-integers",
+  "homepage": "https://github.com/purescript/purescript-integers",
+  "description": "Integer numeric type",
+  "keywords": [
+    "purescript"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "tests",
+    "tmp",
+    "bower.json",
+    "Gruntfile.js",
+    "package.json"
+  ],
+  "version": "0.1.0",
+  "_release": "0.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.1.0",
+    "commit": "e0d71323854185bb48cb6827d079cbee8aea6851"
+  },
+  "_source": "git://github.com/purescript/purescript-integers.git",
+  "_target": "~0.1.0",
+  "_originalSource": "purescript-integers"
+}

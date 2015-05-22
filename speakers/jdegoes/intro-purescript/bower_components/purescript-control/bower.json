@@ -1,0 +1,20 @@
+{
+  "name": "purescript-control",
+  "homepage": "https://github.com/purescript/purescript-control",
+  "description": "Monad and Applicative utility functions",
+  "keywords": [
+    "purescript"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "bower_components",
+    "node_modules",
+    "output",
+    "tests",
+    "tmp",
+    "bower.json",
+    "Gruntfile.js",
+    "package.json"
+  ]
+}
