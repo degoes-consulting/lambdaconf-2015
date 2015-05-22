@@ -531,17 +531,36 @@ Prelude> flip runState 0 (inc :: StateT Int Identity Int)
 
 \section{Complaints}
 
-\begin{frame}[fragile,fragile]
+\begin{frame}[fragile]
+  \frametitle{Just a few points in the lattice}
+\begin{lstlisting}
+MonadTrans (ContT r) Source	 
+Monad (ContT r m) Source	 
+Functor (ContT r m) Source	 
+Applicative (ContT r m) Source	 
+MonadIO m => MonadIO (ContT r m) Source	 
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
   \frametitle{All points in the lattice}
 \begin{lstlisting}
-MonadState s (StateT s m)
+MonadCont (ContT r m) Source	 
 \end{lstlisting}
   \pause
 \begin{lstlisting}
-MonadState s m => MonadState s (WriterT w m)
-MonadState s m => MonadState s (ReaderT w m)
-MonadState s m => MonadState s (ContT w m)
-MonadState s m => MonadState s (MonadPlus w m)
+MonadCont m => MonadCont (MaybeT m) Source	 
+MonadCont m => MonadCont (ListT m) Source	 
+MonadCont m => MonadCont (IdentityT m) Source	 
+(Monoid w, MonadCont m) => MonadCont (WriterT w m) Source	 
+(Monoid w, MonadCont m) => MonadCont (WriterT w m) Source	 
+(Error e, MonadCont m) => MonadCont (ErrorT e m) Source	 
+MonadCont m => MonadCont (ExceptT e m) Source	 
+MonadCont m => MonadCont (StateT s m) Source	 
+MonadCont m => MonadCont (StateT s m) Source	 
+MonadCont m => MonadCont (ReaderT r m) Source	 
+(Monoid w, MonadCont m) => MonadCont (RWST r w s m) Source	 
+(Monoid w, MonadCont m) => MonadCont (RWST r w s m) Source
 ...
 -- This gets quite complex
 \end{lstlisting}
