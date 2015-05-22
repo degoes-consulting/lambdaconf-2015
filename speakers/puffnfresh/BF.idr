@@ -114,12 +114,24 @@ mutual
 
 -- Literals
 
-data Every : List a -> Type where
+data Every : List Char -> Type where
+  Nil : Every []
+  (::) : BF c -> Every cs -> Every (c :: cs)
+
+toInstructions : Every cs -> Tape Instruction
+toInstructions [] = MkTape (repeat Nothing) Nothing (repeat Nothing)
+toInstructions (x :: y) =
+  case toInstructions y of
+    MkTape ls c rs => MkTape ls (Just (_ ** x)) (c :: rs)
 
 partial
 bf : (s : String) -> { auto p : Every (unpack s) } -> IO ()
+bf _ {p} = bf' emptyTape (toInstructions p)
+
 
 partial
 main : IO ()
 main = do
   bf"++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-."
+  bf"+++++++++++++++."
+  bf""
