@@ -166,7 +166,7 @@ locX :: Loc -> Number
 locX (Loc x _) = x
 
 locY :: Loc -> Number
-locY (Loc _ y) = Number
+locY (Loc _ y) = y
 
 locX (Loc 1 2) -- 1
 locY (Loc 1 2) -- 2
@@ -349,7 +349,7 @@ data NPC =
 
 ```haskell
 makeWolf :: String -> Loc -> Number -> NPC
-makeWolf name loc health = Wolf name loc health
+makeWolf name loc health = Wolf {name: name, loc: loc, health: health}
 
 nameOf :: NPC -> String
 nameOf (Ogre { name : n }) = n
@@ -374,8 +374,8 @@ nameOf (Wolf record) = record.name
 
 ```haskell
 changeName :: NPC -> NPC
-changeName (Ogre record) = Ogre record { name = "Shrek" }
-changeName (Wolf record) = Wolf record { name = "Big Bad" }
+changeName (Ogre r) = Ogre r { name = "Shrek" }
+changeName (Wolf r) = Wolf r { name = "Big Bad" }
 ```
 
 ---
@@ -491,12 +491,12 @@ isAlive h = case h of
 
 ---
 
-# Higher-Kinded Functions
+# Higher-Order Functions
 ### Or, OMG sets can hold functions!!!
 
 ---
 
-# Higher-Kinded Functions
+# Higher-Order Functions
 ### Functions that accept functions.
 
 ```haskell
@@ -506,7 +506,7 @@ likesEmptyString f = f ""
 
 ---
 
-# Higher-Kinded Functions
+# Higher-Order Functions
 ### Functions that return functions.
 
 ```haskell
@@ -521,7 +521,7 @@ matchesEvil "evil" -- true
 
 ---
 
-# Higher-Kinded Functions
+# Higher-Order Functions
 ### "Multi-parameter" functions.[^6]
 
 ```haskell
@@ -534,7 +534,7 @@ damageNpc damage = \npc -> ...
 --- 
 
 
-# Higher-Kinded Functions
+# Higher-Order Functions
 ### Making sense of "multi-parameter" functions: values.
 
 ```haskell
@@ -546,7 +546,7 @@ f a b c d e
 --- 
 
 
-# Higher-Kinded Functions
+# Higher-Order Functions
 ### Making sense of "multi-parameter" functions: types.
 
 ```haskell
@@ -558,7 +558,7 @@ f :: a -> b -> c -> d -> e
 
 ---
 
-# Higher-Kinded Functions
+# Higher-Order Functions
 ### MORE functions that return functions.
 
 ```haskell
