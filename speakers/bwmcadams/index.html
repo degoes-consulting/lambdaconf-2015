@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+	<html class="sl-root base export loaded">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>A SKEPTIC&#39;S LOOK AT SCALAZ&#39; &quot;GATEWAY DRUGS&quot;:  A PRACTICAL EXPLORATION: Slides</title>
+		<meta name="description" content="Slides">
+
+		<link rel="stylesheet" type="text/css" href="lib/offline-v2.css">
+	</head>
+	<body class="reveal-viewport theme-font-news theme-color-black-orange">
+		<div class="reveal">
+			<div class="slides">
+				<section data-id="500917e7902266fc740e4e4eb989f978"><div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 1146.66666666667px; height: 645px; left: -93px; top: 28px;" data-block-id="4cd5d35ec10571eb2d4be220ff16a5e9"><div class="sl-block-content" style="z-index: 12;"><img data-src="scalaz-gateway-drugs/1191463-heisenberg-scalaz-cover.png" style="visibility: visible;" data-natural-width="1600" data-natural-height="900"></div></div></section><section class="stack" data-id="586c1621b4b40454b7a6e1a26f1c7a20"><section data-id="0f8e9e8e05a6ef2d3ad2d05a78930eda"><div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 800px; height: 530.909090909091px; left: 80px; top: 126px;" data-block-id="76592e48d33a3bf97b6776829a826822"><div class="sl-block-content" style="z-index: 11;"><img data-src="scalaz-gateway-drugs/1191471-shaun-and-ed.jpg" style="visibility: visible;" data-natural-width="770" data-natural-height="511"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 180px; top: 70px;" data-block-id="965eb8cdf5fc16cc79ba3d316b7602a8"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<p>We are <em>not </em>using the "Zed" word.</p>
+</div></div></section><section data-id="83f947449f418ba1cbfaec890a624203"><div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 180px; top: 70px;" data-block-id="ac9789311d4e31cba84eb4ed1d7d83f1"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<p>We are <em><s>not</s> </em>using the "Zed" word.</p>
+</div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 960px; height: 414.72px; left: 0px; top: 184px;" data-block-id="893e06fa9be8c26b55fba638ff0f8697"><div class="sl-block-content" style="z-index: 12;"><img data-src="scalaz-gateway-drugs/1191474-shaun-ed-couch.gif" style="visibility: visible;" data-natural-width="500" data-natural-height="216"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 180px; top: 109px;" data-block-id="e427c66474d9bd8ad030a0a3f69f7c2f"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;" data-fragment-index="0">
+<p>Ok, so I lied a little...</p>
+</div></div></section></section><section data-id="f581778b79963bd88ea5373e38fe188b"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 70px; height: auto;" data-block-id="123ad39876817eb480807ddfffd969de"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>How I've Traditionally Seen scalaz</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 186px; height: auto;" data-block-id="d17b43b92998bfb8f538a8be1c7d1a62"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text">
+<ul>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="0">In the past, I've seen scalaz as fairly intimidating<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="1">People always spoke about it being more "pure"/"haskelly"/"mathy"<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="2">I'll be the first to admit: I don't have a CS degree and sort of suck at math<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="3">"What's wrong with what I have in standard Scala?!?"</li>
+</ul>
+</div></div></section><section class="stack" data-id="8d2ca27dd968183a0764ac02d30b79bc"><section data-id="7c6cfc56e230f502a71c4f66d7927da8"><div class="sl-block" data-block-type="text" style="width: 960px; left: 0px; top: 280px; height: auto;" data-block-id="d7be768b5c2fed74d2943109c6ebe09a"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text">
+<h1>The Reality about scalaz?</h1>
+</div></div></section><section data-background-image="scalaz-gateway-drugs/1191519-its-magic-shia-labeouf-gif.gif" data-id="bb8cab6ff8f216eb63269dc53a7968f0"><div class="sl-block" data-block-type="text" style="width: 499px; left: 231px; top: 280px; height: auto;" data-block-id="41684564794593a165c751de701c876d"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="color: rgb(255, 255, 255);">
+<h1>IT'S MAGIC</h1>
+</div></div></section><section data-id="6d15060ca4a73b7b99d173b4ab8a4403"><div class="sl-block" data-block-type="text" style="width: 430px; left: 11px; top: 70px; height: auto;" data-block-id="d0322ba6f5434e6057953c65c732f140"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 12;">
+<h2>The Road to scalaz</h2>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 852.941176470588px; height: 551px; left: 320px; top: 94px;" data-block-id="9100b70d63e574b3eec1c1d100413255"><div class="sl-block-content" style="z-index: 0;"><img data-src="scalaz-gateway-drugs/1191543-clockwork-eyes.gif" style="visibility: visible;" data-natural-width="500" data-natural-height="323"></div></div>
+<div class="sl-block" data-block-type="text" style="width: 480px; left: 0px; top: 144px; height: auto;" data-block-id="0e60e11bde96daa21f43ad2c8d797344"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<ul>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="0">Once I got started, it was hard to stop<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="1">The constructs are powerful and useful<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="2">I am by <em>no means </em>an expert: just an excited amateur<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="3">This is not a category theory or haskell talk: Let's be practical</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="shape" style="min-width: 4px; min-height: 4px; width: 480px; height: 700px; left: 0px; top: 0px;" data-block-id="82409150c98c42eca067ca27bccfe321"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(34, 34, 34)" data-shape-stretch="true" style="z-index: 11;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 480 700"><rect fill="rgb(34, 34, 34)" class="shape-element" height="700" width="480"></rect></svg></div></div></section><section data-id="15c908d1d6cfeb3fbfcb073913058b31"><div class="sl-block" data-block-type="text" style="width: 430px; left: 510px; top: 40px; height: auto;" data-block-id="5a283f396228472f88594c8d265fc7e7"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 12;">
+<h2>The Road to scalaz</h2>
+</div></div>
+
+<div class="sl-block" data-block-type="text" style="width: 471px; left: 489px; top: 140px; height: auto;" data-block-id="dcbb48d81d134ea9ec7516c916d1c17f"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;" dir="ui">
+<ul>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="0">I want you to learn:
+	<ul>
+		<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="1">"Hey! This stuff may be useful!"<br>
+		 </li>
+	</ul>
+	</li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="2">I am not going to teach you:
+	<ul>
+		<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="3">"A monad is a monoid in the category of endofunctors, what's the problem?"</li>
+	</ul>
+	</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="shape" style="width: 480px; height: 700px; left: 489px; top: 0px;" data-block-id="75997af2c1cad63789d60ab0e55ee06d"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(34, 34, 34)" data-shape-stretch="true" style="z-index: 11;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 480 700"><rect fill="rgb(34, 34, 34)" class="shape-element" height="700" width="480"></rect></svg></div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 803.27868852459px; height: 588px; left: -172px; top: 77px;" data-block-id="b18cbbdf34432b6a4663bd03cebf0e5d"><div class="sl-block-content" style="z-index: 0;"><img data-src="scalaz-gateway-drugs/1191596-shining-grinning.gif" style="visibility: visible;" data-natural-width="500" data-natural-height="366"></div></div></section><section data-id="878f699658f0f14d2eb2bfd4134a5aa7"><div class="sl-block" data-block-type="text" style="width: 430px; left: 25px; top: 0px; height: auto;" data-block-id="adece99c0e3ea58f253f3d43852d46a0"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 12;">
+<h2>The Road to scalaz</h2>
+</div></div>
+
+
+<div class="sl-block" data-block-type="shape" style="width: 480px; height: 700px; left: 0px; top: 0px;" data-block-id="af5a6305b7eccee908cb65d45ffbf094"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(34, 34, 34)" data-shape-stretch="true" style="z-index: 11;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 480 700"><rect fill="rgb(34, 34, 34)" class="shape-element" height="700" width="480"></rect></svg></div></div>
+<div class="sl-block" data-block-type="image" style="min-width: 30px; min-height: 30px; width: 1286.76470588235px; height: 700px; left: 66.1176470588235px; top: 0px;" data-block-id="c59817d232ead2b2ceffcce99e5b6c2f"><div class="sl-block-content" style="z-index: 10; border-width: 1px;"><img data-src="scalaz-gateway-drugs/1191639-dr-strangelove-cigarette.gif" style="visibility: visible;" data-natural-width="500" data-natural-height="272"></div></div>
+<div class="sl-block" data-block-type="text" data-block-id="2b22b37f11871cb7c7ac0df43c50a06d" style="height: auto; min-width: 30px; min-height: 30px; width: 408px; left: 25px; top: 74px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;">
+<h3>Problems to solve...</h3>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 480px; left: 0px; top: 133px; height: auto;" data-block-id="8c5b62f471ec641b4dbb5fe229d5d6ae"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15;" dir="ui">
+<ul>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="0">Our API server was part of a larger Angular.js application: error passing was hard
+	<ul>
+		<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="1">Providing clear errors &amp; validating input was a problem<br>
+		 </li>
+		<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="2">500s &amp; generic exceptions complicate and frustrate frontend devs' debugging</li>
+	</ul>
+	</li>
+</ul>
+</div></div></section><section data-id="0590197fb5396a0dabc191d9722f6438"><div class="sl-block" data-block-type="text" style="width: 482px; left: 25px; top: 0px; height: auto;" data-block-id="00b43a73e2350dce5c68e96e2b57458f"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 12;">
+<p><span style="font-size:32px">Helping Developers<br>
+      Help Themselves</span></p>
+</div></div>
+
+
+<div class="sl-block" data-block-type="shape" style="width: 489px; height: 700px; left: 0px; top: 0px;" data-block-id="e144b7496af0f96839da022ddf5b8894"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(34, 34, 34)" data-shape-stretch="true" style="z-index: 11;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 489 700"><rect width="489" height="700" class="shape-element" fill="rgb(34, 34, 34)"></rect></svg></div></div>
+
+<div class="sl-block" data-block-type="text" style="width: 480px; left: 0px; top: 97px; height: auto;" data-block-id="b2373b6154fb226d0d43e629c69a307e"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;" dir="ui">
+<ul>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="0">An error occurred
+	<ul>
+		<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="1">API Received bad/invalid data? (e.g. JSON Failed to parse)<br>
+		 </li>
+		<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="2">Database failed?<br>
+		 </li>
+		<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="3">Hovercraft filled up with eels?<br>
+		 </li>
+	</ul>
+	</li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="4">What if multiple errors occurred?<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="5">How do we communicate all of this effectively?</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="image" data-block-id="0380a9b7b7b62dc0750df141bc534c8f" style="min-width: 30px; min-height: 30px; width: 1086.95652173913px; height: 700px; left: 221.021739130435px; top: 0px;"><div class="sl-block-content" style="z-index: 0;"><img data-src="scalaz-gateway-drugs/1215518-buf-phone-cinemagraph.gif" style="visibility: visible;" data-natural-width="500" data-natural-height="322"></div></div></section></section><section class="stack" data-id="4bb3e6c7fb5e1259a5e0bab4c6a10ad5"><section data-id="a44eb26398c5ab9b6710c9ec2c2e165a"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 70px; height: auto;" data-block-id="86da33db275e3420f16af3c107e71522"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Scala's Either: The Limitations</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 210px; height: auto;" data-block-id="6348664c3e90333e4bc35d098f718058"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text">
+<ul>
+	<li>Scala's builtin <strong>Either</strong><em> </em>is a commonly used tool, allowing <strong>Left</strong><em> </em>and <strong>Right</strong><em> </em>projections<br>
+	 </li>
+	<li>By convention <em>Left </em>indicates an error, while <em>Right</em> indicates a success<br>
+	 </li>
+	<li>Good concept, but there are some limitations in interaction</li>
+</ul>
+</div></div></section><section data-id="26615343d73315ff6534fcdf0de90392"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 33px; height: auto;" data-block-id="68091ae674bd13300206593e4854b138"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 11;">
+<h2>Scala's Either: The Limitations</h2>
+</div></div>
+<div class="sl-block" data-block-type="code" data-block-id="55993dfc3899ec87b84fe29b24038168" style="min-width: 30px; min-height: 30px; width: 960px; height: 453px; left: 0px; top: 107px;"><div class="sl-block-content" style="z-index: 12; font-size: 120%;"><pre><code>scala&gt; val success = Right("Success!")
+success: scala.util.Right[Nothing,String] = Right(Success!)
+
+scala&gt; success.isRight
+res2: Boolean = true
+
+scala&gt; success.isLeft
+res3: Boolean = false
+
+scala&gt; for {
+     |   x &lt;- success
+     | } yield x
+&lt;console&gt;:10: error: value map is not a member of scala.util.Right[Nothing,String]
+                x &lt;- success
+                     ^
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" data-block-id="bd3d603f6cd8b23244f7f068f7e76ab7" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 180px; top: 591px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<p>Not a monad. Pain in the ass to extract.</p>
+</div></div></section><section data-id="f2da17b3312701adda01d82bd8b76dc8"><div class="sl-block" data-block-type="image" data-block-id="52abeb5683e4a1c6be20d936a92853a1" style="min-width: 30px; min-height: 30px; width: 960px; height: 720px; left: 0px; top: -15.5px;"><div class="sl-block-content" style="z-index: 11;"><img data-src="scalaz-gateway-drugs/1240784-kermit.gif" style="visibility: visible;" data-natural-width="480" data-natural-height="360"></div></div></section></section><section class="stack" data-id="ace66a0812db5996936dbbe74340b954"><section data-id="e777a52ff10393df1d0c2bf3809572da"><div class="sl-block" data-block-type="text" style="width: 665px; left: 149px; top: 70px; height: auto;" data-block-id="8a269fe9b802e8d108048df32b918395"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Disjunctions as an Alternative</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 874px; left: 45px; top: 195px; height: auto;" data-block-id="66c92297a1947b0bb6583e3e79cffcaf"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" dir="ui">
+<ul>
+	<li class="fragment" data-fragment-index="0">scalaz' \/ (aka "Disjunction") is similar to "Either" <br>
+	 </li>
+	<li class="fragment" data-fragment-index="1">By convention, the right is success and the left failure
+	<ul>
+		<li>The symbol -\/ is "left" </li>
+		<li>The symbol \/- is "right"</li>
+	</ul>
+	</li>
+</ul>
+</div></div></section><section data-id="c9dbd4b8e1b24a42d7b31008ec7c077f"><div class="sl-block" data-block-type="text" style="width: 665px; left: 148px; top: 70px; height: auto;" data-block-id="d909d4c7004a6a4cfee1262897f53ad7"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="border-width: 1px; z-index: 10;">
+<h2>Disjunctions as an Alternative</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 788px; left: 92px; top: 204px; height: auto;" data-block-id="611e33664fdb43fedaa2ce8b9c271e5f"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" dir="ui" style="z-index: 13;">
+<ul>
+	<li class="fragment" data-fragment-index="0">Disjunctions assume we prefer success (the right)<br>
+	 </li>
+	<li class="fragment" data-fragment-index="1">This is also known as "Right Bias"<br>
+	 </li>
+	<li class="fragment" data-fragment-index="2">for comprehensions, map, and flatMap statements unpack where "success" \/- continues, and "failure" -\/ aborts</li>
+</ul>
+</div></div></section><section data-id="0c436e4972d78b4ae19d219959aff3c7">
+<div class="sl-block" data-block-type="code" data-block-id="29dafa56671e8d3908b498f13a86da41" style="min-width: 30px; min-height: 30px; width: 640px; height: 53px; left: 160px; top: 280px;"><div class="sl-block-content" style="z-index: 11; font-size: 150%;"><pre class="scala"><code>def query(arg: String): Error \/ Success
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" data-block-id="83bab450f296d8fb1d441ffd06944e1e" style="height: auto; min-width: 30px; min-height: 30px; width: 640px; left: 160px; top: 167px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<p>Best Practice</p>
+
+<p>When declaring types, prefer infix notation, i.e.</p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-block-id="8b797f8d5211e6563ac5537168046704" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 180px; top: 350px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<p>over "standard" notation such as</p>
+</div></div>
+<div class="sl-block" data-block-type="code" style="min-width: 30px; min-height: 30px; width: 640px; height: 53px; left: 160px; top: 420px;" data-block-id="e01ef6a06a11a4eca697a3c9750a382b"><div class="sl-block-content" style="z-index: 14; font-size: 150%;"><pre class="scala"><code>def query(arg: String): \/[Error, Success]
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="width: 665px; left: 160px; top: 70px; height: auto;" data-block-id="20fac99cee12e9f5bcafa8f746c2b6f8"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 15;">
+<h2>Disjunctions as an Alternative</h2>
+</div></div></section><section data-id="febaa17a4e9a732fdabac50d85bcaf0b"><div class="sl-block" data-block-type="code" data-block-id="66e9778e756cec19722fe2b5cec0ad76" style="min-width: 30px; min-height: 30px; width: 800px; height: 290px; left: 80px; top: 205px;"><div class="sl-block-content" style="z-index: 11; font-size: 150%;"><pre class="scala"><code>import scalaz._
+import Scalaz._
+
+scala&gt; "Success!".right
+res7: scalaz.\/[Nothing,String] = \/-(Success!)
+
+scala&gt; "Failure!".left
+res8: scalaz.\/[String,Nothing] = -\/(Failure!)
+
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" data-block-id="b23ca1415278317a855e36b4b5c043ab" style="height: auto; min-width: 30px; min-height: 30px; width: 640px; left: 160px; top: 521px;"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" dir="ui" data-fragment-index="0"><p>Postfix Operators (<strong>.left </strong>&amp; <strong>.right</strong>) allow us to wrap an existing Scala value to a disjunction</p></div></div></section><section data-id="aad30386917c8110c74fd8a0271f7427"><div class="sl-block" data-block-type="code" style="width: 800px; height: 290px; left: 80px; top: 205px;" data-block-id="ff57de2edec1774b2cfb851877534125"><div class="sl-block-content" style="z-index: 11; font-size: 150%;"><pre class="scala"><code>import scalaz._
+import Scalaz._
+
+scala&gt; \/.left("Failure!")
+res10: scalaz.\/[String,Nothing] = -\/(Failure!)
+
+
+scala&gt; \/.right("Success!")
+res12: scalaz.\/[Nothing,String] = \/-(Success!)
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 640px; left: 160px; top: 521px;" data-block-id="670e7928189ae7198b5231055174432f"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" dir="ui" data-fragment-index="0">
+<p>We can also invoke <strong>.left </strong>&amp; <strong>.right</strong> methods on the Disjunction singleton for the same effect...</p>
+</div></div></section><section data-id="e9cb537a1b8b2d3e7c308646d35701a0"><div class="sl-block" data-block-type="code" style="width: 800px; height: 290px; left: 80px; top: 205px;" data-block-id="9554c56ba94ce5dc24148de9977dceb2"><div class="sl-block-content" style="z-index: 11; font-size: 150%;"><pre class="scala"><code>import scalaz._
+import Scalaz._
+
+scala&gt; -\/("Failure!")
+res9: scalaz.-\/[String] = -\/(Failure!)
+
+scala&gt; \/-("Success!")
+res11: scalaz.\/-[String] = \/-(Success!)
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 640px; left: 160px; top: 498px;" data-block-id="46c9fc7e9dca047ea55014e22931e4d6"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" dir="ui" data-fragment-index="0">
+<p>... or go fully symbolic with specific constructors: </p>
+
+<p>-\/ for left </p>
+
+<p>\/- for right</p>
+</div></div></section><section data-id="1f3095279ce0fa5e1844a038695735c3"><div class="sl-block" data-block-type="text" style="width: 800px; left: 89px; top: 70px; height: auto;" data-block-id="6160fc3d3168a6c9cd158cec8a365939"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Digression: Scala <strong>Option</strong>
+</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 183px; height: auto;" data-block-id="0139287ad7b60b92958fff49a92ce542"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text">
+<ul>
+	<li class="fragment" data-fragment-index="0">Scala Option is a commonly used container, having  a <strong>None </strong>and a <strong>Some </strong>subtype<br>
+	 </li>
+	<li class="fragment" data-fragment-index="1">Like \/ it also has a bias towards "success": <strong>Some</strong><br>
+	 </li>
+	<li class="fragment" data-fragment-index="2">Comprehension over it has issues with "undiagnosed aborts"</li>
+</ul>
+</div></div></section><section data-id="7e74f98be7fa70639654c4575feaaa9d"><div class="sl-block" data-block-type="code" data-block-id="1e9eee16564fba6ce040fb124a79bcf3" style="min-width: 30px; min-height: 30px; width: 800px; height: 406px; left: 80px; top: 154px;"><div class="sl-block-content" style="z-index: 11; font-size: 130%;"><pre class="scala"><code>case class Address(city: String)
+
+case class User(first: String, 
+                last: String, 
+                address: Option[Address])
+
+case class DBObject(id: Long, 
+                    user: Option[User])
+
+val brendan = 
+  Some(DBObject(1, Some(User("Brendan", "McAdams", None))))
+
+val someOtherGuy = 
+  Some(DBObject(2, None))
+</code></pre></div></div></section><section data-id="9e3b426fbf2bb114440ecbea7d7718b6"><div class="sl-block" data-block-type="code" style="width: 800px; height: 381px; left: 80px; top: 140px;" data-block-id="e2ce288a3ea0c3b384dbd32e6e16f3c5"><div class="sl-block-content" style="z-index: 11; font-size: 130%;"><pre class="scala"><code>for {
+  dao &lt;- brendan
+  user &lt;- dao.user
+} yield user
+
+/* res13: Option[User] = Some(User(Brendan,McAdams,None)) */
+
+for {
+  dao &lt;- someOtherGuy
+  user &lt;- dao.user
+} yield user
+
+/* res14: Option[User] = None */
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" data-block-id="78d77661abe6911525ddc34be964e240" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 180px; top: 541px;"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" data-fragment-index="0">
+<p>What went wrong?</p>
+</div></div></section></section><section class="stack" data-id="2a3cc2a3e0e365dd53227357d2e8743a"><section data-id="50aead53fcade80c1add9c23cdd80848"><div class="sl-block" data-block-type="text" style="width: 381px; left: 50px; top: 0px; height: auto;" data-block-id="042f3658252cf426d7a34f119b486996"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 11;">
+<h2>\/ to the Rescue</h2>
+</div></div>
+
+<div class="sl-block" data-block-type="text" style="width: 480px; left: 0px; top: 100px; height: auto;" data-block-id="6807024cc0f4ebfb6c8deb75a73749fb"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<ul>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="0">Comprehending over groups of Option leads to "silent failure"<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="1">Luckily, scalaz includes implicits to help convert a <strong>Option </strong>to a Disjunction<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="2">\/ right bias makes it easy to comprehend<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="3">On a <strong>left, </strong>we'll get  potentially useful information instead of <strong>None</strong>
+</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="shape" style="width: 480px; height: 700px; left: 0px; top: 0px;" data-block-id="973ecbf8f04739b946ddbc557ee91b70"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(34, 34, 34)" data-shape-stretch="true" style="z-index: 10;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 480 700"><rect fill="rgb(34, 34, 34)" class="shape-element" height="700" width="480"></rect></svg></div></div>
+<div class="sl-block" data-block-type="image" data-block-id="da2b3f0ae2a1a32f21b57fa9d089e0f5" style="min-width: 30px; min-height: 30px; width: 933px; height: 699.75px; left: 266px; top: 0px;"><div class="sl-block-content" style="z-index: 0;"><img style="visibility: visible;" data-natural-width="480" data-natural-height="360" data-src="scalaz-gateway-drugs/1241013-majorKong-noloop.gif"></div></div></section><section data-id="50fb0c7d560a3e37beeeb0c295110e9a"><div class="sl-block" data-block-type="code" style="width: 891px; height: 363px; left: 35px; top: 169px;" data-block-id="7ba6417d55cf89cf5ae3afe4dbd62e7e"><div class="sl-block-content" style="z-index: 11; font-size: 120%;"><pre class="scala"><code>
+None \/&gt; "No object found"
+/* res0: scalaz.\/[String,Nothing] = -\/(No object found) */
+
+None toRightDisjunction "No object found"
+/* res1: scalaz.\/[String,Nothing] = -\/(No object found) */
+
+Some("My Hovercraft Is Full of Eels") \/&gt; "No object found"
+/* res2: scalaz.\/[String, String] = \/-(My Hovercraft Is Full of Eels) */
+
+Some("I Will Not Buy This Record It Is Scratched")
+  .toRightDisjunction("No object found")
+/* res3: scalaz.\/[String, String] = 
+  \/-(I Will Not Buy This Record, It Is Scratched") */</code></pre></div></div></section><section data-id="1fd6a7282ca4e78468c38ef256d1e54c"><div class="sl-block" data-block-type="code" style="width: 833px; height: 316px; left: 80px; top: 174px;" data-block-id="d3ccebdff5e2595ec29ba124201b1ba1"><div class="sl-block-content" style="z-index: 11; font-size: 120%;"><pre class="scala"><code>for {
+  dao &lt;- brendan \/&gt; "No user by that ID"
+  user &lt;- dao.user \/&gt; "Join failed: no user object"
+} yield user
+/* res0: scalaz.\/[String,User] = \/-(User(Brendan,McAdams,None)) */
+
+for {
+  dao &lt;- someOtherGuy \/&gt; "No user by that ID"
+  user &lt;- dao.user \/&gt; "Join failed: no user object"
+} yield user
+/* res1: scalaz.\/[String,User] = -\/(Join failed: no user object) */
+
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 80px; top: 521px;" data-block-id="e4774c41644a0b97761a092216bdd360"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" dir="ui" data-fragment-index="0">
+<p>Suddenly we have much more useful failure information.</p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-block-id="3c8d5abf5a5b8649b4a3a133095d5116" style="height: auto; min-width: 30px; min-height: 30px; width: 600px; left: 180px; top: 591px;"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;" data-fragment-index="1">
+<p><span style="color:rgb(255, 255, 255)">But what if we want to do something beyond comprehensions?</span></p>
+</div></div></section></section><section class="stack" data-id="00a29c2386c295949bfbc50b8acd3d03"><section data-id="9fa911131efcef46cbf6f9cf5de0224b"><div class="sl-block" data-block-type="text" style="width: 270px; left: 105px; top: 0px; height: auto;" data-block-id="0f519bba567633ccaea829ee2684be50"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 12;">
+<h2>Validation</h2>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 853px; height: 637.652459016393px; left: 320px; top: 31px;" data-block-id="0ac3d888fe7e9e57f803061b0298aca5"><div class="sl-block-content" style="z-index: 0;"><img style="visibility: visible;" data-natural-width="305" data-natural-height="228" data-src="scalaz-gateway-drugs/1241036-cook.gif"></div></div>
+<div class="sl-block" data-block-type="text" style="width: 480px; left: 0px; top: 74px; height: auto;" data-block-id="2231c62c5595c511d9483981606cc7d6"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<ul>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="0">
+<strong>Validation</strong> <em>looks </em>similar to \/ at first glance
+	<ul>
+		<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="1">(And you can convert between them)</li>
+		<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="2">Subtypes are S<strong>uccess </strong>and F<strong>ailure</strong>
+</li>
+	</ul>
+	</li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="3">
+<strong>Validation </strong>is <em>not </em> a monad<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="4">
+<strong>Validation </strong>is an <em>applicative functor, </em> and many can be chained together<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="5">If any failure in the chain, failure wins: All errors get appended together</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="shape" style="width: 480px; height: 700px; left: 0px; top: 0px;" data-block-id="9b8ffded0f734f6555043a438ca9964a"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(34, 34, 34)" data-shape-stretch="true" style="z-index: 11;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 480 700"><rect fill="rgb(34, 34, 34)" class="shape-element" height="700" width="480"></rect></svg></div></div></section><section data-id="7bbc94f1a423c1c1e94be50c33f406c3"><div class="sl-block" data-block-type="code" style="width: 891px; height: 525px; left: 35px; top: 88px;" data-block-id="ed30b818da0654b4118981b385b6c857"><div class="sl-block-content" style="z-index: 11; font-size: 130%;"><pre class="scala"><code>
+val brendanCA = 
+  DBObject(4, 
+    Some(User("Brendan", "McAdams",
+      Some(Address("Sunnyvale"))))
+  )
+  
+
+val cthulhu = 
+  DBObject(5, 
+    Some(User("Cthulhu", "Old One",
+      Some(Address("R'lyeh"))))
+  )
+
+val noSuchPerson = DBObject(6, None)
+
+val wanderingJoe = 
+  DBObject(7, 
+    Some(User("Wandering", "Joe", None))
+  )
+</code></pre></div></div></section><section data-id="28fc5e2fbc6350c7c97d1993dbc1517f"><div class="sl-block" data-block-type="code" style="width: 891px; height: 363px; left: 35px; top: 155px;" data-block-id="4c36e5cd848fa60c0e43f25ad70b84d4"><div class="sl-block-content" style="z-index: 11; font-size: 130%;"><pre class="scala"><code>def validDBUser(dbObj: DBObject): Validation[String, User] = {
+  dbObj.user match {
+
+    case Some(user) =&gt;
+      Success(user)
+
+    case None =&gt;
+      Failure(s"DBObject $dbObj does not contain a user object")
+
+  }
+}
+</code></pre></div></div></section><section data-id="6f8565897f8d148aaa90173f1178a3a4"><div class="sl-block" data-block-type="code" style="width: 891px; height: 363px; left: 35px; top: 155px;" data-block-id="48e7ab9d142e7a9a07e56cca0eac20b6"><div class="sl-block-content" style="z-index: 11; font-size: 130%;"><pre class="scala"><code>validDBUser(brendanCA)
+/* Success[User] */
+
+validDBUser(cthulhu)
+/* Success[User] */
+
+validDBUser(noSuchPerson)
+/* Failure("... does not contain a user object") */
+
+validDBUser(wanderingJoe)
+/* Success[User] */
+</code></pre></div></div></section><section data-id="72f3ea73b72a46d8021a2d9225c381ee"><div class="sl-block" data-block-type="code" style="width: 864px; height: 560px; left: 63px; top: 70px;" data-block-id="d88b3fecbf8cc9559e273dbdf2bd9a82"><div class="sl-block-content" style="z-index: 11; font-size: 120%;"><pre class="scala"><code>def validAddress(user: Option[User]): Validation[String, Address] = {
+  user match {
+
+    case Some(User(_, _, Some(address))) if postOfficeValid(address) =&gt;
+      address.success
+
+    case Some(User(_ , _, Some(address))) =&gt;
+      "Invalid address: Not recognized by postal service".failure
+
+    case Some(User(_, _, None)) =&gt;
+      "User has no defined address".failure
+
+    case None =&gt;
+      "No such user".failure
+
+  }
+}
+</code></pre></div></div></section><section data-id="3d5f6cd7bfa90e0f4e11dc00c10c102b"><div class="sl-block" data-block-type="code" style="width: 864px; height: 560px; left: 63px; top: 70px;" data-block-id="8def0254c2ee223f769c756e18fea21a"><div class="sl-block-content" style="z-index: 11; font-size: 130%;"><pre class="scala"><code>
+validAddress(brendanCA.user)
+/* Success(Address(Sunnyvale)) */
+
+// let's assume R'Lyeh has no mail carrier
+validAddress(cthulhu.user)
+/* Failure(Invalid address: Not recognized by postal 
+service) */
+
+validAddress(noSuchPerson.user)
+/* Failure(No such user) */
+
+validAddress(wanderingJoe.user)
+/* Failure(User has no defined address) */
+</code></pre></div></div></section><section data-id="1b80fcfe3f5061a6fa81d397cab15123"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 70px; height: auto;" data-block-id="df5b9fa3f9b57fd090f4638300825e13"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Sticking it all together</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 210px; height: auto;" data-block-id="a466711ee0bab890df3d42b50d056557"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text">
+<ul>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="0">scalaz <strong> </strong>has a number of <em>applicative </em>operators to combine <strong>Validation </strong>results<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="1">*&gt; and &lt;* are two of the ones you'll run into first
+	<ul>
+		<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="2">*&gt; takes the right hand value and discards the left<br>
+		 </li>
+		<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="3">&lt;* takes the left hand value and discards the right<br>
+		 </li>
+		<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="4">Errors "win"</li>
+	</ul>
+	</li>
+</ul>
+</div></div></section><section data-id="7561f4132636ac6fbab239cddaf93f52"><div class="sl-block" data-block-type="code" style="width: 833px; height: 316px; left: 80px; top: 205px;" data-block-id="dbb631b3dc91f78fcebb3460dcf41045"><div class="sl-block-content" style="z-index: 11; font-size: 130%;"><pre class="scala"><code>1.some *&gt; 2.some
+/* res10: Option[Int] = Some(2) */
+
+1.some &lt;* 2.some
+/* res11: Option[Int] = Some(1) */
+
+1.some &lt;* None
+/* res13: Option[Int] = None */
+
+None *&gt; 2.some
+/* res14: Option[Int] = None */
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 97px; top: 552px;" data-block-id="d50a470b7b6b903ef0d45d2867f6dea0"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" dir="ui" data-fragment-index="0">
+<p>BUT: with <strong>Validation </strong>it will chain together <em>all </em>errors that occur instead of short circuiting </p>
+</div></div></section><section data-id="66e1afb5007629c2febad3056807cb43"><div class="sl-block" data-block-type="code" style="width: 960px; height: 451px; left: 0px; top: 70px;" data-block-id="d8d956f343bb0f42b95b7fe6fda8ea38"><div class="sl-block-content" style="z-index: 11; font-size: 115%;"><pre class="scala"><code>validDBUser(brendanCA) *&gt; validAddress(brendanCA.user)                          
+/* res16: scalaz.Validation[String,Address] =
+Success(Address(Sunnyvale)) */
+
+validDBUser(cthulhu) *&gt; validAddress(cthulhu.user)                              
+/* res17: scalaz.Validation[String,Address] =
+Failure(Invalid address: Not recognized by postal service) */
+
+validDBUser(wanderingJoe) *&gt; validAddress(wanderingJoe.user)                         
+/* res19: scalaz.Validation[String,Address] = 
+Failure(User has no defined address) */
+
+validDBUser(noSuchPerson) *&gt; validAddress(noSuchPerson.user)                   
+/* res18: scalaz.Validation[String,Address] =
+  Failure(DBObject DBObject(6,None) does not contain a user objectNo such user)*/
+
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 81px; top: 560px;" data-block-id="ec9e7fea1ac872ce990385d81302c4f5"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" dir="ui" data-fragment-index="0">
+<p>Wait. WTF happened to that last one?</p>
+</div></div></section><section data-id="1157c79e9fe2916578d35d3af9ab34a6">
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 80px; top: 521px;" data-block-id="bd966c2f42ba3e663ec1e15617a3167b"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10;" dir="ui" data-fragment-index="0">
+<ul>
+	<li>The way *&gt; is called on <strong>Validation, </strong>it appends all errors together...</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 758px; left: 80px; top: 622px;" data-block-id="efec978e4f9b0127c06da62b66a1d339"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" dir="ui" data-fragment-index="1">
+<ul>
+	<li>We'll need another tool if we want this to make sense      </li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="code" style="width: 960px; height: 451px; left: 0px; top: 70px;" data-block-id="ee587e4b81af845b1e249f2619904e09"><div class="sl-block-content" style="z-index: 13; font-size: 115%;"><pre class="scala"><code>validDBUser(brendanCA) *&gt; validAddress(brendanCA.user)                          
+/* res16: scalaz.Validation[String,Address] =
+Success(Address(Sunnyvale)) */
+
+validDBUser(cthulhu) *&gt; validAddress(cthulhu.user)                              
+/* res17: scalaz.Validation[String,Address] =
+Failure(Invalid address: Not recognized by postal service) */
+
+validDBUser(wanderingJoe) *&gt; validAddress(wanderingJoe.user)                         
+/* res19: scalaz.Validation[String,Address] = 
+Failure(User has no defined address) */
+
+validDBUser(noSuchPerson) *&gt; validAddress(noSuchPerson.user)                   
+/* res18: scalaz.Validation[String,Address] =
+  Failure(DBObject DBObject(6,None) does not contain a user objectNo such user)*/
+
+</code></pre></div></div></section></section><section class="stack" data-id="78e0c893c9ddc3349b72c1f03fd9bd12"><section data-id="4dab3b5d1b2cf39fd8c72762d3325706">
+<div class="sl-block" data-block-type="image" style="width: 585px; height: 585px; left: 428px; top: 70px;" data-block-id="bd3fe4a8f3bd69e0fc64bec9167106ca"><div class="sl-block-content" style="z-index: 10;"><img style="visibility: visible;" data-natural-width="900" data-natural-height="900" data-src="scalaz-gateway-drugs/1241105-BrilliantPony.png"></div></div>
+<div class="sl-block" data-block-type="text" style="width: 480px; left: 0px; top: 97px; height: auto;" data-block-id="2cce607de6cce1e2c272f591458d196a"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;" dir="ui">
+<ul>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="0">
+<strong>NonEmptyList </strong>is a scalaz <strong>List </strong>that is guaranteed to have <em>at least one element</em><br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="1">Commonly used<br>
+	with <strong>Validation </strong>to allow accrual of multiple error messages<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="2">There's a type alias for <strong>Validation[NonEmptyList[L], R] </strong>of <strong>​ValidationNEL[L, R]</strong><br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="3">Like a list, <em>append</em> allows elements to be added to the end</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="shape" style="width: 480px; height: 700px; left: 0px; top: 0px;" data-block-id="27545aa38e25a87cb4dd5d4f457b2f0e"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(34, 34, 34)" data-shape-stretch="true" style="z-index: 11;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 480 700"><rect width="480" height="700" class="shape-element" fill="rgb(34, 34, 34)"></rect></svg></div></div>
+<div class="sl-block" data-block-type="text" style="width: 327px; left: 77px; top: 0px; height: auto;" data-block-id="13d85920c7d4ae6e289e591535d58c3b"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 14;">
+<h2>NonEmptyList</h2>
+</div></div></section><section data-id="a7aad1981388bc85673d01104bf548d1"><div class="sl-block" data-block-type="code" style="width: 917px; height: 316px; left: 22px; top: 192px;" data-block-id="13efb5286744bdaf650cac4be30bf5ae"><div class="sl-block-content" style="z-index: 11; font-size: 115%;"><pre class="scala"><code>def validDBUserNel(dbObj: DBObject): Validation[NonEmptyList[String], User] = {
+  dbObj.user match {
+
+    case Some(user) =&gt;
+      Success(user)
+
+    case None =&gt;
+      Failure(NonEmptyList(s"DBObject $dbObj does not contain a user object"))
+  }
+}
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 80px; top: 521px;" data-block-id="ad1891edcf1b4374ff4ed8474d2e0189"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" dir="ui" data-fragment-index="0">
+<p>We can be explicit, and construct a <strong>NonEmptyList </strong>by hand</p>
+</div></div></section><section data-id="12da62b5a98f35541b7e2bd66a74f03f"><div class="sl-block" data-block-type="code" style="width: 917px; height: 381px; left: 22px; top: 140px;" data-block-id="2a2cf9d89c919c7568ee11b56d021f49"><div class="sl-block-content" style="z-index: 11; font-size: 115%;"><pre class="scala"><code>def validAddressNel(user: Option[User]): ValidationNel[String, Address] = {
+  user match {
+
+    case Some(User(_, _, Some(address))) if postOfficeValid(address) =&gt;
+      address.success
+
+    case Some(User(_ , _, Some(address))) =&gt;
+      "Invalid address: Not recognized by postal service".failureNel
+
+    case Some(User(_, _, None)) =&gt;
+      "User has no defined address".failureNel
+
+    case None =&gt;
+      "No such user".failureNel
+  }
+}
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 80px; top: 521px;" data-block-id="e2cf6ee0c23ae26573af9b54bd95058c"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" dir="ui" data-fragment-index="0">
+<p>Or we can use some helpers, calling <strong>.failureNel</strong>, and declaring a <strong>ValidationNel</strong> return type.</p>
+</div></div></section><section data-id="cda8b07a96f2213db68a14988b36fd75"><div class="sl-block" data-block-type="code" style="width: 917px; height: 381px; left: 22px; top: 140px;" data-block-id="533ccc17947b88b72ce65a312f988f8e"><div class="sl-block-content" style="z-index: 11; font-size: 130%;"><pre class="scala"><code>
+
+
+validDBUserNel(noSuchPerson) *&gt; validAddressNel(noSuchPerson.user)             
+/* res20: scalaz.Validation[scalaz.NonEmptyList[String],Address] = 
+Failure(NonEmptyList(
+  DBObject(6,None) does not contain a user object,
+  No such user
+)) 
+*/
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 80px; top: 521px;" data-block-id="b0a73d308a3d6c334b5bd5a8168cba6c"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" dir="ui" data-fragment-index="0">
+<p>Now, we get a list of errors - instead of a globbed string</p>
+</div></div></section></section><section class="stack" data-id="ca3eadeaebf1af063898cbd8d7faaf71"><section data-id="3679c658d1672fc5302aabcda7afe27e"><div class="sl-block" data-block-type="text" style="width: 430px; left: 25px; top: 0px; height: auto;" data-block-id="96aae79585b8907b48f673a0e7205f05"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 12;">
+<h2>One Last Operator</h2>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 853px; height: 461.081081081081px; left: 320px; top: 138.959459459459px;" data-block-id="e90da4d500033a11cf015c8f78f52d2e"><div class="sl-block-content" style="z-index: 0;"><img style="visibility: visible;" data-natural-width="740" data-natural-height="400" data-src="scalaz-gateway-drugs/1241143-youngfrankenstein-igor-brain.jpg"></div></div>
+<div class="sl-block" data-block-type="text" style="width: 480px; left: 0px; top: 139px; height: auto;" data-block-id="3e50a0a4af7c7d88d181f5ad07f862a2"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<ul>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="0">scalaz provides another useful applicative operator for us<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="1">
+<strong>|@|</strong> combines all of the <strong>Failure</strong> <br>
+	<em>and </em><strong>Success </strong>conditions<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="2">To handle <strong>Success</strong>es we provide  a<strong> PartialFunction</strong>
+</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="shape" style="width: 480px; height: 700px; left: 0px; top: 0px;" data-block-id="98e5e30052cc826e3a9d61790d8ce3dd"><div class="sl-block-content" data-shape-type="rect" data-shape-fill-color="rgb(34, 34, 34)" data-shape-stretch="true" style="z-index: 11;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100%" height="100%" preserveaspectratio="none" viewbox="0 0 480 700"><rect width="480" height="700" class="shape-element" fill="rgb(34, 34, 34)"></rect></svg></div></div></section><section data-id="405af79c7d02bb3c84d5a30c523b5b5f"><div class="sl-block" data-block-type="code" style="width: 874px; height: 316px; left: 43px; top: 192px;" data-block-id="56d28bdf9cc7facef66f15ee9f6ba859"><div class="sl-block-content" style="z-index: 11; font-size: 125%;"><pre class="scala"><code>
+(validDBUserNel(brendanCA) |@| validAddressNel(brendanCA.user)) {
+  case (user, address) =&gt;
+    s"User ${user.first} ${user.last} lives in ${address.city}"
+}
+
+// "User Brendan McAdams lives in Sunnyvale"
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 80px; top: 521px;" data-block-id="37026805537caa471089c02a51ae1223"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" dir="ui" data-fragment-index="0">
+<p>Our other users will return an <strong>NEL</strong> of errors, like with <strong>*&gt;</strong></p>
+</div></div></section><section data-id="1838505260d8233dece8143f03ef054f"><div class="sl-block" data-block-type="code" style="width: 923px; height: 316px; left: 19px; top: 205px;" data-block-id="4437c441f9dbdc8c9921d25ba63ac87a"><div class="sl-block-content" style="z-index: 11; font-size: 120%;"><pre class="scala"><code>
+(validDBUserNel(noSuchPerson) |@| validAddressNel(noSuchPerson.user)) {
+  case (user, address) =&gt;
+    s"User ${user.first} ${user.last} lives in ${address.city}"
+}
+
+// Failure(
+//   NonEmptyList(DBObject DBObject(6,None) does not contain a user object, 
+//                No such user))
+
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 80px; top: 521px;" data-block-id="8d26af512f88b8e28ff2e1c66acac35b"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" dir="ui" data-fragment-index="0">
+<p>noSuchPerson gets a combined list</p>
+</div></div></section></section><section class="stack" data-id="f0d2a55e7e90708904a080c4917ace3e"><section data-id="3bb2b382fe62db67cfd93eb080ce8d20"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 70px; height: auto;" data-block-id="ecdf0e79489113561f0b3eb439d1fec3"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>One last <em>function:</em> Error Handling</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 194px; height: auto;" data-block-id="1034902a1fe3af44cf18c67ceb1c1f98"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text">
+<ul>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="0">Dealing sanely with errors is always a challenge<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="1">There are a few ways in the Scala world to avoid try/catch, such as <strong>scala.util.Try</strong><br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="2">scalaz' \/ offers the Higher Order Function <strong>fromTryCatchThrowable</strong>, which catches any specific exception, and returns a Disjunction<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="3">You specify your return type, the type of exception to catch, and your function body...</li>
+</ul>
+</div></div></section><section data-id="21e74110d0b978b212e7a2fd6b266460"><div class="sl-block" data-block-type="code" style="width: 833px; height: 316px; left: 80px; top: 205px;" data-block-id="bf6f0486e433ae3bfc490d1c86108447"><div class="sl-block-content" style="z-index: 11; font-size: 120%;"><pre class="scala"><code>
+
+
+"foo".toInt
+
+/* java.lang.NumberFormatException: For input string: "foo"
+	  at java.lang.NumberFormatException.forInputString ...
+	  at java.lang.Integer.parseInt(Integer.java:492)
+	  at java.lang.Integer.parseInt(Integer.java:527) */
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 80px; top: 521px;" data-block-id="d50255ba8903b8fb011e056948e1ca43"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" dir="ui">
+<p>Here's a great function to wrap...</p>
+</div></div></section><section data-id="eab231a499b4693d2d6b50d48c46a6c5"><div class="sl-block" data-block-type="code" style="width: 833px; height: 316px; left: 80px; top: 205px;" data-block-id="5d7d2fc8c40a8201bf352d8ddc0532a1"><div class="sl-block-content" style="z-index: 11; font-size: 120%;"><pre class="scala"><code>
+
+
+\/.fromTryCatchThrowable[Int, NumberFormatException] { 
+  "foo".toInt 
+}
+
+/* res9: scalaz.\/[NumberFormatException,Int] = 
+    -\/(java.lang.NumberFormatException: 
+        for input string: "foo") */
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 80px; top: 522px;" data-block-id="6c9f9790d6c2be402fde83c0975dd047"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" dir="ui" data-fragment-index="0"><p>Note the reversed order of arguments: <b>Right </b>type, <em>then </em><strong>Left </strong>​type<br></p></div></div></section><section data-id="7320a499cb8d974f0bda7895a190bdd6"><div class="sl-block" data-block-type="code" style="width: 833px; height: 316px; left: 80px; top: 205px;" data-block-id="814ecaef8f4580c452a7b15c76cc20e2"><div class="sl-block-content fragment" style="z-index: 11; font-size: 120%;" data-fragment-index="1"><pre class="scala"><code>
+
+
+\/.fromTryCatchThrowable[Int, Exception] { 
+  "foo".toInt 
+}
+
+/* res9: scalaz.\/[NumberFormatException,Int] = 
+    -\/(java.lang.NumberFormatException: 
+        for input string: "foo") */
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 80px; top: 521px;" data-block-id="c0e5798c2395dd63026ea0edc1dc680f"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" dir="ui" data-fragment-index="0">
+<p>We can also be "less specific" in our exception type to catch more</p>
+</div></div></section><section data-id="e5f9b67e52dadd76fbcdcf6a20d5a378"><div class="sl-block" data-block-type="code" style="width: 901px; height: 389px; left: 30px; top: 140px;" data-block-id="538340c8118ffd2b4ac1253fdaa86327"><div class="sl-block-content fragment" style="z-index: 11; font-size: 120%;" data-fragment-index="1"><pre class="scala"><code>
+
+
+\/.fromTryCatchThrowable[Int, java.sql.SQLException] { 
+  "foo".toInt 
+}
+
+/*
+java.lang.NumberFormatException: For input string: "foo"
+  at java.lang.NumberFormatException.forInputString(NumberFormatException.java:65)
+  at java.lang.Integer.parseInt(Integer.java:580)
+  at java.lang.Integer.parseInt(Integer.java:615)
+...
+*/</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 80px; top: 529px;" data-block-id="d20fa252165db390d1dfde07bd4af461"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" dir="ui" data-fragment-index="0">
+<p>Our exception type <em>matters</em>: if an Exception doesn't match it will still be thrown</p>
+</div></div></section><section data-id="ccff1308d88d33145784426ecdff2769"><div class="sl-block" data-block-type="code" style="width: 901px; height: 324px; left: 30px; top: 205px;" data-block-id="452cc4012e91f5d3c6219dfecca6310d"><div class="sl-block-content fragment" style="z-index: 11; font-size: 120%;" data-fragment-index="1"><pre class="scala"><code>
+
+\/.fromTryCatchNonFatal[Int] { 
+  "foo".toInt 
+}
+/* res14: scalaz.\/[Throwable,Int] = 
+    -\/(java.lang.NumberFormatException:
+        For input string: "foo") */
+</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 800px; left: 80px; top: 529px;" data-block-id="2589913b8e6c824685261618d348a26f"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" dir="ui" data-fragment-index="0">
+<p>There is also <strong>\/.tryCatchNonFatal </strong>which will catch <em>anything </em>classified as <strong>scala.util.control.NonFatal</strong></p>
+</div></div></section></section><section class="stack" data-id="b46778a502a752c5f1c2510c44d9a893"><section data-id="7a88dab8dbdc6ddb24dee0a2e76c2e2e"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 70px; height: auto;" data-block-id="dd7aaca977c47c1e0d05410f34d47ead"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Final Thought: On Naming</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 812px; left: 68px; top: 162px; height: auto;" data-block-id="794e3e8a09ae69dc0e6db84fd0c55084"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text">
+<ul>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="0">From the skeptical side, the common use of symbols gets... interesting<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="1">Agreeing on names - at least within your own team - is important<br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="2">Although it is defined in the file "Either.scala", calling <strong>\/ </strong>"Either" gets confusing vs. Scala's builtin <strong>Either</strong><br>
+	 </li>
+	<li class="fragment" style="color:rgb(255, 255, 255)" data-fragment-index="3">Here's a few of the names I've heard used in the community for <strong>|@|</strong> (There's also a unicode alias of ⊛)</li>
+</ul>
+</div></div></section><section data-id="4f9dcc3189e425657d37503ffc7bb415"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 31px; height: auto;" data-block-id="1874dac4b045762d769dac0391bab9e3"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Oink</h2>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 960px; height: 554.904458598726px; left: 0px; top: 104.547770700637px;" data-block-id="ed14f79df225d383ce2ef4da6adb5928"><div class="sl-block-content"><img data-natural-width="628" data-natural-height="363" style="visibility: visible;" data-src="scalaz-gateway-drugs/1241299-piglet.jpg"></div></div></section><section data-id="6b462b27cb3b9cdcc5bf1b1ea4b12b38"><div class="sl-block" data-block-type="text" style="width: 800px; left: 79px; top: -4px; height: auto;" data-block-id="91886c36364c8e768866c51f1ed2d6c5"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Cinnabon/Cinnamon Bun</h2>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 960px; height: 638.940397350993px; left: -1px; top: 70px;" data-block-id="826f5ff86376c9b8ffadaaaa584fa087"><div class="sl-block-content"><img data-natural-width="604" data-natural-height="402" style="visibility: visible;" data-src="scalaz-gateway-drugs/1241301-cinnabon.jpg"></div></div></section><section data-id="447e80b1f62d4472bbe64637756308d2"><div class="sl-block" data-block-type="text" style="width: 800px; left: 79px; top: -4px; height: auto;" data-block-id="397e63ff43c842b5766f7d50d384326e"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Chelsea Bun / Pain aux Raisins</h2>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 960px; height: 612px; left: -1px; top: 70px;" data-block-id="2ff7d4a2e843101aeba4c95fd095a2f4"><div class="sl-block-content"><img data-natural-width="640" data-natural-height="408" style="visibility: visible;" data-src="scalaz-gateway-drugs/1241308-chelseaBun.jpg"></div></div></section><section data-id="a080c0391a3976631d29800d8cc0d304"><div class="sl-block" data-block-type="text" style="width: 800px; left: 79px; top: -10px; height: auto;" data-block-id="2036da6c67685b22a368b3c73e58ec7f"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Tie Fighter</h2>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 680.4px; height: 630px; left: 139px; top: 70px;" data-block-id="91e8ce3218983a10edb69fd174376970"><div class="sl-block-content"><img data-natural-width="972" data-natural-height="900" style="visibility: visible;" data-src="scalaz-gateway-drugs/1241310-tiefighter.jpg"></div></div></section><section data-id="195a7feccdebad091ca50e37ffcbe622"><div class="sl-block" data-block-type="text" style="width: 800px; left: 79px; top: -4px; height: auto;" data-block-id="8c84140b7fd03e87e606ef58629bb6f5"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Princess Leia</h2>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 838.6px; height: 630px; left: 72.7px; top: 70px;" data-block-id="4da353a9b315a694f1711f37d4d0f4a1"><div class="sl-block-content"><img data-natural-width="1198" data-natural-height="900" style="visibility: visible;" data-src="scalaz-gateway-drugs/1241313-leia.jpg"></div></div></section><section data-id="ba9b58ac148830b58e1cfb5821bf72d9"><div class="sl-block" data-block-type="text" style="width: 800px; left: 79px; top: -4px; height: auto;" data-block-id="8f852d1724e3800dcc4e3e566088f4b6"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Admiral Ackbar</h2>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 527.664974619289px; height: 630px; left: 216px; top: 70px;" data-block-id="745ad8765c0e8aa0a0ffe1bc9dade7e2"><div class="sl-block-content"><img data-natural-width="330" data-natural-height="394" style="visibility: visible;" data-src="scalaz-gateway-drugs/1241317-Star_Wars_ackbar.jpg"></div></div></section><section data-id="78cff11581524bcd7e7bf9aad7cbc82e"><div class="sl-block" data-block-type="text" style="width: 800px; left: 79px; top: -14px; height: auto;" data-block-id="27e7f09333b2dd5bd39c961ba8280a21"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Scream</h2>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 480px; height: 640px; left: 239px; top: 60px;" data-block-id="73f343589686b22b9ffe03d75d9ce6f5"><div class="sl-block-content"><img data-natural-width="675" data-natural-height="900" style="visibility: visible;" data-src="scalaz-gateway-drugs/1246246-munch-the-scream.jpg"></div></div></section><section><div class="sl-block" data-block-type="text" style="width: 800px; left: 79px; top: -14px; height: auto;" data-block-id="e69ceb24f64c2c1af9975777cd93efe3"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Scream 2?</h2>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 960px; height: 640px; left: -1px; top: 60px;" data-block-id="77321c734d31c3ea77a4bc2cff8c3b49"><div class="sl-block-content"><img data-natural-width="600" data-natural-height="400" style="visibility: visible;" data-src="scalaz-gateway-drugs/1241321-Scream-Mask.jpg"></div></div></section><section data-id="3799ec7b432ac40a1a2a2218911e2a96"><div class="sl-block" data-block-type="text" style="width: 800px; left: 79px; top: -14px; height: auto;" data-block-id="e32c2969fe9396b87ffcb30b497e7d3c"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Home Alone</h2>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 960px; height: 640px; left: 0px; top: 60px;" data-block-id="89d7ffe0ec8de1cd3625d2a39879df51"><div class="sl-block-content"><img data-natural-width="600" data-natural-height="400" style="visibility: visible;" data-src="scalaz-gateway-drugs/1241326-homealone.gif"></div></div></section><section data-id="0f5f7829d41072080f1957ea788dfb15"><div class="sl-block" data-block-type="text" style="width: 800px; left: 79px; top: -14px; height: auto;" data-block-id="1a5c3caf9553ca2e98771d2487a3901e"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Pinkie Pie</h2>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 595px; height: 595px; left: 182px; top: 70px;" data-block-id="3c2a2915a6b5fd354367c56e483af124"><div class="sl-block-content"><img data-natural-width="300" data-natural-height="300" style="visibility: visible;" data-src="scalaz-gateway-drugs/1241334-rimshot.gif"></div></div></section></section><section class="stack"><section>
+<div data-block-id="2f6728d68fd622d86d745094ee208d8b" class="sl-block" data-block-type="image" style="width: 960px; height: 540.211px; left: 0px; top: 80px;"><div class="sl-block-content" style="z-index: 0;"><img style="visibility: visible;" data-natural-width="853" data-natural-height="480" data-src="scalaz-gateway-drugs/1248715-starshiptroopers-recruiting-ad.jpg"></div></div>
+
+</section><section><div data-block-id="36604dd57c192b5001a63f2de6824fae" class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: 70px; height: auto;"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h2>Some Resources...</h2>
+</div></div>
+<div data-block-id="7e905335ca61d0527909c872420173af" class="sl-block" data-block-type="text" style="width: 844px; left: 58px; top: 218px; height: auto;"><div dir="ui" class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text">
+<ul>
+	<li data-fragment-index="0" class="fragment" style="color:rgb(255, 255, 255)">Eugene Yokota's free website, "Learning Scalaz"
+	<ul>
+		<li data-fragment-index="1" class="fragment" style="color:rgb(255, 255, 255)">http://eed3si9n.com/learning-scalaz/<br>
+		 </li>
+	</ul>
+	</li>
+	<li data-fragment-index="2" class="fragment" style="color:rgb(255, 255, 255)">Learn some Haskell! I really like "Learn You A Haskell For Great Good" by Miran Lipovača
+	<ul>
+		<li data-fragment-index="3" class="fragment" style="color:rgb(255, 255, 255)">http://learnyouahaskell.com</li>
+	</ul>
+	</li>
+</ul>
+</div></div></section><section data-id="c8432e05814ef6b245afd29fc6a12ccd"><div class="sl-block" data-block-type="text" style="width: 800px; left: 80px; top: -12px; height: auto;" data-block-id="5046ee53dd34a3b84b5411c6a6214531"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text">
+<h1>Questions?</h1>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 960px; height: 685.714285714286px; left: 0px; top: 85.1428571428571px;" data-block-id="eb07822b3ce6cfe61ef436bcebe30474"><div class="sl-block-content"><img style="visibility: visible;" data-natural-width="1260" data-natural-height="900" data-src="scalaz-gateway-drugs/1241337-Dr-Strangelove-George-C.Scott_.jpg"></div></div></section></section>
+			</div>
+		</div>
+
+		<script>
+			var SLConfig = {"deck": {"id":371372,"slug":"scalaz-gateway-drugs","title":"A SKEPTIC'S LOOK AT SCALAZ' \"GATEWAY DRUGS\":  A PRACTICAL EXPLORATION","description":"\"We've all seen them on the corner of our local software development neighborhoods: FP purists, shamelessly peddling scalaz to unsuspecting developers. Lured in by promises of Free Monoids, Semigroups, and Endofunctors these developers soon seem lost in throes of ecstatic coding.\"  To the skeptical and stubbornly practical among us, the above might ring a little true – especially if read in Rod Serling's voice. Images of gibbering horrors lurking in the depths of mathematical perfection swim before our eyes.  But what if there is true value in the world of scalaz? What if it is possible to use these tools for good (and a little bit of evil – it's fun to use learning for evil!) and profit... Without getting hopelessly lost in the opium dens of FP?  In this talk we will look at some of the \"gateway drugs\" of scalaz: Validation, NonEmptyList, \\/, Monad Transformers, and more. How do they work from a practical standpoint? What is their value for real world applications? Can we use them without an advanced Maths PhD? And just how fun is it to *really* code with these tools?","visibility":"all","published_at":"2015-03-21T15:23:20.686Z","sanitize_messages":null,"thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/thumbnails/secure/a4f4ef/decks.jpg","view_count":246,"user":{"id":297036,"username":"bwmcadams","name":"Brendan McAdams","description":"","thumbnail_url":"https://www.gravatar.com/avatar/f16748d23e8a588d0e9875af34b684ee?s=140\u0026d=https%3A%2F%2Fs3.amazonaws.com%2Fstatic.slid.es%2Fimages%2Fdefault-profile-picture.png","pro":true,"enterprise":false,"enterprise_manager":false,"settings":{"id":125027,"present_controls":true,"present_upsizing":true},"registered":true},"background_transition":"zoom","transition":"fade","theme_id":null,"theme_font":"news","theme_color":"black-orange","auto_slide_interval":0,"comments_enabled":true,"forking_enabled":true,"rolling_links":false,"center":false,"should_loop":false,"rtl":false,"version":2,"notes":{"a44eb26398c5ab9b6710c9ec2c2e165a":"specifically: no `map` or `flatMap` implementations: have to force a right projection","febaa17a4e9a732fdabac50d85bcaf0b":"You can quickly convert values to 'right' or 'left'","4dab3b5d1b2cf39fd8c72762d3325706":"Apart from this invariant, behaves like a standard Scala List\n"}}};
+			SLConfig.current_user = {
+				name: "Brendan McAdams",
+				username: "bwmcadams",
+				pro: true
+			};
+		</script>
+
+		<script src="lib/head.min.js"></script>
+		<script src="lib/reveal.min.js"></script>
+		<script>
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				mouseWheel: false,
+
+				autoSlide: SLConfig.deck.auto_slide_interval || 0,
+				autoSlideStoppable: true,
+
+				rolling_links: SLConfig.deck.rolling_links || true,
+				center: SLConfig.deck.center || false,
+				loop: SLConfig.deck.should_loop || false,
+				rtl: SLConfig.deck.rtl || false,
+
+				transition: SLConfig.deck.transition,
+				backgroundTransition: SLConfig.deck.background_transition,
+
+				dependencies: [
+					{ src: 'lib/reveal-plugins/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/highlight/highlight.js', async: true, callback: function() { hljs.initHighlighting(); hljs.initHighlightingOnLoad(); } },
+					{ src: 'lib/reveal-plugins/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+			// Make Slides speaker notes available in the reveal.js speaker view
+			if( SLConfig.deck.notes ) {
+				[].forEach.call( document.querySelectorAll( '.reveal .slides section' ), function( slide ) {
+
+					var value = SLConfig.deck.notes[ slide.getAttribute( 'data-id' ) ];
+					if( value && typeof value === 'string' ) {
+						slide.setAttribute( 'data-notes', value );
+					}
+
+				} );
+			}
+		</script>
+
+		
+
+	</body>
+</html>
