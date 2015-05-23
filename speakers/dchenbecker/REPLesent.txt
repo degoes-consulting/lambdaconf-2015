@@ -76,6 +76,44 @@ val pint: Process[Task, Int] = Process.emitAll(Seq(1,2,3,4))
 
 - More specifically: a description of a sequence of operations that generate values
 ---
+| \gBasic Process Construction
+
+< - emit/emitAll - direct construction from an existing element or sequence
+
+```
+val answerP: Process[Task, Int] = Process.emit(42)
+
+val fib5: Process[Task, Int] = Process.emitAll(Seq(1, 1, 2, 3, 5))
+```
+
+- eval - Construct from an effect, \bF[O] => Process[F, O]\s
+
+```
+val waitASecondP: Process[Task, Unit] = Process.eval(Task.delay(Thread.sleep(1000)))
+```
+---
+| \gRepetition
+
+< - Similar to \beval\s, \brepeatEval\s repeatedly generates a value from an effect
+
+```
+val rep1 = Process.repeatEval(Task.delay(System.currentTimeMillis))
+```
+--
+
+- Or, you can use \brepeat\s on an existing Process to evaluate repeatedly (surprise!)
+
+```
+val rep2 = Process.eval(Task.delay(System.currentTimeMillis)).repeat
+```
+--
+
+- Or, \bconstant\s if you don't need effectful repetition
+
+```
+val constAnswer: Process[Task, Int] = Process.constant(42)
+```
+---
 | \gGetting Data Out
 
 
@@ -84,28 +122,28 @@ val pint: Process[Task, Int] = Process.emitAll(Seq(1,2,3,4))
 - It returns the monad in which you're working.
 
 ```
-println(pint.run)
+pint.run
 ```
 
 --
 - In this case, we're using Task, so we then need a second run on the task.
 
 ```
-println(pint.run.run)
+pint.run.run
 ```
 
 --
 - \brunLast\s executes the process and returns the last value produced:
 
 ```
-println(pint.runLast.run)
+pint.runLast.run
 ```
 
 --
 - \brunLog\s executes the process and collects all outputs:
 
 ```
-println(pint.runLog.run)
+pint.runLog.run
 ```
 ---
 | \grunFoldMap folds the produced values, under your control
@@ -137,7 +175,7 @@ val pAlterUniverse: Process[Task, Boolean] =
 --
 
 ```
-println(pAlterUniverse.take(2).runLog.run)
+pAlterUniverse.take(2).runLog.run
 ```
 ---
 | \gProcess relies on the stack safety of the Monad
@@ -148,23 +186,7 @@ println(pAlterUniverse.take(2).runLog.run)
 
 - Even Task can blow up in your face if you're careless
 
-- If you truly have no effects (e.g. Nothing), you can use \btoSource\s
----
-| \gBasic Process Usage
-
-< - emit/emitAll - direct construction from an existing element or sequence
-
-```
-val answerP: Process[Task, Int] = Process.emit(42)
-
-val fib5: Process[Task, Int] = Process.emitAll(Seq(1, 1, 2, 3, 5))
-```
-
-- eval - Construct from an effect, \bF[O] => Process[F, O]\s
-
-```
-val waitASecondP: Process[Task, Unit] = Process.eval(Task.delay(Thread.sleep(1000)))
-```
+- If you truly have no effects, you can use \btoStream\s and friends
 ---
 | \gIn general, methods available on \bSeq\g are present for Process
 
@@ -179,7 +201,7 @@ println(fib5.flatMap { i => Process.emitAll(i to 5) }.runLog.run)
 
 - Including \bzip\s, \btake\s, \bcollect\s, etc.
 ---
-| \b++\g and \bappend\g...allow appending processes
+| \b++\g (and \bappend\g) concatenates processes
 
 ```
 {
@@ -188,14 +210,14 @@ println(fib5.flatMap { i => Process.emitAll(i to 5) }.runLog.run)
 }
 ```
 ---
-| \gSecond (and subsequent process) only run if the previous process is successfull
+| \gSecond (and subsequent process) only run if the previous process is successful
 
 ```
 {
   val failP = Process.emitAll(Seq(11,12,13,14,15)) ++
     Process.fail(new Exception("BOO")) ++
     Process.emit(0)
-  failP.map(_.toString).to(io.stdOutLines).run.attemptRun
+  failP.evalMap(i => Task.delay(println(i))).run.attemptRun
 }
 ```
 ---
@@ -206,26 +228,11 @@ println(fib5.flatMap { i => Process.emitAll(i to 5) }.runLog.run)
 ```
 pint.map(_ / 0).onComplete {
   Process.eval_(Task.delay(println("still ran!")))
-}.run.attempt.run
+}.run.attemptRun
 ```
 
 - \bonFailure\s, \bonKill\s let you handle an error or termination, respectively
 
----
-| \gRepetition
-
-< - Similar to \beval\s, \brepeatEval\s repeatedly generates a value from an effect
-
-```
-println(Process.repeatEval(Task.delay(System.currentTimeMillis)).take(5).runLog.run)
-```
---
-
-- Or, you can use \brepeat\s on an existing Process to evaluate repeatedly (surprise!)
-
-```
-println(Process.eval(Task.delay(System.currentTimeMillis)).repeat.take(5).runLog.run)
-```
 ---
 | \gChannels
 
@@ -244,7 +251,7 @@ val addTwoChannel: Channel[Task, Int, Int] = Process.constant {
 < - Application to an existing Process with \bthrough\s
 
 ```
-val twoAdded = Process.emitAll(Seq(1,2,3)).through(addTwoChannel)
+val twoAdded = pint.through(addTwoChannel)
 twoAdded.runLog[Task,Int].run
 ```
 
@@ -266,8 +273,6 @@ val printInts: Sink[Task, Int] = Process.constant {
 - Return type is \bUnit\s
 
 - The sole purpose of a Sink is to apply an effectful function
-
-- You can convert a Sink to a Channel, which applies the effect and echoes the input
 
 ---
 | \gWorking with Sinks
@@ -328,7 +333,51 @@ val parsed = Process.emitAll(Seq("1", "2", "FOO", "4")).through(intParser)
 - Lots of convenience methods for working with either side, e.g. mapW, observeO
 
 ```
-parsed.drainW(io.stdOut).run.run
+parsed.drainW(io.stdOutLines).runLog.run
+```
+---
+    ██████╗ ███████╗ █████╗ ██╗            
+    ██╔══██╗██╔════╝██╔══██╗██║            
+    ██████╔╝█████╗  ███████║██║            
+    ██╔══██╗██╔══╝  ██╔══██║██║            
+    ██║  ██║███████╗██║  ██║███████╗       
+    ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚══════╝       
+                                           
+██╗    ██╗ ██████╗ ██████╗ ██╗     ██████╗ 
+██║    ██║██╔═══██╗██╔══██╗██║     ██╔══██╗
+██║ █╗ ██║██║   ██║██████╔╝██║     ██║  ██║
+██║███╗██║██║   ██║██╔══██╗██║     ██║  ██║
+╚███╔███╔╝╚██████╔╝██║  ██║███████╗██████╔╝
+ ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═════╝ 
+---
+| \gHandy IO utilities
+
+< - There are number of useful methods in the \bscalaz.stream.io\s package
+
+- Broken down by what they read (\bByteVector\s/\bString\s)
+
+- And where they read from (file, stdIn, Input/OutpuStream)
+
+- New in 0.7a: toInputStream turns a Process into an InputStream
+---
+| \gio.resource
+
+< - A really useful method for constructing your own effectful Processes
+
+```
+val myList = List(1,2,3)
+val rint: Process[Task, Int] = io.resource {
+    Task.now(myList.iterator) } {  // allocator
+    iter => Task.delay { println("done") } } { // cleanup
+    iter => Task.delay {
+      if (iter.hasNext) iter.next else throw Cause.Terminated(Cause.End)
+    }
+  }
+```
+--
+
+```
+rint.runLog.run
 ```
 ---
 | \gTimer-based Construction
@@ -356,12 +405,12 @@ sleepers.map(_.toString).to(io.stdOutLines).run.run
 ---
 | \bduration\s is a \gcontinuous\s stream of durations from the initial invocation
 
-< - Typically used in a zip to add timing
+< - Could be used in a zip to add timing
 
 ```
-println(Process.emitAll(Seq(1,2,3,4,5)).evalMap {
+Process.emitAll(Seq(1,2,3,4,5)).evalMap {
   x => Task.delay(println(x))
-}.zip(time.duration).runLog.run.unzip._2)
+}.zip(time.duration).to(io.stdOutLines.contramap(_._2.toString)).run.run
 ```
 ---
 | \bevery\s is a continuous boolean stream which is true after N*d duration
@@ -375,39 +424,7 @@ println(Process.emitAll(Seq(1,2,3,4,5)).evalMap {
 ```
 time.every(Duration(1, SECONDS)).zip(
   time.awakeEvery(Duration(250, MILLISECONDS))
-).take(5).runLog.run.mkString("\n")
-```
----
-| \gHandy IO utilities
-
-< - There are number of useful methods in the \bscalaz.stream.io\s package
-
-- Broken down by what they read (\bByteVector\s/\bString\s)
-
-- And where they read from (file, stdIn, Input/OutpuStream)
-
-- New in 0.7a: toInputStream turns a Process into an InputStream
----
-| \gio.resource
-
-< - A really useful method for constructing your own effectful Processes
-
-- I don't want external slide dependencies, so...
-
-```
-val myList = List(1,2,3)
-val rint: Process[Task, Int] = io.resource {
-    Task.now(myList.iterator) } {  // allocator
-    iter => Task.delay { println("done") } } { // cleanup
-    iter => Task.delay {
-      if (iter.hasNext) iter.next else throw Cause.Terminated(Cause.End)
-    }
-  }
-```
---
-
-```
-println(rint.runLog.run)
+).take(5).to(io.stdOutLines.contramap(_.toString)).run.run
 ```
 ---
 | \gQueues
@@ -419,6 +436,13 @@ val myQueue = async.boundedQueue[Int](2)
 
 Process.emitAll(Seq(42, 42)).to(myQueue.enqueue).run.runAsync(_ => ())
 myQueue.dequeue.map(_.toString).to(io.stdOutLines).run.runAsync(_ => ())
+```
+--
+
+- Clean up by closing the queue
+
+```
+myQueue.close.run
 ```
 ---
 | \gTopics
@@ -494,8 +518,8 @@ implicit val statsMonoid = Monoid.instance[StreamStats]({
 def go(acc: StreamStats): Process1[A \/ B, A \/ B] =
   Process.receive1Or { ??? } {
     rx => Process.emit(rx) ++
-      go(acc |+| rx.fold(_ => StreamStats(1, 0),
-                         _ => StreamStats(0, 1)))
+      go(acc |+| rx.fold(_ => StreamStats(0, 1),
+                         _ => StreamStats(1, 0)))
   }
 ```
 ---
@@ -506,11 +530,11 @@ import scalaz.syntax.monoid._
 def reportStats[A, B](f: StreamStats => Task[Unit]): Process1[A \/ B, A \/ B] = {
   def go(acc: StreamStats): Process1[A \/ B, A \/ B] =
     Process.receive1Or[A \/ B, A \/ B](
-      f(acc).attempt.run.fold(Process.fail, _ => Process.halt)
+      f(acc).attemptRun.fold(Process.fail, _ => Process.halt)
     ) {
       rx => Process.emit(rx) ++
-        go(acc |+| rx.fold(_ => StreamStats(1, 0),
-                           _ => StreamStats(0, 1)))
+        go(acc |+| rx.fold(_ => StreamStats(0, 1),
+                           _ => StreamStats(1, 0)))
     }
 
   go(mzero[StreamStats])

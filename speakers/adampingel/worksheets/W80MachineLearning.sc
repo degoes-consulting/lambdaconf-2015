@@ -34,7 +34,7 @@ object W80MachineLearning {
   import axle.ml.NaiveBayesClassifier
   import spire.algebra._
   import spire.math._
- 
+
   val classifier = NaiveBayesClassifier(
     data,
     List(
