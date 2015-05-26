@@ -25,3 +25,4 @@ The official supporting materials repository for LambdaConf 2015.
  * [Axle: A Spire-based DSL](speakers/adampingel) by [Adam Pingel](https://github.com/adampingel)
  * [Introducing Emily: Simplifying functional programming](speakers/mcclure) by [Andi McClure](https://bitbucket.org/runhello/index)
  * [Shipping a Production Web App in Elm](speakers/rtfeldman) by [Richard Feldman](https://twitter.com/rtfeldman)
+ * [Selfish Purity](speakers/djspiewak/selfish-purity.pdf) by [Daniel Spiewak](https://twitter.com/djspiewak)
