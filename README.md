@@ -13,6 +13,7 @@ The official supporting materials repository for LambdaConf 2015.
  * [Introduction to Constraint Logic Programming](speakers/kit1980) by [Sergii Dymchenko](http://twitter.com/kit1980)
  * [Data-driven Webapps with ClojureScript and Om](speakers/tennety/Data-driven%20Webapps%20with%20ClojureScript%20and%20Om.pdf) by [Chandu Tennety](http://tennety.github.io)
  * [Introduction to Erlang](/speakers/stevenproctor/README.md) by [Proctor](https://twitter.com/stevenproctor)
+ * [Writing an Adventure Game in Elm](https://github.com/rtfeldman/lambdaconf-2015-elm-workshop) by [Richard Feldman](https://twitter.com/rtfeldman)
 
 # Talk Materials
 
@@ -21,3 +22,6 @@ The official supporting materials repository for LambdaConf 2015.
  * [The Case for the Cutting Edge](speakers/farmdawgnation/) by [Matt Farmer](http://twitter.com/farmdawgnation)
  * [A Bird's Eye View of ClojureScript](speakers/tennety/A%20Bird's%20Eye%20View%20of%20ClojureScript.pdf) by [Chandu Tennety](http://tennety.github.io)
  * [Computation Expressions in Scala](speakers/jedesah) by [Jean-Rémi Desjardins](https://github.com/jedesah)
+ * [Axle: A Spire-based DSL](speakers/adampingel) by [Adam Pingel](https://github.com/adampingel)
+ * [Introducing Emily: Simplifying functional programming](speakers/mcclure) by [Andi McClure](https://bitbucket.org/runhello/index)
+ * [Shipping a Production Web App in Elm](speakers/rtfeldman) by [Richard Feldman](https://twitter.com/rtfeldman)

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title></title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="reveal.js/css/reveal.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; }
+code > span.dt { color: #902000; }
+code > span.dv { color: #40a070; }
+code > span.bn { color: #40a070; }
+code > span.fl { color: #40a070; }
+code > span.ch { color: #4070a0; }
+code > span.st { color: #4070a0; }
+code > span.co { color: #60a0b0; font-style: italic; }
+code > span.ot { color: #007020; }
+code > span.al { color: #ff0000; font-weight: bold; }
+code > span.fu { color: #06287e; }
+code > span.er { color: #ff0000; font-weight: bold; }
+    </style>
+    <link rel="stylesheet" href="reveal.js/css/theme/night.css" id="theme">
+    <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+    <script>
+      if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'reveal.js/css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+      }
+    </script>
+    <!--[if lt IE 9]>
+    <script src="reveal.js/lib/js/html5shiv.js"></script>
+    <![endif]-->
+    <style type="text/css">
+      code { 
+        font-size: 32px; 
+        color: #00aa00; }
+    
+      code > span.dt { color: #c05000; }
+      code > span.ot { color: #00a050; }
+      code > span.fu { color: #60a0b0; }
+    
+      .reveal pre {
+        width: 95%; }
+    
+      .reveal pre code { 
+        font-size: 30px; 
+        padding: 8px;
+        line-height: 1.3em;
+        background: #2F2F2F; }
+    </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+
+<section class="slide level1">
+
+<h2 id="parametricity-the-essence-of-information-hiding">Parametricity: The Essence of Information Hiding</h2>
+<p><a href="http://github.com/nuttycom">Kris Nuttycombe</a> – <a href="http://twitter.com/nuttycom"><code>@nuttycom</code></a></p>
+<p>April 19, 2014</p>
+<p><a href="http://github.com/nuttycom/lambdaconf-2015" class="uri">http://github.com/nuttycom/lambdaconf-2015</a></p>
+</section>
+<section class="slide level1">
+
+<h2 id="about-me">About Me</h2>
+<ul>
+<li>Introduced to Scala in 2008</li>
+<li>Discovered Scalaz in 2010</li>
+<li><p>Led Scala dev teams at Gaiam, Precog, &amp; Simple Energy</p></li>
+<li><p>Finally started using Haskell for real work in 2014</p></li>
+</ul>
+</section>
+<section class="slide level1">
+
+<h2 id="about-this-talk">About This Talk</h2>
+<ul>
+<li class="fragment">Mostly (very) introductory material</li>
+<li class="fragment">Some Haskell basics
+<ul>
+<li class="fragment">Types</li>
+<li class="fragment">Universal Quantification</li>
+<li class="fragment">What Parametricity Means</li>
+<li class="fragment">Existential Interlude</li>
+</ul></li>
+<li class="fragment">How to apply what we learn in Haskell to work we do in other languages</li>
+</ul>
+<div class="fragment">
+<p><strong>Interrupt me!</strong></p>
+</div>
+<aside class="notes">
+<p>Because this is an introductory talk, I want it to be interactive.</p>
+<p>At this point, ask for show of hands:</p>
+<h1 id="who-have-experience-with-a-functional-programming-language">who have experience with a functional programming language</h1>
+<h1 id="who-have-experience-with-a-typed-functional-programming-language">who have experience with a typed functional programming language</h1>
+<h1 id="who-have-experience-with-an-oo-language-with-parameterized-types-generics">who have experience with an OO language with parameterized types (generics)</h1>
+<p>So, what is a type?</p>
+</aside>
+</section>
+<section class="slide level1">
+
+<h2 id="types">Types</h2>
+<ul>
+<li class="fragment">A type is a set of possible values</li>
+<li class="fragment">e.g.
+<ul>
+<li class="fragment">the type Bool is <code>{ True, False }</code></li>
+<li class="fragment">the type Int is <code>{ -2147483648, ..., 2147483647 }</code></li>
+</ul></li>
+</ul>
+<div class="fragment">
+<p><em>Type</em> is purely a concern of static analysis.</p>
+</div>
+<aside class="notes">
+<p>If you write a piece of code, you have to reason about what values are representable in that piece of code. This is true about <em>every</em> programming language. You simply may not have access to a program that helps you with that kind of reasoning.</p>
+<p>And, in complete fairness, some terms are <em>hard</em> to type. Take any example where some feature of a system determined at runtime defines the operations that are available with respect to a value. ActiveRecord is a good example of this.</p>
+</aside>
+</section>
+<section id="section" class="slide level1">
+<h1>∀</h1>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">
+id<span class="ot"> ::</span> <span class="ot">∀</span> a<span class="fu">.</span> a <span class="ot">-&gt;</span> a
+  </code></pre></div>
+<ul>
+<li><code>::</code> is pronounced “has type”</li>
+<li><code>∀</code> is pronounced (and may be written) <code>forall</code></li>
+</ul>
+<p><br/></p>
+<ul>
+<li class="fragment">A type is a set of possible values</li>
+<li class="fragment">A type <em>variable</em> is the set of such sets.</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<p><img src="./img/bttf-19890601.png" width="400"/></p>
+<blockquote>
+<p>“Write down the definition of a polymorphic function on a piece of paper. Tell me its type, but careful not to let me see the function’s definition. I will tell you a theorem that the function satisfies.” –<a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.38.9875&amp;rep=rep1&amp;type=pdf">Wadler, 1989</a></p>
+</blockquote>
+</section>
+<section class="slide level1">
+
+<h2 id="simple-examples">Simple Examples</h2>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">
+<span class="ot">asdf ::</span> <span class="ot">∀</span> a<span class="fu">.</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a
+   </code></pre></div>
+<div class="fragment">
+<ul>
+<li>The output value is one of the input values.</li>
+<li>We can’t tell which one, but it will always be the same one.</li>
+</ul>
+</div>
+</section>
+<section class="slide level1">
+
+<h2 id="simple-examples-1">Simple Examples</h2>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">
+<span class="ot">asdf ::</span> <span class="ot">∀</span> a b<span class="fu">.</span> a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> a
+   </code></pre></div>
+<div class="fragment">
+<ul>
+<li>The value returned is the first argument to this function.</li>
+<li>The second argument is to this function is ignored entirely.</li>
+</ul>
+</div>
+</section>
+<section class="slide level1">
+
+<h2 id="simple-examples-2">Simple Examples</h2>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">
+<span class="ot">asdf ::</span> <span class="ot">∀</span> a b<span class="fu">.</span> (a, b) <span class="ot">-&gt;</span> a
+   </code></pre></div>
+<div class="fragment">
+<ul>
+<li>The value returned is the first element of the tuple.</li>
+<li>The second element of the tuple is ignored entirely.</li>
+</ul>
+</div>
+<aside class="notes">
+<p>This is obvious, right? This is the ‘first’ function, which just uncurries the function on the former slide, which was ‘const’.</p>
+</aside>
+</section>
+<section class="slide level1">
+
+<blockquote>
+<p>“Write down the definition of a polymorphic function on a piece of paper. Tell me its type, but careful not to let me see the function’s definition. I will tell you a theorem that the function satisfies.” –<a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.38.9875&amp;rep=rep1&amp;type=pdf">Wadler, 1989</a></p>
+</blockquote>
+<p><em>Note that this only says “I will tell you <code>a</code> theorem.”</em></p>
+</section>
+<section class="slide level1">
+
+<h2 id="simple-examples-3">Simple Examples</h2>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">asdf ::</span> <span class="ot">∀</span> a b<span class="fu">.</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [b]</code></pre></div>
+<ul>
+<li class="fragment">Every value in the output is obtained by applying the function provided to a member of the input.</li>
+<li class="fragment"><em>BUT</em> <code>List</code> gives the implementer too much information, and the caller too little.</li>
+</ul>
+<div class="fragment">
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">asdf ::</span> <span class="ot">∀</span> a b<span class="fu">.</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [b]
+asdf f [] <span class="fu">=</span> []
+asdf f (x <span class="fu">:</span> _) <span class="fu">=</span> [f x]</code></pre></div>
+</div>
+<aside class="notes">
+<ul>
+<li>could reverse the result</li>
+<li>could just pick the n’th value from the list, apply the function, and repeat it indefinitely…</li>
+</ul>
+</aside>
+</section>
+<section class="slide level1">
+
+<p><img src="./img/list_fns.png" width="800"/></p>
+<p>(and many more)</p>
+</section>
+<section class="slide level1">
+
+<h2 id="code-reuse">Code Reuse</h2>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">
+<span class="ot">asdf ::</span> <span class="ot">∀</span> a b<span class="fu">.</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [b]
+
+<span class="ot">firsts ::</span> <span class="ot">∀</span> a b<span class="fu">.</span> [(a, b)] <span class="ot">-&gt;</span> [a]
+firsts xs <span class="fu">=</span> asdf fst xs
+<span class="co">-- firsts = asdf fst </span>
+  </code></pre></div>
+<ul>
+<li>This is excessively restrictive for the caller, who must provide a list</li>
+<li>AND excessively permissive to the implementer, who could (ab)use other List functions!</li>
+</ul>
+<aside class="notes">
+<p>This is just a small motivating example.</p>
+<p>If <code>List</code> gives us too much information, how can we recover generality? To start with, remember that</p>
+</aside>
+</section>
+<section class="slide level1">
+
+<h2 id="typeclasses">Typeclasses</h2>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">
+<span class="kw">class</span> <span class="dt">Functor</span> f <span class="kw">where</span>
+<span class="ot">  fmap ::</span> <span class="ot">∀</span> a b<span class="fu">.</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b
+  
+<span class="kw">instance</span> <span class="dt">Functor</span> <span class="dt">List</span> <span class="kw">where</span>
+<span class="ot">  fmap ::</span> <span class="ot">∀</span> a b<span class="fu">.</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [b]
+  fmap f [] <span class="fu">=</span> []
+  fmap f x <span class="fu">:</span> xs <span class="fu">=</span> f x <span class="fu">:</span> fmap f xs
+  </code></pre></div>
+</section>
+<section class="slide level1">
+
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">
+<span class="ot">firsts ::</span> <span class="ot">∀</span> f a b<span class="fu">.</span> <span class="dt">Functor</span> f <span class="ot">=&gt;</span> f (a, b) <span class="ot">-&gt;</span> f a
+firsts <span class="fu">=</span> fmap fst 
+  </code></pre></div>
+</section>
+<section class="slide level1">
+
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">
+<span class="kw">class</span> <span class="dt">Foldable</span> f <span class="kw">where</span>
+<span class="ot">  foldr ::</span> <span class="ot">∀</span> a b<span class="fu">.</span> (a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> b
+
+<span class="kw">class</span> <span class="dt">Monoid</span> a <span class="kw">where</span>
+<span class="ot">  mempty ::</span> a
+<span class="ot">  mzero ::</span> a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a
+  </code></pre></div>
+<div class="fragment">
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">
+<span class="ot">foldMap ::</span> 
+  <span class="ot">∀</span> f m a<span class="fu">.</span> (<span class="dt">Foldable</span> f, <span class="dt">Monoid</span> m) <span class="ot">=&gt;</span> 
+  (a <span class="ot">-&gt;</span> m) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> m
+  </code></pre></div>
+</div>
+</section>
+<section class="slide level1">
+
+<h2 id="laws">Laws</h2>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">
+<span class="kw">class</span> <span class="dt">Functor</span> f <span class="kw">where</span>
+  <span class="co">-- | Functor laws! </span>
+  <span class="fu">--</span>
+  <span class="co">-- &gt;&gt;&gt; fmap id == id</span>
+  <span class="co">-- &gt;&gt;&gt; fmap (f . g) == fmap f . fmap g </span>
+  <span class="fu">--</span>
+<span class="ot">  fmap ::</span> <span class="ot">∀</span> a b<span class="fu">.</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b
+  </code></pre></div>
+<ul>
+<li>This would be a nice and complete solution … but it’s not something Haskell does.</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<ul>
+<li>However, we can get a little bit of the way there.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">
+<span class="co">-- | reverse a list</span>
+<span class="fu">--</span>
+<span class="co">-- &gt;&gt;&gt; import Test.DocTest.Prop</span>
+<span class="co">-- &gt;&gt;&gt; prop $ \xs ys -&gt;</span>
+<span class="co">--       rev (xs ++ ys) == rev ys ++ rev xs</span>
+<span class="fu">--</span>
+<span class="co">-- &gt;&gt;&gt; prop $ \xs -&gt; rev (rev xs) == xs</span>
+<span class="fu">--</span>
+<span class="ot">rev ::</span> <span class="ot">∀</span> a<span class="fu">.</span> [a] <span class="ot">-&gt;</span> [a]
+  </code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="pitfalls">Pitfalls</h2>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">
+<span class="ot">asdf ::</span> <span class="ot">∀</span> a<span class="fu">.</span> a
+  </code></pre></div>
+<div class="fragment">
+<ul>
+<li>This function will cause your program to fail at runtime.</li>
+<li>If we have this in our language, we can’t trust anything.</li>
+</ul>
+</div>
+<div class="fragment">
+<p><br/></p>
+<p>This literally says, “all propositions are true.”</p>
+</div>
+<aside class="notes">
+<p>This is a really interesting result. From nothing but the type signature, we can tell right away that something is wrong. This function promises that, for any type, it can return a value of that type. Sorcery! This is the function that could put all of us out of our jobs instantaneously, if it were to exist. It promises to be able to synthesize literally any program from thin air.</p>
+</aside>
+</section>
+<section class="slide level1">
+
+<p><img src="./img/discordia.png" width="800"/></p>
+<blockquote>
+<p>– <a href="http://www.principiadiscordia.com/downloads/Principia%20Discordia.pdf">The Principia Discordia</a></p>
+</blockquote>
+</section>
+<section class="slide level1">
+
+<h2 id="give-up-now">Give Up Now?</h2>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">
+error<span class="ot"> ::</span> <span class="ot">∀</span> a<span class="fu">.</span> <span class="dt">String</span> <span class="ot">-&gt;</span> a
+  </code></pre></div>
+</section>
+<section class="slide level1">
+
+<h3 id="fast-and-loose-reasoning-is-morally-correct">Fast And Loose Reasoning Is Morally Correct</h3>
+<blockquote>
+<p>“Functional programmers often reason about programs as if they were written in a total language, expecting the results to carry over to non-total (partial) languages. We justify such reasoning.” – <a href="http://www.cse.chalmers.se/~nad/publications/danielsson-et-al-popl2006.html">Danielsson et al. 2006</a></p>
+</blockquote>
+<aside class="notes">
+<p>It is proved that if two closed terms have the same semantics in the total language, then they have related semantics in the partial language. It is also shown that the PER gives rise to a bicartesian closed category which can be used to reason about values in the domain of the relation.</p>
+</aside>
+</section>
+<section class="slide level1">
+
+<h2 id="seeing-the-fnords">Seeing The Fnords</h2>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">brokenHead ::</span> <span class="ot">∀</span> a<span class="fu">.</span> [a] <span class="ot">-&gt;</span> a</code></pre></div>
+<div class="fragment">
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">fromJustAwful ::</span> <span class="ot">∀</span> a<span class="fu">.</span> <span class="dt">Maybe</span> a <span class="ot">-&gt;</span> a</code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">stupIdx ::</span> <span class="ot">∀</span> a<span class="fu">.</span> [a] <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> a</code></pre></div>
+</div>
+<div class="fragment">
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">horkl1 ::</span> <span class="ot">∀</span> a<span class="fu">.</span> (a <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> a</code></pre></div>
+</div>
+</section>
+<section class="slide level1">
+
+<h2 id="universal-problem">Universal Problem</h2>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">JsonRendering</span> a <span class="fu">=</span> 
+  <span class="dt">JsonRendering</span> a (a <span class="ot">-&gt;</span> <span class="dt">Data.Aeson.Value</span>)
+
+<span class="ot">jsonArray ::</span> 
+  <span class="ot">∀</span> f a<span class="fu">.</span> (<span class="dt">Foldable</span> f) <span class="ot">=&gt;</span> 
+  f (<span class="dt">JsonRendering</span> a) <span class="ot">-&gt;</span> <span class="dt">Data.Aeson.Value</span></code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="existential-solution">Existential Solution</h2>
+<ul>
+<li>This is something you don’t need very often, but when you do, it’s essential.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">{-# LANGUAGE ExistentialQuantification #-}</span>
+
+<span class="kw">data</span> <span class="dt">JsonRendering</span> <span class="fu">=</span> 
+  <span class="ot">∀</span> a<span class="fu">.</span> <span class="dt">JsonRendering</span> a (a <span class="ot">-&gt;</span> <span class="dt">Data.Aeson.Value</span>)
+
+<span class="ot">jsonArray ::</span> 
+  <span class="ot">∀</span> f<span class="fu">.</span> (<span class="dt">Foldable</span> f) <span class="ot">=&gt;</span> 
+  f <span class="dt">JsonRendering</span> <span class="ot">-&gt;</span> <span class="dt">Data.Aeson.Value</span></code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="bringing-parametricity-home">Bringing Parametricity Home</h2>
+</section>
+<section class="slide level1">
+
+<div class="sourceCode"><pre class="sourceCode haskell"><code class="sourceCode haskell">const<span class="ot"> ::</span> <span class="ot">∀</span> a b<span class="fu">.</span> a <span class="ot">-&gt;</span> b <span class="ot">-&gt;</span> a
+const a _ <span class="fu">=</span> a</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="dt">static</span> &lt;A, B&gt; Function&lt;B, A&gt; <span class="fu">constf</span>(A a) {
+  <span class="kw">return</span> (B b) -&gt; a;
+}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="kw">def</span> constf(a)
+  lambda <span class="kw">do</span> |b|
+    a
+  <span class="kw">end</span>
+<span class="kw">end</span></code></pre></div>
+</section>
+<section class="slide level1">
+
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala">
+<span class="kw">trait</span> Monoid[A] {
+  <span class="kw">def</span> mempty: A
+  <span class="kw">def</span> <span class="fu">mappend</span>(a0: A, a1: A): A
+}
+  </code></pre></div>
+<div class="sourceCode"><pre class="sourceCode scala"><code class="sourceCode scala">
+<span class="kw">trait</span> Functor[F[_]] {
+  <span class="kw">def</span> fmap[A, B](f: A =&gt; B)(fa: F[A]): F[B]
+}
+  </code></pre></div>
+</section>
+<section class="slide level1">
+
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="co">// this works</span>
+<span class="kw">interface</span> Monoid&lt;A&gt; {
+  A <span class="fu">mempty</span>();
+  A <span class="fu">mappend</span>(A a0, A a1);
+}</code></pre></div>
+<div class="fragment">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java"><span class="co">// This doesn&#39;t work. At all.</span>
+<span class="kw">interface</span> Functor&lt;A&gt; {
+  &lt;B&gt; Functor&lt;B&gt; <span class="fu">fmap</span>(Function&lt;A, B&gt;);
+}
+
+<span class="kw">class</span> MyList&lt;A&gt; <span class="kw">extends</span> Functor&lt;A&gt; {
+  <span class="kw">public</span> &lt;B&gt; MyList&lt;B&gt; <span class="fu">fmap</span>(Function&lt;A, B&gt;);
+}</code></pre></div>
+</div>
+</section>
+<section class="slide level1">
+
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">
+List&lt;String&gt; result =  
+  Arrays.<span class="fu">asList</span>(<span class="st">&quot;Larry&quot;</span>, <span class="st">&quot;Moe&quot;</span>, <span class="st">&quot;Curly&quot;</span>)
+        .<span class="fu">stream</span>()
+        .<span class="fu">map</span>(s -&gt; <span class="st">&quot;Hello &quot;</span> + s)
+        .<span class="fu">collect</span>(Collectors.<span class="fu">toList</span>());
+
+<span class="co">// result will be a List&lt;String&gt; containing </span>
+<span class="co">// &quot;Hello Larry&quot;, &quot;Hello Moe&quot; and &quot;Hello Curly&quot;</span>
+     </code></pre></div>
+<div class="fragment">
+<div class="sourceCode"><pre class="sourceCode java"><code class="sourceCode java">
+<span class="dt">static</span> &lt;T&gt; Collector&lt;T,?,List&lt;T&gt;&gt; <span class="fu">toList</span>()
+   </code></pre></div>
+</div>
+</section>
+<section class="slide level1">
+
+<p><img src="./img/quack.jpeg" width="700"/></p>
+</section>
+<section class="slide level1">
+
+<h2 id="a-few-quick-rules">A Few Quick Rules</h2>
+<ul>
+<li class="fragment">Give the consumer of a function the most freedom, and the implementer the least.</li>
+<li class="fragment">Never use introspection to determine the types of your arguments (type erasure is a GOOD thing!)</li>
+<li class="fragment">Prefer typeclasses over inheritance if your language will let you.</li>
+</ul>
+<aside class="notes">
+<p>One of the nice things about dynamically typed languages is that you don’t suffer the “MyType” curse. This may explain their popularity over things like Java.</p>
+</aside>
+</section>
+<section id="questions" class="slide level1">
+<h1>Questions?</h1>
+</section>
+    </div>
+  </div>
+
+
+  <script src="reveal.js/lib/js/head.min.js"></script>
+  <script src="reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'night', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+    </body>
+</html>

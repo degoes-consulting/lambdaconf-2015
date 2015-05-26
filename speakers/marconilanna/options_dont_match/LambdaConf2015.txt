@@ -1,0 +1,728 @@
+| \*Idiomatic Scala\s: Your \mOption\ss Do Not Match
+/
+
+| Marconi Lanna
+
+| Originate
+
+---
+
+| Raise your hand who has never seen code similar to this:
+
+```
+if (someBoolean == true) {
+  return true;
+} else {
+  return false;
+}
+```
+--
+
+/
+
+```
+return someBoolean;
+```
+
+---
+
+| Now raise your hand who has seen or even written code like this:
+
+```
+someOption match {
+  case Some(a) => foo(a)
+  case None => bar
+}
+```
+
+---
+
+Too literal, unsophisticated.
+--
+
+Not high enough level of abstraction.
+--
+
+Not declarative enough, procedural.
+--
+
+Feels like:
+
+```
+if (Some(a)) {
+  foo(a)
+} else if (None) {
+  bar
+}
+```
+
+---
+
+But pattern matching is functional...
+--
+
+Indeed, pattern matching \*is\s functional.
+--
+
+But higher-order functions are functionaler.
+--
+
+Higher-order functions are \*functionalest\s!
+
+---
+
+Pattern matching on \mOption\s is almost never necessary.
+--
+
+Usually there are cleaner and more expressive ways
+to attain the same results.
+--
+
+This is what \mOption\s Scaladoc has to say:
+
+"The \*most idiomatic\s way to use an \mscala.Option\s instance
+is to \gtreat it as a collection or monad\s and use \cmap\s,
+\cflatMap\s, \cfilter\s, or \cforeach\s […]
+
+A \*less-idiomatic\s way to use \mscala.Option\s values is
+via \rpattern matching\s."
+
+---
+
+Any expression of the form
+
+```
+someOption match {
+  case Some(a) => foo(a)
+  case None => bar
+}
+```
+--
+
+can be written as
+
+```
+someOption map foo getOrElse bar
+```
+--
+
+Furthermore, since Scala 2.10, a conciser alternative is available:
+--
+
+```
+someOption.fold(bar)(foo)
+```
+
+---
+
+\cfold\s even gives us the additional benefit of being more
+\*type-strict\s than either of the previous alternatives.
+--
+
+For instance, both \ma\s and \mb\s have type \mAny\s and value 2:
+
+```
+val someOption = Option(1)
+
+val a = someOption match {
+  case Some(a) => a + 1
+  case None => "a"
+}
+
+val b = someOption map (_ + 1) getOrElse "a"
+```
+--
+
+While this expression fails to compile with a type mismatch error:
+
+```
+val c = someOption.fold("a")(_ + 1)
+```
+
+---
+
+But we still can do a \*lot\s better than \cfold\s.
+--
+
+\mOption\s offers a few dozen higher-order functions which can be
+used to better express some more specific transformations.
+--
+
+For instance,
+
+```
+opt.fold(false)(_ => true)
+```
+--
+
+is equivalent to
+
+```
+opt.isDefined
+```
+
+---
+
+Let's see some examples!
+
+---
+
+First, a few definitions:
+
+```
+type Opt = Option[String]
+
+val a    :Opt = Option("a")
+val empty:Opt = Option("")
+val none :Opt = None
+
+val p: String => Boolean = _.isEmpty     // predicate
+val f: String => String  = _.toUpperCase // transformation
+```
+
+---
+
+```
+def test[A](g: Opt => A, h: Opt => A): Unit = {
+  import scala.io.AnsiColor.{GREEN, RED}
+
+  Seq(a, empty, none) foreach { opt =>
+    val a = g(opt)
+    val b = h(opt)
+
+    if (a == b)
+      println(f"$GREEN  OK:  $opt%-7s -> $a == $b")
+    else
+      println(f"$RED  Bad: $opt%-7s -> $a != $b")
+  }
+}
+```
+
+---
+
+```
+def g(opt: Opt) = opt.fold("b")(_.toUpperCase)
+
+def h(opt: Opt) = opt.fold("c")(_.toUpperCase)
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) => Some(f(a))
+  case None => None
+}
+```
+--
+
+```
+def h(opt: Opt) = opt map f
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) => a
+  case None => "b"
+}
+```
+--
+
+```
+def h(opt: Opt) = opt getOrElse "b"
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) => f(a)
+  case None => "b"
+}
+```
+--
+
+```
+def h(opt: Opt) = opt.fold("b")(f) // 2.10
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) => false
+  case None => true
+}
+```
+--
+
+```
+def h(opt: Opt) = opt.isEmpty
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) => true
+  case None => false
+}
+```
+--
+
+```
+def h(opt: Opt) = opt.isDefined // 2.10: nonEmpty
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) => 1
+  case None => 0
+}
+```
+--
+
+```
+def h(opt: Opt) = opt.size
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) => Some(a)
+  case None => Option("b")
+}
+```
+--
+
+```
+def h(opt: Opt) = opt orElse Option("b")
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) => a
+  case None => null
+}
+```
+--
+
+```
+def h(opt: Opt) = opt.orNull
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) if p(a) => Some(a)
+  case _ => None
+}
+```
+--
+
+```
+def h(opt: Opt) = opt filter p // find
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) if !p(a) => Some(a)
+  case _ => None
+}
+```
+--
+
+```
+def h(opt: Opt) = opt filterNot p // 2.9
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) => a == ""
+  case None => false
+}
+```
+--
+
+```
+def h(opt: Opt) = opt contains "" // 2.11
+```
+--
+
+```
+test(g, h)
+```
+--
+
+```
+Option("banana") contains "a"
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) => p(a)
+  case None => false
+}
+```
+--
+
+```
+def h(opt: Opt) = opt exists p
+```
+--
+
+```
+test(g, h)
+```
+--
+
+```
+Option("banana") exists (_ contains "a")
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) => p(a)
+  case None => true
+}
+```
+--
+
+```
+def h(opt: Opt) = opt forall p // 2.10
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) if p(a) => 1
+  case _ => 0
+}
+```
+--
+
+```
+def h(opt: Opt) = opt count p
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) => println(a)
+  case None => () // Unit
+}
+```
+--
+
+```
+def h(opt: Opt) = opt foreach println
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) => Right(a)
+  case None => Left("b")
+}
+```
+--
+
+```
+def h(opt: Opt) = opt toRight "b"
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) => Left(a)
+  case None => Right("b")
+}
+```
+--
+
+```
+def h(opt: Opt) = opt toLeft "b"
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) => Seq(a)
+  case None => Nil
+}
+```
+--
+
+```
+def h(opt: Opt) = opt.toSeq // toList
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+```
+def g(opt: Opt) = opt match {
+  case Some(a) => Set(a)
+  case None => Set.empty
+}
+```
+--
+
+```
+def h(opt: Opt) = opt.toSet
+```
+--
+
+```
+test(g, h)
+```
+
+---
+
+| For-comprehensions
+--
+
+\mOption\s is a monad.
+--
+
+```
+case class Employee(name: String, boss: Option[Employee]) {
+  def bossBoss = for {
+    b1 <- boss
+    b2 <- b1.boss
+  } yield b2.name
+
+  def bossBossBoss = for {
+    b1 <- boss
+    b2 <- b1.boss
+    b3 <- b2.boss
+  } yield b3.name
+}
+```
+
+---
+
+```
+val president = Employee("President", None)
+val director = Employee("Director", Option(president))
+val me = Employee("Me", Option(director))
+
+val a = me.bossBoss
+val b = me.bossBossBoss
+val c = president.bossBoss
+```
+
+---
+
+| \gUsing HOF is not just a matter of personal coding style!
+
+---
+
+```
+case class BadEmployee(name: String, company: Option[String]) {
+  def isEmployed = company match {
+    case Some(_) => true
+    case None => false
+  }
+
+  def worksFor(company: String) = this.company match {
+    case Some(c) => c == company
+    case None => false
+  }
+}
+
+val joe = BadEmployee("Joe", Option("Acme"))
+
+val a = joe.isEmployed
+val b = joe.worksFor("Acme")
+```
+
+---
+
+```
+case class GoodEmployee(name: String, company: Option[String]) {
+  def isEmployed = company.nonEmpty
+  def worksFor(company: String) = this.company contains company
+}
+
+val joe = GoodEmployee("Joe", Option("Acme"))
+
+val a = joe.isEmployed
+val b = joe.worksFor("Acme")
+```
+
+---
+
+```
+case class GoodEmployee(name: String, company: Seq[String]) {
+  def isEmployed = company.nonEmpty
+  def worksFor(company: String) = this.company contains company
+}
+
+val joe = GoodEmployee("Joe", Seq("Acme Corporation", "MadLab"))
+
+val a = joe.isEmployed
+val b = joe.worksFor("MadLab")
+```
+
+---
+
+Imagine how much work is saved on classes with many methods
+and on methods with multiple chained operations.
+
+---
+
+| More than \mOption\s
+--
+
+Abusing pattern matching can be considered a code smell.
+--
+
+Pattern matching is not always the most readable or concise construct.
+--
+
+Do not pattern match on \mBoolean\s; use \mif else\s.
+--
+
+Avoid pattern matching on a single value followed by a default case:
+
+```
+items match {
+  case 0 => "Cart is empty"
+  case _ => "View cart"
+}
+```
+--
+
+For most data structures, like \mSeq\s and \mString\s, consider using
+methods like \misEmpty\s, \mheadOption\s, \mtail\s, etc.
+
+For \mEnumeration\s, use \mwithName\s.
+
+---
+
+| \gReferences
+
+github.com/marconilanna/LambdaConf2015
+
+blog.originate.com
+
+blog.originate.com/blog/2014/06/15/idiomatic-scala-your-options-do-not-match/
+--
+
+/
+
+| github.com/marconilanna/REPLesent
+--
+
+/
+
+| Thank you!
+--
+
+| Questions?
