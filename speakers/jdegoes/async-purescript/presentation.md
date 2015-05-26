@@ -1,5 +1,5 @@
 build-lists: true
-autoscale: true
+autoscale: true 
 
 # Principled, Painless Asynchronous Programming in PureScript
 ### *John A. De Goes* — [@jdegoes](http://twitter.com/jdegoes)
