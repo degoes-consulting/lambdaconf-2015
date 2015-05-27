@@ -14,7 +14,8 @@ The official supporting materials repository for LambdaConf 2015.
  * [Data-driven Webapps with ClojureScript and Om](speakers/tennety/Data-driven%20Webapps%20with%20ClojureScript%20and%20Om.pdf) by [Chandu Tennety](http://tennety.github.io)
  * [Introduction to Erlang](/speakers/stevenproctor/README.md) by [Proctor](https://twitter.com/stevenproctor)
  * [Writing an Adventure Game in Elm](https://github.com/rtfeldman/lambdaconf-2015-elm-workshop) by [Richard Feldman](https://twitter.com/rtfeldman)
- * [Who Got Types in my Systems Programming](https://github.com/jroesch/lambdaconf-2015) by [Jared Roesch](https://github.com/jroesch)
+ * [Who Got Types in my Systems Programming](https://github.com/jroesch/lambdaconf-2015) by [Jared Roesch](https://github.com/jroesch)  
+ 
 # Talk Materials
 
  * [How to Learn Haskell in Less Than 5 Years](speakers/bitemyapp/howtolearnhaskell) by [Chris Allen](http://twitter.com/bitemyapp)
